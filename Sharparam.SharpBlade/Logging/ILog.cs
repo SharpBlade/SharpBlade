@@ -33,11 +33,17 @@ namespace Sharparam.SharpBlade.Logging
 {
     public interface ILog
     {
-        void Debug(string message);
-        void Info(string message);
-        void Warn(string message);
-        void Error(string message);
-        void Fatal(string message);
+        void Debug(object message);
+        void Info(object message);
+        void Warn(object message);
+        void Error(object message);
+        void Fatal(object message);
+
+        void Debug(object message, Exception exception);
+        void Info(object message, Exception exception);
+        void Warn(object message, Exception exception);
+        void Error(object message, Exception exception);
+        void Fatal(object message, Exception exception);
 
         void DebugFormat(string format, params object[] args);
         void InfoFormat(string format, params object[] args);
