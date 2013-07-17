@@ -265,9 +265,10 @@ namespace Sharparam.SharpBlade.Razer
 
             var source = new Bitmap(RazerAPI.TouchpadWidth, RazerAPI.TouchpadHeight);
             var dest = new Bitmap(source.Width, source.Height, PixelFormat.Format16bppRgb565);
+            form.DrawToBitmap(dest, new Rectangle(0, 0, dest.Width, dest.Height));
 
             using (var g = Graphics.FromImage(dest))
-                g.DrawImageUnscaled(source, 0, 0);
+                g.DrawImageUnscaled(dest, 0, 0);
 
             var data = dest.LockBits(new Rectangle(0, 0, dest.Width, dest.Height),
                                      ImageLockMode.ReadOnly, PixelFormat.Format16bppRgb565);
