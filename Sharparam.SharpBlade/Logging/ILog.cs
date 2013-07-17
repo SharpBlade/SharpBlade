@@ -31,26 +31,120 @@ using System;
 
 namespace Sharparam.SharpBlade.Logging
 {
+    /// <summary>
+    /// Provides methods for logging.
+    /// </summary>
     public interface ILog
     {
+        /// <summary>
+        /// Writes a debug message to the logging output.
+        /// </summary>
+        /// <param name="message">The message to write.</param>
         void Debug(object message);
+
+        /// <summary>
+        /// Writes an informational message to the logging output.
+        /// </summary>
+        /// <param name="message">The message to write.</param>
         void Info(object message);
+
+        /// <summary>
+        /// Writes a warning message to the logging output.
+        /// </summary>
+        /// <param name="message">The message to write.</param>
         void Warn(object message);
+
+        /// <summary>
+        /// Writes an error message to the logging output.
+        /// </summary>
+        /// <param name="message">The message to write.</param>
         void Error(object message);
+
+        /// <summary>
+        /// Writes a fatal message to the logging output.
+        /// </summary>
+        /// <param name="message">The message to write.</param>
         void Fatal(object message);
 
+        /// <summary>
+        /// Writes a debug message to the logging output
+        /// accompanied by an exception stack trace.
+        /// </summary>
+        /// <param name="message">The message to write.</param>
+        /// <param name="exception">Exception object to read stack trace from.</param>
         void Debug(object message, Exception exception);
+
+        /// <summary>
+        /// Writes an informational message to the logging output
+        /// accompanied by an exception stack trace.
+        /// </summary>
+        /// <param name="message">The message to write.</param>
+        /// <param name="exception">Exception object to read stack trace from.</param>
         void Info(object message, Exception exception);
+
+        /// <summary>
+        /// Writes a warning message to the logging output
+        /// accompanied by an exception stack trace.
+        /// </summary>
+        /// <param name="message">The message to write.</param>
+        /// <param name="exception">Exception object to read stack trace from.</param>
         void Warn(object message, Exception exception);
+
+        /// <summary>
+        /// Writes an error message to the logging output
+        /// accompanied by an exception stack trace.
+        /// </summary>
+        /// <param name="message">The message to write.</param>
+        /// <param name="exception">Exception object to read stack trace from.</param>
         void Error(object message, Exception exception);
+
+        /// <summary>
+        /// Writes a fatal message to the logging output
+        /// accompanied by an exception stack trace.
+        /// </summary>
+        /// <param name="message">The message to write.</param>
+        /// <param name="exception">Exception object to read stack trace from.</param>
         void Fatal(object message, Exception exception);
 
+        /// <summary>
+        /// Writes a formatted debug message to the logging output.
+        /// </summary>
+        /// <param name="format">Format string.</param>
+        /// <param name="args">Format arguments.</param>
         void DebugFormat(string format, params object[] args);
+
+        /// <summary>
+        /// Writes a formatted informational message to the logging output.
+        /// </summary>
+        /// <param name="format">Format string.</param>
+        /// <param name="args">Format arguments.</param>
         void InfoFormat(string format, params object[] args);
+
+        /// <summary>
+        /// Writes a formatted warning message to the logging output.
+        /// </summary>
+        /// <param name="format">Format string.</param>
+        /// <param name="args">Format arguments.</param>
         void WarnFormat(string format, params object[] args);
+
+        /// <summary>
+        /// Writes a formatted error message to the logging output.
+        /// </summary>
+        /// <param name="format">Format string.</param>
+        /// <param name="args">Format arguments.</param>
         void ErrorFormat(string format, params object[] args);
+
+        /// <summary>
+        /// Writes a formatted fatal message to the logging output.
+        /// </summary>
+        /// <param name="format">Format string.</param>
+        /// <param name="args">Format arguments.</param>
         void FatalFormat(string format, params object[] args);
 
+        /// <summary>
+        /// Writes exception details to logging output.
+        /// </summary>
+        /// <param name="exception">Exception object to read details from.</param>
         void Exception(Exception exception);
     }
 }

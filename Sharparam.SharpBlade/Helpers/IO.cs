@@ -31,8 +31,16 @@ using System.IO;
 
 namespace Sharparam.SharpBlade.Helpers
 {
+    /// <summary>
+    /// Helper functions for IO operations.
+    /// </summary>
     public static class IO
     {
+        /// <summary>
+        /// Gets the absolute path to the specified file.
+        /// </summary>
+        /// <param name="path">(Relative) path to resolve.</param>
+        /// <returns>The absolute path to the specified relative path on the file system.</returns>
         public static string GetAbsolutePath(string path)
         {
             return Path.Combine(Directory.GetCurrentDirectory(), path);

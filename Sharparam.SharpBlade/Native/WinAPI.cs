@@ -32,6 +32,9 @@ using System.Runtime.InteropServices;
 
 namespace Sharparam.SharpBlade.Native
 {
+    /// <summary>
+    /// Native WinAPI functions.
+    /// </summary>
     public static class WinAPI
     {
         // ReSharper disable InconsistentNaming

@@ -31,11 +31,26 @@ using System;
 
 namespace Sharparam.SharpBlade.Razer.Structs
 {
+    /// <summary>
+    /// Information provided by keyboard-enabled forms. [WIP]
+    /// </summary>
     public struct KeyboardControl
     {
+        /// <summary>
+        /// Handle to the form.
+        /// </summary>
         public IntPtr Handle;
+
+        /// <summary>
+        /// Should keyboard capture be released when user presses enter?
+        /// </summary>
         public bool ReleaseOnEnter;
 
+        /// <summary>
+        /// Creates a new <see cref="KeyboardControl" /> struct.
+        /// </summary>
+        /// <param name="handle">Handle to the form.</param>
+        /// <param name="releaseOnEnter">Release control on enter?</param>
         public KeyboardControl(IntPtr handle, bool releaseOnEnter = true)
         {
             Handle = handle;

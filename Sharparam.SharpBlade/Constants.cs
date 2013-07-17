@@ -29,15 +29,28 @@
 
 namespace Sharparam.SharpBlade
 {
+    /// <summary>
+    /// Constant values used by the SharpBlade library.
+    /// </summary>
     public static class Constants
     {
+        /// <summary>
+        /// True if compiled with DEBUG enabled, false otherwise.
+        /// </summary>
 #if DEBUG
         public const bool DebugEnabled = true;
 #else
         public const bool DebugEnabled = false;
 #endif
 
+        /// <summary>
+        /// Blank image used for touchpad.
+        /// </summary>
         public const string BlankTouchpadImage = @"res\images\tp_blank.png";
+        
+        /// <summary>
+        /// Blank image used for dynamic keys.
+        /// </summary>
         public const string DisabledDynamicKeyImage = @"res\images\dk_disabled.png";
     }
 }

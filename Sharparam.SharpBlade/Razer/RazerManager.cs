@@ -36,11 +36,19 @@ using Sharparam.SharpBlade.Razer.Exceptions;
 
 namespace Sharparam.SharpBlade.Razer
 {
-    public delegate void VoidDelegate();
-
+    /// <summary>
+    /// Manages everything related to Razer and its devices.
+    /// </summary>
     public class RazerManager : IDisposable
     {
+        /// <summary>
+        /// Thrown when an app event occurs.
+        /// </summary>
         public event AppEventEventHandler AppEvent;
+
+        /// <summary>
+        /// Thrown when a dynamic key event occurs.
+        /// </summary>
         public event DynamicKeyEventHandler DynamicKeyEvent;
 
         private const string RazerControlFile = "DO_NOT_TOUCH__RAZER_CONTROL_FILE";
@@ -55,6 +63,10 @@ namespace Sharparam.SharpBlade.Razer
         private static RazerAPI.AppEventCallbackDelegate _appEventCallback;
         private static RazerAPI.DynamicKeyCallbackFunctionDelegate _dkCallback;
 
+        /// <summary>
+        /// Creates a new <see cref="RazerManager" />.
+        /// </summary>
+        /// <remarks>Only one Razer manager should be active at any one time.</remarks>
         public RazerManager()
         {
             _log = LogManager.GetLogger(this);
@@ -104,6 +116,9 @@ namespace Sharparam.SharpBlade.Razer
             _dynamicKeys = new DynamicKey[RazerAPI.DynamicKeysCount];
         }
 
+        /// <summary>
+        /// Disposes of this <see cref="RazerManager" />.
+        /// </summary>
         public void Dispose()
         {
             _log.Debug("RazerManager is disposing...");
@@ -132,6 +147,9 @@ namespace Sharparam.SharpBlade.Razer
                 func(this, new DynamicKeyEventArgs(keyType, state));
         }
 
+        /// <summary>
+        /// Creates the Razer control file.
+        /// </summary>
         public static void CreateControlFile()
         {
             try
@@ -150,6 +168,9 @@ namespace Sharparam.SharpBlade.Razer
             }
         }
 
+        /// <summary>
+        /// Deletes the Razer control file.
+        /// </summary>
         public static void DeleteControlFile()
         {
             try
@@ -168,6 +189,10 @@ namespace Sharparam.SharpBlade.Razer
             }
         }
 
+        /// <summary>
+        /// Stops all Razer interaction.
+        /// </summary>
+        /// <param name="cleanup">True to delete the control file and clean up, false otherwise.</param>
         public static void Stop(bool cleanup = true)
         {
             StaticLog.Info("RazerManager is stopping! Calling RzSBStop...");
@@ -184,16 +209,35 @@ namespace Sharparam.SharpBlade.Razer
             throw new RazerNativeException(result);
         }
 
+        /// <summary>
+        /// Gets the SwitchBlade touchpad device.
+        /// </summary>
+        /// <returns></returns>
         public Touchpad GetTouchpad()
         {
             return _touchpad;
         }
 
+        /// <summary>
+        /// Gets a specific dynamic key.
+        /// </summary>
+        /// <param name="keyType">The key type to get.</param>
+        /// <returns><see cref="DynamicKey" /> object representing the specified key type.</returns>
         public DynamicKey GetDynamicKey(RazerAPI.DynamicKeyType keyType)
         {
             return _dynamicKeys[(int) keyType - 1];
         }
 
+        /// <summary>
+        /// Enables a specific dynamic key.
+        /// </summary>
+        /// <param name="keyType">The key type to enable.</param>
+        /// <param name="callback">Callback called when this key is pressed.</param>
+        /// <param name="upImage">Image to display on this key when in the UP state.</param>
+        /// <param name="downImage">Image to display on this key when in the DOWN state.</param>
+        /// <param name="replace">True to override this key's previous configuration
+        /// if it has already been enabled, otherwise returns current key if already enabled.</param>
+        /// <returns>The dynamic key that was enabled.</returns>
         public DynamicKey EnableDynamicKey(RazerAPI.DynamicKeyType keyType, DynamicKeyPressedEventHandler callback, string upImage, string downImage = null, bool replace = false)
         {
             var index = (int) keyType - 1;
@@ -220,6 +264,10 @@ namespace Sharparam.SharpBlade.Razer
             return _dynamicKeys[index];
         }
 
+        /// <summary>
+        /// Disables a specific dynamic key.
+        /// </summary>
+        /// <param name="keyType">The key type to disable.</param>
         public void DisableDynamicKey(RazerAPI.DynamicKeyType keyType)
         {
             var index = (int) keyType - 1;

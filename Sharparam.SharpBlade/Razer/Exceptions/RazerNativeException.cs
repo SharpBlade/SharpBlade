@@ -31,8 +31,14 @@ using Sharparam.SharpBlade.Native;
 
 namespace Sharparam.SharpBlade.Razer.Exceptions
 {
+    /// <summary>
+    /// Exception for failures in native code provided by Razer.
+    /// </summary>
     public class RazerNativeException : RazerException
     {
+        /// <summary>
+        /// <see cref="HRESULT" /> obtained from calling the native function.
+        /// </summary>
         public readonly HRESULT Hresult;
         
         internal RazerNativeException(HRESULT hresult)

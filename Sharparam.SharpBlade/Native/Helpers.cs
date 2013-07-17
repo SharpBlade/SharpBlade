@@ -32,13 +32,25 @@ using System.Runtime.InteropServices;
 
 namespace Sharparam.SharpBlade.Native
 {
+    /// <summary>
+    /// Provides helper methods for working with native code.
+    /// </summary>
     public static class Helpers
     {
+        /// <summary>
+        /// Gets the last error code that was set by native code.
+        /// </summary>
+        /// <returns>The error code.</returns>
         public static int GetLastError()
         {
             return Marshal.GetLastWin32Error();
         }
 
+        /// <summary>
+        /// Gets the last error code and its associated info that was set by native code.
+        /// </summary>
+        /// <param name="message">Will be set to the message associated with the error code.</param>
+        /// <returns>The error code.</returns>
         public static int GetLastErrorInfo(out string message)
         {
             var err = GetLastError();
@@ -46,21 +58,39 @@ namespace Sharparam.SharpBlade.Native
             return err;
         }
 
+        /// <summary>
+        /// Gets the message associated with the specified error code.
+        /// </summary>
+        /// <param name="err">The error code.</param>
+        /// <returns>The message associated with this error code.</returns>
         public static string GetErrorMessage(int err)
         {
             return GetWin32Exception(err).Message;
         }
 
+        /// <summary>
+        /// Gets the message associated with the last error.
+        /// </summary>
+        /// <returns>The message associated with the code of the last error.</returns>
         public static string GetLastErrorMessage()
         {
             return GetErrorMessage(GetLastError());
         }
 
+        /// <summary>
+        /// Gets a Win32Exception object for the specified error code.
+        /// </summary>
+        /// <param name="err">The error code.</param>
+        /// <returns>An exception object with more detailed information about the error.</returns>
         public static Win32Exception GetWin32Exception(int err)
         {
             return new Win32Exception(err);
         }
 
+        /// <summary>
+        /// Gets a Win32Exception object for the last error code.
+        /// </summary>
+        /// <returns>An exception object with more detailed information about the last error.</returns>
         public static Win32Exception GetLastWin32Exception()
         {
             return GetWin32Exception(GetLastError());

@@ -40,8 +40,14 @@ using Sharparam.SharpBlade.Razer.Events;
 
 namespace Sharparam.SharpBlade.Razer
 {
+    /// <summary>
+    /// The SwitchBlade touchpad.
+    /// </summary>
     public class Touchpad : IDisposable
     {
+        /// <summary>
+        /// Thrown when a gesture occurs on the touchpad.
+        /// </summary>
         public event GestureEventHandler Gesture;
 
         private readonly ILog _log;
@@ -75,6 +81,9 @@ namespace Sharparam.SharpBlade.Razer
                 RazerManager.NativeCallFailure("RzSBGestureSetCallback", hResult);
         }
 
+        /// <summary>
+        /// Disposes of this touchpad.
+        /// </summary>
         public void Dispose()
         {
             
@@ -87,6 +96,10 @@ namespace Sharparam.SharpBlade.Razer
                 func(this, new GestureEventArgs(gestureType, parameter, x, y, z));
         }
 
+        /// <summary>
+        /// Sets the form to be rendered to this touchpad.
+        /// </summary>
+        /// <param name="form">The new form to render.</param>
         public void SetForm(Form form)
         {
             ClearForm();
@@ -96,6 +109,10 @@ namespace Sharparam.SharpBlade.Razer
             //CurrentForm.Paint += DrawForm;
         }
 
+        /// <summary>
+        /// Clears the current form from touchpad
+        /// and stops rendering of it.
+        /// </summary>
         public void ClearForm()
         {
             if (CurrentForm != null)
@@ -104,6 +121,10 @@ namespace Sharparam.SharpBlade.Razer
             }
         }
 
+        /// <summary>
+        /// Set a static image to be displayed on the touchpad.
+        /// </summary>
+        /// <param name="image">Path to image.</param>
         public void SetImage(string image)
         {
             image = IO.GetAbsolutePath(image);
@@ -115,6 +136,9 @@ namespace Sharparam.SharpBlade.Razer
             CurrentImage = image;
         }
 
+        /// <summary>
+        /// Clears the image currently on the touchpad.
+        /// </summary>
         public void ClearImage()
         {
             var hResult = RazerAPI.RzSBSetImageTouchpad(IO.GetAbsolutePath(Constants.BlankTouchpadImage));
@@ -124,12 +148,29 @@ namespace Sharparam.SharpBlade.Razer
             CurrentImage = null;
         }
 
-        public void StopAll()
+        /// <summary>
+        /// Clears current form and image on the touchpad (if any).
+        /// </summary>
+        public void ClearAll()
         {
             ClearForm();
             ClearImage();
         }
 
+        /// <summary>
+        /// Stops rendering of forms and images.
+        /// </summary>
+        [Obsolete("Renamed to ClearAll")]
+        public void StopAll()
+        {
+            ClearAll();
+        }
+
+        /// <summary>
+        /// Sets whether a gesture should be handled by the touchpad.
+        /// </summary>
+        /// <param name="gestureType">The gesture type to set.</param>
+        /// <param name="enabled">True to enable gesture, false to disable.</param>
         public void SetGesture(RazerAPI.GestureType gestureType, bool enabled)
         {
             RazerAPI.GestureType newGesturesType;
@@ -189,16 +230,29 @@ namespace Sharparam.SharpBlade.Razer
             _allGestureEnabled = _activeGesturesType == RazerAPI.GestureType.All && !enabled;
         }
 
+        /// <summary>
+        /// Enables a gesture to be handled by the touchpad.
+        /// </summary>
+        /// <param name="gestureType">Gesture to enable.</param>
         public void EnableGesture(RazerAPI.GestureType gestureType)
         {
             SetGesture(gestureType, true);
         }
 
+        /// <summary>
+        /// Disables a gesture from being handled by the touchpad.
+        /// </summary>
+        /// <param name="gestureType">Gesture to disable.</param>
         public void DisableGesture(RazerAPI.GestureType gestureType)
         {
             SetGesture(gestureType, false);
         }
 
+        /// <summary>
+        /// Sets whether a gesture should be forwarded to the host operating system.
+        /// </summary>
+        /// <param name="gestureType">Gesture to set.</param>
+        /// <param name="enabled">True to enable forwarding, false to disable.</param>
         public void SetOSGesture(RazerAPI.GestureType gestureType, bool enabled)
         {
             RazerAPI.GestureType newGesturesType;
@@ -248,16 +302,28 @@ namespace Sharparam.SharpBlade.Razer
             _allOSGestureEnabled = _activeGesturesType == RazerAPI.GestureType.All && !enabled;
         }
 
+        /// <summary>
+        /// Enables a gesture to be forwarded to the host operating system.
+        /// </summary>
+        /// <param name="gestureType">Gesture to forward.</param>
         public void EnableOSGesture(RazerAPI.GestureType gestureType)
         {
             SetOSGesture(gestureType, true);
         }
 
+        /// <summary>
+        /// Disables forwarding of a gesture.
+        /// </summary>
+        /// <param name="gestureType">Gesture to disable.</param>
         public void DisableOSGesture(RazerAPI.GestureType gestureType)
         {
             SetOSGesture(gestureType, false);
         }
 
+        /// <summary>
+        /// Draws the specified form to the touchpad.
+        /// </summary>
+        /// <param name="form">Form to draw.</param>
         public void DrawForm(Form form)
         {
             if (form == null || form.IsDisposed)

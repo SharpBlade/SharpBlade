@@ -29,11 +29,29 @@
 
 namespace Sharparam.SharpBlade.Razer.Structs
 {
+    /// <summary>
+    /// Information about touchpad rendering.
+    /// </summary>
     public struct RenderStats
     {
+        /// <summary>
+        /// Frame count(?).
+        /// </summary>
         public uint Count;
+
+        /// <summary>
+        /// Maximum render time recorded.
+        /// </summary>
         public uint MaxTime;
+
+        /// <summary>
+        /// Last render time recorded.
+        /// </summary>
         public uint LastTime;
+
+        /// <summary>
+        /// Average render time.
+        /// </summary>
         public uint AverageTime;
 
         internal RenderStats(uint count, uint maxTime, uint lastTime, uint averageTime)

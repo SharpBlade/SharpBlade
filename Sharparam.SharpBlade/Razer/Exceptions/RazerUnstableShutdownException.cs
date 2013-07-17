@@ -29,6 +29,9 @@
 
 namespace Sharparam.SharpBlade.Razer.Exceptions
 {
+    /// <summary>
+    /// Thrown when the application was not properly shut down on last session.
+    /// </summary>
     public class RazerUnstableShutdownException : RazerException
     {
         internal RazerUnstableShutdownException()

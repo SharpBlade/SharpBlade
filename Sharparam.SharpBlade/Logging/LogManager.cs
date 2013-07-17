@@ -39,14 +39,28 @@ using Microsoft.Win32.SafeHandles;
 
 namespace Sharparam.SharpBlade.Logging
 {
+    /// <summary>
+    /// Provides helper methods for logging functions.
+    /// </summary>
     public static class LogManager
     {
 #if DEBUG
         private static bool _consoleLoaded;
 #endif
 
+        /// <summary>
+        /// The <see cref="ILogProvider" /> object that <see cref="LogManager" />
+        /// will use for providing <see cref="ILog" /> object to calling code.
+        /// </summary>
+        /// <remarks>This field must be set by code using the SharpBlade library
+        /// before any library code is invoked, or code that uses logging features will fail.</remarks>
         public static ILogProvider LogProvider = null;
 
+        /// <summary>
+        /// Gets a logger object associated with the specified object.
+        /// </summary>
+        /// <param name="sender">The object to get a logger for.</param>
+        /// <returns>An <see cref="ILog" /> that provides logging features.</returns>
         public static ILog GetLogger(object sender)
         {
             if (LogProvider == null)
@@ -55,6 +69,10 @@ namespace Sharparam.SharpBlade.Logging
             return LogProvider.GetLogger(sender.GetType().ToString() == "System.RuntimeType" ? (Type) sender : sender.GetType());
         }
 
+        /// <summary>
+        /// Sets up a console for standard output.
+        /// </summary>
+        /// <remarks>Method body only compiled on DEBUG.</remarks>
         public static void SetupConsole()
         {
 #if DEBUG
@@ -72,6 +90,10 @@ namespace Sharparam.SharpBlade.Logging
 #endif
         }
 
+        /// <summary>
+        /// Destroys an open console, usually the one created by <see cref="SetupConsole" />.
+        /// </summary>
+        /// <remarks>Method body only compiled on DEBUG.</remarks>
         public static void DestroyConsole()
         {
 #if DEBUG
@@ -80,6 +102,13 @@ namespace Sharparam.SharpBlade.Logging
 #endif
         }
 
+        /// <summary>
+        /// Clears old log files from specified log directory.
+        /// </summary>
+        /// <param name="daysOld">Delete log files older than this number of days.</param>
+        /// <param name="logsDir">The directory to check for log files.</param>
+        /// <remarks>This will delete ALL files in the specified directory,
+        /// regardless of file type.</remarks>
         public static void ClearOldLogs(int daysOld = 7, string logsDir = "logs")
         {
             var log = GetLogger(typeof (LogManager));

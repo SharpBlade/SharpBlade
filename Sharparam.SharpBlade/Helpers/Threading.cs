@@ -31,8 +31,16 @@ using System.Threading;
 
 namespace Sharparam.SharpBlade.Helpers
 {
+    /// <summary>
+    /// Helper functions for threading operations.
+    /// </summary>
     public static class Threading
     {
+        /// <summary>
+        /// Changes the name of the currently executing thread.
+        /// </summary>
+        /// <param name="name">Name to give the current thread.</param>
+        /// <remarks>Will do nothing if a name has already been set for the thread.</remarks>
         public static void SetCurrentThreadName(string name)
         {
             if (string.IsNullOrEmpty(Thread.CurrentThread.Name))

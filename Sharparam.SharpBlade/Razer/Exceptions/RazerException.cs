@@ -31,6 +31,9 @@ using System;
 
 namespace Sharparam.SharpBlade.Razer.Exceptions
 {
+    /// <summary>
+    /// Exception for Razer-related issues.
+    /// </summary>
     public class RazerException : Exception
     {
         internal RazerException(string message = null, Exception innerException = null) : base(message, innerException)
