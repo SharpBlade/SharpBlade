@@ -30,8 +30,11 @@
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Media.Imaging;
 using Sharparam.SharpBlade.Extensions;
 using Sharparam.SharpBlade.Helpers;
 using Sharparam.SharpBlade.Logging;
@@ -320,6 +323,34 @@ namespace Sharparam.SharpBlade.Razer
             SetOSGesture(gestureType, false);
         }
 
+        public void DrawBitmap(Bitmap bitmap)
+        {
+            var data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                                       ImageLockMode.ReadOnly, PixelFormat.Format16bppRgb565);
+
+            var buffer = new RazerAPI.BufferParams
+            {
+                PixelType = RazerAPI.PixelType.RGB565,
+                DataSize = (uint) (bitmap.Width * bitmap.Height * sizeof (ushort)),
+                PtrData = data.Scan0
+            };
+
+            var ptrToImageStruct = Marshal.AllocHGlobal(Marshal.SizeOf(buffer));
+            Marshal.StructureToPtr(buffer, ptrToImageStruct, true);
+
+            var hResult = RazerAPI.RzSBRenderBuffer(RazerAPI.TargetDisplay.Widget, ptrToImageStruct);
+
+            // Free resources before handling return
+
+            Marshal.FreeHGlobal(ptrToImageStruct);
+            bitmap.UnlockBits(data);
+
+            bitmap.Dispose();
+
+            if (HRESULT.RZSB_FAILED(hResult))
+                RazerManager.NativeCallFailure("RzSBRenderBuffer", hResult);
+        }
+
         /// <summary>
         /// Draws the specified form to the touchpad.
         /// </summary>
@@ -361,6 +392,26 @@ namespace Sharparam.SharpBlade.Razer
 
             if (HRESULT.RZSB_FAILED(hResult))
                 RazerManager.NativeCallFailure("RzSBRenderBuffer", hResult);
+        }
+
+        /// <summary>
+        /// Draws a WPF window to the touchpad.
+        /// </summary>
+        /// <param name="window">Window object to draw.</param>
+        public void DrawWindow(Window window)
+        {
+            var rtb = new RenderTargetBitmap(RazerAPI.TouchpadWidth, RazerAPI.TouchpadHeight, 96, 96,
+                                                System.Windows.Media.PixelFormats.Pbgra32);
+            rtb.Render(window);
+
+            using (var stream = new MemoryStream())
+            {
+                BitmapEncoder enc = new BmpBitmapEncoder();
+                enc.Frames.Add(BitmapFrame.Create(rtb));
+                enc.Save(stream);
+                var bitmap = new Bitmap(stream);
+                DrawBitmap(bitmap);
+            }
         }
 
         private HRESULT HandleTouchpadGesture(RazerAPI.GestureType gestureType, uint dwParameters, ushort wXPos, ushort wYPos, ushort wZPos)
