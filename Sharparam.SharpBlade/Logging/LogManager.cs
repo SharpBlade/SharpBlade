@@ -53,8 +53,13 @@ namespace Sharparam.SharpBlade.Logging
         /// will use for providing <see cref="ILog" /> object to calling code.
         /// </summary>
         /// <remarks>This field must be set by code using the SharpBlade library
-        /// before any library code is invoked, or code that uses logging features will fail.</remarks>
+        /// before any library code is invoked, or code that uses logging features will fail.
+        /// The <see cref="SimpleLogProvider" /> can be used for very basic logging.</remarks>
+// ReSharper disable FieldCanBeMadeReadOnly.Global
+// ReSharper disable MemberCanBePrivate.Global
         public static ILogProvider LogProvider = null;
+// ReSharper restore MemberCanBePrivate.Global
+// ReSharper restore FieldCanBeMadeReadOnly.Global
 
         /// <summary>
         /// Gets a logger object associated with the specified object.
@@ -73,7 +78,9 @@ namespace Sharparam.SharpBlade.Logging
         /// Sets up a console for standard output.
         /// </summary>
         /// <remarks>Method body only compiled on DEBUG.</remarks>
+// ReSharper disable UnusedMember.Global
         public static void SetupConsole()
+// ReSharper restore UnusedMember.Global
         {
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
@@ -94,7 +101,9 @@ namespace Sharparam.SharpBlade.Logging
         /// Destroys an open console, usually the one created by <see cref="SetupConsole" />.
         /// </summary>
         /// <remarks>Method body only compiled on DEBUG.</remarks>
+// ReSharper disable UnusedMember.Global
         public static void DestroyConsole()
+// ReSharper restore UnusedMember.Global
         {
 #if DEBUG
             if (_consoleLoaded)
@@ -109,7 +118,9 @@ namespace Sharparam.SharpBlade.Logging
         /// <param name="logsDir">The directory to check for log files.</param>
         /// <remarks>This will delete ALL files in the specified directory,
         /// regardless of file type.</remarks>
+// ReSharper disable UnusedMember.Global
         public static void ClearOldLogs(int daysOld = 7, string logsDir = "logs")
+// ReSharper restore UnusedMember.Global
         {
             var log = GetLogger(typeof (LogManager));
 
