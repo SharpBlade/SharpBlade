@@ -158,7 +158,7 @@ namespace Sharparam.SharpBlade.Razer
                     StaticLog.Warn("CreateControlFile: File already exists");
                 else
                 {
-                    File.Create(RazerControlFile);
+                    File.Create(RazerControlFile).Close();
                     StaticLog.Info("CreateControlFile: Success!");
                 }
             }
