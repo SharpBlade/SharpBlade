@@ -36,7 +36,7 @@ namespace Sharparam.SharpBlade.Razer.Events
     {
         public readonly RazerAPI.DynamicKeyType KeyType;
         public readonly RazerAPI.DynamicKeyState State;
-
+     
         internal DynamicKeyEventArgs(RazerAPI.DynamicKeyType keyType, RazerAPI.DynamicKeyState state)
         {
             KeyType = keyType;
@@ -46,5 +46,6 @@ namespace Sharparam.SharpBlade.Razer.Events
 
     public delegate void DynamicKeyEventHandler(object sender, DynamicKeyEventArgs e);
 
+  
     public delegate void DynamicKeyPressedEventHandler(object sender, EventArgs e);
 }

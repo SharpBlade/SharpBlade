@@ -42,6 +42,7 @@ namespace Sharparam.SharpBlade.Razer
     {
         public event AppEventEventHandler AppEvent;
         public event DynamicKeyEventHandler DynamicKeyEvent;
+        public event KeyboardEventHandler KeyboardEvent;
 
         private const string RazerControlFile = "DO_NOT_TOUCH__RAZER_CONTROL_FILE";
 
@@ -54,6 +55,7 @@ namespace Sharparam.SharpBlade.Razer
         // Native code callbacks
         private static RazerAPI.AppEventCallbackDelegate _appEventCallback;
         private static RazerAPI.DynamicKeyCallbackFunctionDelegate _dkCallback;
+        private static RazerAPI.KeyboardCallbackFunctionDelegate _kbCallBack;
 
         public RazerManager()
         {
@@ -99,9 +101,26 @@ namespace Sharparam.SharpBlade.Razer
             if (HRESULT.RZSB_FAILED(hResult))
                 NativeCallFailure("RzSBDynamicKeySetCallback", hResult);
 
+            _log.Debug("Creating keyboard callback");
+            _kbCallBack = HandleKeyboardEvent;
+            _log.Debug("Calling RzKeyboardSetCallback");
+            hResult = RazerAPI.RzSBKeyboardCaptureSetCallback(_kbCallBack);
+            if (HRESULT.RZSB_FAILED(hResult))
+                NativeCallFailure("RzKeyboardSetCallback", hResult);
+
             _log.Debug("Initializing dynamic key arrays");
 
             _dynamicKeys = new DynamicKey[RazerAPI.DynamicKeysCount];
+        }
+
+        private HRESULT HandleKeyboardEvent(uint uMsg, UIntPtr wParam, IntPtr lParam)
+        {
+            var result = HRESULT.RZSB_OK;
+
+            _log.Debug("Raising DynamicKeyEvent event");
+            OnKeyboardEvent(uMsg, wParam, lParam);
+                    
+            return result;
         }
 
         public void Dispose()
@@ -132,6 +151,13 @@ namespace Sharparam.SharpBlade.Razer
                 func(this, new DynamicKeyEventArgs(keyType, state));
         }
 
+        private void OnKeyboardEvent(uint uMsg, UIntPtr wParam, IntPtr lParam)
+        {
+            var func = KeyboardEvent;
+            if (func != null)
+                func(this, new KeyboardEventArgs(uMsg, wParam, lParam));
+        }
+
         public static void CreateControlFile()
         {
             try
@@ -140,7 +166,7 @@ namespace Sharparam.SharpBlade.Razer
                     StaticLog.Warn("CreateControlFile: File already exists");
                 else
                 {
-                    File.Create(RazerControlFile);
+                    File.Create(RazerControlFile).Close(); 
                     StaticLog.Info("CreateControlFile: Success!");
                 }
             }
@@ -264,5 +290,7 @@ namespace Sharparam.SharpBlade.Razer
 
             return result;
         }
+       
+
     }
 }
