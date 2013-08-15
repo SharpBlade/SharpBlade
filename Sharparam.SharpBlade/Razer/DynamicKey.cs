@@ -42,7 +42,7 @@ namespace Sharparam.SharpBlade.Razer
     public class DynamicKey
     {
         /// <summary>
-        /// Thrown when a dynamic key is pressed.
+        /// Raised when a dynamic key is pressed.
         /// </summary>
         public event DynamicKeyPressedEventHandler KeyPressed;
 

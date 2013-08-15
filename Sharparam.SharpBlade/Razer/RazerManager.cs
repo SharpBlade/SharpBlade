@@ -42,12 +42,12 @@ namespace Sharparam.SharpBlade.Razer
     public class RazerManager : IDisposable
     {
         /// <summary>
-        /// Thrown when an app event occurs.
+        /// Raised when an app event occurs.
         /// </summary>
         public event AppEventEventHandler AppEvent;
 
         /// <summary>
-        /// Thrown when a dynamic key event occurs.
+        /// Raised when a dynamic key event occurs.
         /// </summary>
         public event DynamicKeyEventHandler DynamicKeyEvent;
 

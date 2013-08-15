@@ -49,7 +49,7 @@ namespace Sharparam.SharpBlade.Razer
     public class Touchpad : IDisposable
     {
         /// <summary>
-        /// Thrown when a gesture occurs on the touchpad.
+        /// Raised when a gesture occurs on the touchpad.
         /// </summary>
         public event GestureEventHandler Gesture;
 
