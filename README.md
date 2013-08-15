@@ -17,10 +17,12 @@ If you want to join the development team, please contact [Sharparam](https://git
 
 All authors and contributors are listed in the **AUTHORS** file.
 
+Please read the wiki page about [contributing](https://github.com/Sharparam/SharpBlade/wiki/Contributing) before submitting pull requests.
+
 License
 -------
 
-Copyright © 2013 by Adam Hellberg.
+Copyright &copy; 2013 by Adam Hellberg.
 
 This project is licensed under the MIT license, please see the file **LICENSE** for more information.
 
@@ -29,7 +31,7 @@ Images in **res/images** are created by Graham Hough.
 Razer is a trademark and/or a registered trademark of Razer USA Ltd.  
 All other trademarks are property of their respective owners.
 
-This project is in no way endorsed, sponsored or approved by Valve and/or Razer.
+This project is in no way endorsed, sponsored or approved by Razer.
 
 Dependencies
 ------------

@@ -22,6 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
+    <DocumentationFile>bin\Debug\Sharparam.SharpBlade.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,6 +34,8 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -41,6 +44,7 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
@@ -51,6 +55,8 @@
     <Compile Include="Logging\ILog.cs" />
     <Compile Include="Logging\ILogProvider.cs" />
     <Compile Include="Logging\LogManager.cs" />
+    <Compile Include="Logging\SimpleLog.cs" />
+    <Compile Include="Logging\SimpleLogProvider.cs" />
     <Compile Include="Native\Helpers.cs" />
     <Compile Include="Native\HRESULT.cs" />
     <Compile Include="Native\WinAPI.cs" />

@@ -19,7 +19,7 @@
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
- * Disclaimer: SwitchBladeSteam is in no way affiliated
+ * Disclaimer: SharpBlade is in no way affiliated
  * with Razer and/or any of its employees and/or licensors.
  * Adam Hellberg does not take responsibility for any harm caused, direct
  * or indirect, to any Razer peripherals via the use of SharpBlade.
@@ -31,8 +31,14 @@ using Sharparam.SharpBlade.Native;
 
 namespace Sharparam.SharpBlade.Razer.Exceptions
 {
+    /// <summary>
+    /// Exception for failures in native code provided by Razer.
+    /// </summary>
     public class RazerNativeException : RazerException
     {
+        /// <summary>
+        /// <see cref="HRESULT" /> obtained from calling the native function.
+        /// </summary>
         public readonly HRESULT Hresult;
         
         internal RazerNativeException(HRESULT hresult)

@@ -19,7 +19,7 @@
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
- * Disclaimer: SwitchBladeSteam is in no way affiliated
+ * Disclaimer: SharpBlade is in no way affiliated
  * with Razer and/or any of its employees and/or licensors.
  * Adam Hellberg does not take responsibility for any harm caused, direct
  * or indirect, to any Razer peripherals via the use of SharpBlade.
@@ -31,8 +31,16 @@ using System.IO;
 
 namespace Sharparam.SharpBlade.Helpers
 {
+    /// <summary>
+    /// Helper functions for IO operations.
+    /// </summary>
     public static class IO
     {
+        /// <summary>
+        /// Gets the absolute path to the specified file.
+        /// </summary>
+        /// <param name="path">(Relative) path to resolve.</param>
+        /// <returns>The absolute path to the specified relative path on the file system.</returns>
         public static string GetAbsolutePath(string path)
         {
             return Path.Combine(Directory.GetCurrentDirectory(), path);

@@ -19,7 +19,7 @@
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
- * Disclaimer: SwitchBladeSteam is in no way affiliated
+ * Disclaimer: SharpBlade is in no way affiliated
  * with Razer and/or any of its employees and/or licensors.
  * Adam Hellberg does not take responsibility for any harm caused, direct
  * or indirect, to any Razer peripherals via the use of SharpBlade.
@@ -39,14 +39,33 @@ using Microsoft.Win32.SafeHandles;
 
 namespace Sharparam.SharpBlade.Logging
 {
+    /// <summary>
+    /// Provides helper methods for logging functions.
+    /// </summary>
     public static class LogManager
     {
 #if DEBUG
         private static bool _consoleLoaded;
 #endif
 
+        /// <summary>
+        /// The <see cref="ILogProvider" /> object that <see cref="LogManager" />
+        /// will use for providing <see cref="ILog" /> object to calling code.
+        /// </summary>
+        /// <remarks>This field must be set by code using the SharpBlade library
+        /// before any library code is invoked, or code that uses logging features will fail.
+        /// The <see cref="SimpleLogProvider" /> can be used for very basic logging.</remarks>
+// ReSharper disable FieldCanBeMadeReadOnly.Global
+// ReSharper disable MemberCanBePrivate.Global
         public static ILogProvider LogProvider = null;
+// ReSharper restore MemberCanBePrivate.Global
+// ReSharper restore FieldCanBeMadeReadOnly.Global
 
+        /// <summary>
+        /// Gets a logger object associated with the specified object.
+        /// </summary>
+        /// <param name="sender">The object to get a logger for.</param>
+        /// <returns>An <see cref="ILog" /> that provides logging features.</returns>
         public static ILog GetLogger(object sender)
         {
             if (LogProvider == null)
@@ -55,7 +74,13 @@ namespace Sharparam.SharpBlade.Logging
             return LogProvider.GetLogger(sender.GetType().ToString() == "System.RuntimeType" ? (Type) sender : sender.GetType());
         }
 
+        /// <summary>
+        /// Sets up a console for standard output.
+        /// </summary>
+        /// <remarks>Method body only compiled on DEBUG.</remarks>
+// ReSharper disable UnusedMember.Global
         public static void SetupConsole()
+// ReSharper restore UnusedMember.Global
         {
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
@@ -72,7 +97,13 @@ namespace Sharparam.SharpBlade.Logging
 #endif
         }
 
+        /// <summary>
+        /// Destroys an open console, usually the one created by <see cref="SetupConsole" />.
+        /// </summary>
+        /// <remarks>Method body only compiled on DEBUG.</remarks>
+// ReSharper disable UnusedMember.Global
         public static void DestroyConsole()
+// ReSharper restore UnusedMember.Global
         {
 #if DEBUG
             if (_consoleLoaded)
@@ -80,7 +111,16 @@ namespace Sharparam.SharpBlade.Logging
 #endif
         }
 
+        /// <summary>
+        /// Clears old log files from specified log directory.
+        /// </summary>
+        /// <param name="daysOld">Delete log files older than this number of days.</param>
+        /// <param name="logsDir">The directory to check for log files.</param>
+        /// <remarks>This will delete ALL files in the specified directory,
+        /// regardless of file type.</remarks>
+// ReSharper disable UnusedMember.Global
         public static void ClearOldLogs(int daysOld = 7, string logsDir = "logs")
+// ReSharper restore UnusedMember.Global
         {
             var log = GetLogger(typeof (LogManager));
 

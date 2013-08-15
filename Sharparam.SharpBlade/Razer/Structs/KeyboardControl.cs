@@ -19,7 +19,7 @@
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
- * Disclaimer: SwitchBladeSteam is in no way affiliated
+ * Disclaimer: SharpBlade is in no way affiliated
  * with Razer and/or any of its employees and/or licensors.
  * Adam Hellberg does not take responsibility for any harm caused, direct
  * or indirect, to any Razer peripherals via the use of SharpBlade.
@@ -31,11 +31,27 @@ using System;
 
 namespace Sharparam.SharpBlade.Razer.Structs
 {
+    /// <summary>
+    /// Information provided by keyboard-enabled forms. [WIP]
+    /// </summary>
+    [Obsolete("No longer used as the relevant functions in RazerAPI have been deprecated.")]
     public struct KeyboardControl
     {
+        /// <summary>
+        /// Handle to the form.
+        /// </summary>
         public IntPtr Handle;
+
+        /// <summary>
+        /// Should keyboard capture be released when user presses enter?
+        /// </summary>
         public bool ReleaseOnEnter;
 
+        /// <summary>
+        /// Creates a new <see cref="KeyboardControl" /> struct.
+        /// </summary>
+        /// <param name="handle">Handle to the form.</param>
+        /// <param name="releaseOnEnter">Release control on enter?</param>
         public KeyboardControl(IntPtr handle, bool releaseOnEnter = true)
         {
             Handle = handle;

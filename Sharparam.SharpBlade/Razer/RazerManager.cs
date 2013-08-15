@@ -19,7 +19,7 @@
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
- * Disclaimer: SwitchBladeSteam is in no way affiliated
+ * Disclaimer: SharpBlade is in no way affiliated
  * with Razer and/or any of its employees and/or licensors.
  * Adam Hellberg does not take responsibility for any harm caused, direct
  * or indirect, to any Razer peripherals via the use of SharpBlade.
@@ -36,28 +36,41 @@ using Sharparam.SharpBlade.Razer.Exceptions;
 
 namespace Sharparam.SharpBlade.Razer
 {
-    public delegate void VoidDelegate();
-
+    /// <summary>
+    /// Manages everything related to Razer and its devices.
+    /// </summary>
     public class RazerManager : IDisposable
     {
+        /// <summary>
+        /// Raised when an app event occurs.
+        /// </summary>
         public event AppEventEventHandler AppEvent;
+
+        /// <summary>
+        /// Raised when a dynamic key event occurs.
+        /// </summary>
         public event DynamicKeyEventHandler DynamicKeyEvent;
-        public event KeyboardEventRawHandler KeyboardRawEvent;
-        public event KeyboardEventHandler KeyboardEvent;
 
         private const string RazerControlFile = "DO_NOT_TOUCH__RAZER_CONTROL_FILE";
 
         private readonly ILog _log;
         private static readonly ILog StaticLog = LogManager.GetLogger(typeof (RazerManager));
 
-        private Touchpad _touchpad;
         private readonly DynamicKey[] _dynamicKeys;
 
         // Native code callbacks
         private static RazerAPI.AppEventCallbackDelegate _appEventCallback;
         private static RazerAPI.DynamicKeyCallbackFunctionDelegate _dkCallback;
-        private static RazerAPI.KeyboardCallbackFunctionDelegate _kbCallBack;
 
+        /// <summary>
+        /// Gets the touchpad on the keyboard.
+        /// </summary>
+        public Touchpad Touchpad { get; private set; }
+
+        /// <summary>
+        /// Creates a new <see cref="RazerManager" />.
+        /// </summary>
+        /// <remarks>Only one Razer manager should be active at any one time.</remarks>
         public RazerManager()
         {
             _log = LogManager.GetLogger(this);
@@ -93,7 +106,7 @@ namespace Sharparam.SharpBlade.Razer
                 NativeCallFailure("RzSBAppEventSetCallback", hResult);
 
             _log.Info("Setting up touchpad");
-            _touchpad = new Touchpad();
+            Touchpad = new Touchpad();
 
             _log.Debug("Creating dynamic key callback");
             _dkCallback = HandleDynamicKeyEvent;
@@ -102,33 +115,22 @@ namespace Sharparam.SharpBlade.Razer
             if (HRESULT.RZSB_FAILED(hResult))
                 NativeCallFailure("RzSBDynamicKeySetCallback", hResult);
 
-            _log.Debug("Creating keyboard callback");
-            _kbCallBack = HandleKeyboardRawEvent;
-            _log.Debug("Calling RzKeyboardSetCallback");
-            hResult = RazerAPI.RzSBKeyboardCaptureSetCallback(_kbCallBack);
-            if (HRESULT.RZSB_FAILED(hResult))
-                NativeCallFailure("RzKeyboardSetCallback", hResult);
-
-            _log.Debug("Creating keyboard callback");
-            _kbCallBack = HandleKeyboardEvent;
-            _log.Debug("Calling RzKeyboardSetCallback");
-            hResult = RazerAPI.RzSBKeyboardCaptureSetCallback(_kbCallBack);
-            if (HRESULT.RZSB_FAILED(hResult))
-                NativeCallFailure("RzKeyboardSetCallback", hResult);
-
             _log.Debug("Initializing dynamic key arrays");
 
             _dynamicKeys = new DynamicKey[RazerAPI.DynamicKeysCount];
         }
 
+        /// <summary>
+        /// Disposes of this <see cref="RazerManager" />.
+        /// </summary>
         public void Dispose()
         {
             _log.Debug("RazerManager is disposing...");
 
-            if (_touchpad != null)
+            if (Touchpad != null)
             {
-                _touchpad.Dispose();
-                _touchpad = null;
+                Touchpad.Dispose();
+                Touchpad = null;
             }
 
             _log.Debug("Dispose: Calling Stop()");
@@ -149,20 +151,9 @@ namespace Sharparam.SharpBlade.Razer
                 func(this, new DynamicKeyEventArgs(keyType, state));
         }
 
-        private void OnKeyboardRawEvent(uint uMsg, UIntPtr wParam, IntPtr lParam)
-        {
-            var func = KeyboardRawEvent;
-            if (func != null)
-                func(this, new KeyboardEventRawArgs(uMsg, wParam, lParam));
-        }
-
-        private void OnKeyboardEvent(uint uMsg, UIntPtr wParam, IntPtr lParam)
-        {
-            var func = KeyboardEvent;
-            if (func != null)
-                func(this, new KeyboardEventArgs(uMsg, wParam, lParam));
-        }
-
+        /// <summary>
+        /// Creates the Razer control file.
+        /// </summary>
         public static void CreateControlFile()
         {
             try
@@ -171,7 +162,7 @@ namespace Sharparam.SharpBlade.Razer
                     StaticLog.Warn("CreateControlFile: File already exists");
                 else
                 {
-                    File.Create(RazerControlFile).Close(); 
+                    File.Create(RazerControlFile).Close();
                     StaticLog.Info("CreateControlFile: Success!");
                 }
             }
@@ -181,6 +172,9 @@ namespace Sharparam.SharpBlade.Razer
             }
         }
 
+        /// <summary>
+        /// Deletes the Razer control file.
+        /// </summary>
         public static void DeleteControlFile()
         {
             try
@@ -199,13 +193,17 @@ namespace Sharparam.SharpBlade.Razer
             }
         }
 
-        public static void Stop(bool cleanup = true)
+        /// <summary>
+        /// Stops all Razer interaction.
+        /// </summary>
+        /// <param name="cleanup">True to delete the control file and clean up, false otherwise.</param>
+        public void Stop(bool cleanup = true)
         {
-            StaticLog.Info("RazerManager is stopping! Calling RzSBStop...");
+            _log.Info("RazerManager is stopping! Calling RzSBStop...");
             RazerAPI.RzSBStop();
             if (cleanup)
                 DeleteControlFile();
-            StaticLog.Info("RazerManager has stopped.");
+            _log.Info("RazerManager has stopped.");
         }
 
         internal static void NativeCallFailure(string func, HRESULT result)
@@ -215,16 +213,36 @@ namespace Sharparam.SharpBlade.Razer
             throw new RazerNativeException(result);
         }
 
+        /// <summary>
+        /// Gets the SwitchBlade touchpad device.
+        /// </summary>
+        /// <returns></returns>
+        [Obsolete("Access the touchpad via the Touchpad property instead.")]
         public Touchpad GetTouchpad()
         {
-            return _touchpad;
+            return Touchpad;
         }
 
+        /// <summary>
+        /// Gets a specific dynamic key.
+        /// </summary>
+        /// <param name="keyType">The key type to get.</param>
+        /// <returns><see cref="DynamicKey" /> object representing the specified key type.</returns>
         public DynamicKey GetDynamicKey(RazerAPI.DynamicKeyType keyType)
         {
             return _dynamicKeys[(int) keyType - 1];
         }
 
+        /// <summary>
+        /// Enables a specific dynamic key.
+        /// </summary>
+        /// <param name="keyType">The key type to enable.</param>
+        /// <param name="callback">Callback called when this key is pressed.</param>
+        /// <param name="upImage">Image to display on this key when in the UP state.</param>
+        /// <param name="downImage">Image to display on this key when in the DOWN state.</param>
+        /// <param name="replace">True to override this key's previous configuration
+        /// if it has already been enabled, otherwise returns current key if already enabled.</param>
+        /// <returns>The dynamic key that was enabled.</returns>
         public DynamicKey EnableDynamicKey(RazerAPI.DynamicKeyType keyType, DynamicKeyPressedEventHandler callback, string upImage, string downImage = null, bool replace = false)
         {
             var index = (int) keyType - 1;
@@ -251,6 +269,10 @@ namespace Sharparam.SharpBlade.Razer
             return _dynamicKeys[index];
         }
 
+        /// <summary>
+        /// Disables a specific dynamic key.
+        /// </summary>
+        /// <param name="keyType">The key type to disable.</param>
         public void DisableDynamicKey(RazerAPI.DynamicKeyType keyType)
         {
             var index = (int) keyType - 1;
@@ -292,25 +314,6 @@ namespace Sharparam.SharpBlade.Razer
             _log.Debug("Updating key state");
             // UpdateState will check if it's a valid press and call any event subscribers
             dk.UpdateState(state);
-
-            return result;
-        }
-
-        private HRESULT HandleKeyboardRawEvent(uint uMsg, UIntPtr wParam, IntPtr lParam)
-        {
-            var result = HRESULT.RZSB_OK;
-
-            _log.Debug("Raising HandleKeyboardRawEvent event");
-            OnKeyboardRawEvent(uMsg, wParam, lParam);
-
-            return result;
-        }
-        private HRESULT HandleKeyboardEvent(uint uMsg, UIntPtr wParam, IntPtr lParam)
-        {
-            var result = HRESULT.RZSB_OK;
-
-            _log.Debug("Raising HandleKeyboardEvent event");
-            OnKeyboardEvent(uMsg,wParam,lParam);
 
             return result;
         }

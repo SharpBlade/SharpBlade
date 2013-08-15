@@ -1,6 +1,6 @@
 ﻿/* Touchpad.cs
  *
- * Copyright © 2013 by Adam Hellberg and Brandon Scott
+ * Copyright © 2013 by Adam Hellberg
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,7 +19,7 @@
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
- * Disclaimer: SwitchBlade is in no way affiliated
+ * Disclaimer: SharpBlade is in no way affiliated
  * with Razer and/or any of its employees and/or licensors.
  * Adam Hellberg does not take responsibility for any harm caused, direct
  * or indirect, to any Razer peripherals via the use of SharpBlade.
@@ -30,8 +30,11 @@
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Media.Imaging;
 using Sharparam.SharpBlade.Extensions;
 using Sharparam.SharpBlade.Helpers;
 using Sharparam.SharpBlade.Logging;
@@ -40,8 +43,14 @@ using Sharparam.SharpBlade.Razer.Events;
 
 namespace Sharparam.SharpBlade.Razer
 {
+    /// <summary>
+    /// The SwitchBlade touchpad.
+    /// </summary>
     public class Touchpad : IDisposable
     {
+        /// <summary>
+        /// Raised when a gesture occurs on the touchpad.
+        /// </summary>
         public event GestureEventHandler Gesture;
 
         private readonly ILog _log;
@@ -75,6 +84,9 @@ namespace Sharparam.SharpBlade.Razer
                 RazerManager.NativeCallFailure("RzSBGestureSetCallback", hResult);
         }
 
+        /// <summary>
+        /// Disposes of this touchpad.
+        /// </summary>
         public void Dispose()
         {
             
@@ -87,6 +99,10 @@ namespace Sharparam.SharpBlade.Razer
                 func(this, new GestureEventArgs(gestureType, parameter, x, y, z));
         }
 
+        /// <summary>
+        /// Sets the form to be rendered to this touchpad.
+        /// </summary>
+        /// <param name="form">The new form to render.</param>
         public void SetForm(Form form)
         {
             ClearForm();
@@ -96,6 +112,10 @@ namespace Sharparam.SharpBlade.Razer
             //CurrentForm.Paint += DrawForm;
         }
 
+        /// <summary>
+        /// Clears the current form from touchpad
+        /// and stops rendering of it.
+        /// </summary>
         public void ClearForm()
         {
             if (CurrentForm != null)
@@ -104,6 +124,10 @@ namespace Sharparam.SharpBlade.Razer
             }
         }
 
+        /// <summary>
+        /// Set a static image to be displayed on the touchpad.
+        /// </summary>
+        /// <param name="image">Path to image.</param>
         public void SetImage(string image)
         {
             image = IO.GetAbsolutePath(image);
@@ -115,6 +139,9 @@ namespace Sharparam.SharpBlade.Razer
             CurrentImage = image;
         }
 
+        /// <summary>
+        /// Clears the image currently on the touchpad.
+        /// </summary>
         public void ClearImage()
         {
             var hResult = RazerAPI.RzSBSetImageTouchpad(IO.GetAbsolutePath(Constants.BlankTouchpadImage));
@@ -124,12 +151,29 @@ namespace Sharparam.SharpBlade.Razer
             CurrentImage = null;
         }
 
-        public void StopAll()
+        /// <summary>
+        /// Clears current form and image on the touchpad (if any).
+        /// </summary>
+        public void ClearAll()
         {
             ClearForm();
             ClearImage();
         }
 
+        /// <summary>
+        /// Stops rendering of forms and images.
+        /// </summary>
+        [Obsolete("Renamed to ClearAll")]
+        public void StopAll()
+        {
+            ClearAll();
+        }
+
+        /// <summary>
+        /// Sets whether a gesture should be handled by the touchpad.
+        /// </summary>
+        /// <param name="gestureType">The gesture type to set.</param>
+        /// <param name="enabled">True to enable gesture, false to disable.</param>
         public void SetGesture(RazerAPI.GestureType gestureType, bool enabled)
         {
             RazerAPI.GestureType newGesturesType;
@@ -189,16 +233,29 @@ namespace Sharparam.SharpBlade.Razer
             _allGestureEnabled = _activeGesturesType == RazerAPI.GestureType.All && !enabled;
         }
 
+        /// <summary>
+        /// Enables a gesture to be handled by the touchpad.
+        /// </summary>
+        /// <param name="gestureType">Gesture to enable.</param>
         public void EnableGesture(RazerAPI.GestureType gestureType)
         {
             SetGesture(gestureType, true);
         }
 
+        /// <summary>
+        /// Disables a gesture from being handled by the touchpad.
+        /// </summary>
+        /// <param name="gestureType">Gesture to disable.</param>
         public void DisableGesture(RazerAPI.GestureType gestureType)
         {
             SetGesture(gestureType, false);
         }
 
+        /// <summary>
+        /// Sets whether a gesture should be forwarded to the host operating system.
+        /// </summary>
+        /// <param name="gestureType">Gesture to set.</param>
+        /// <param name="enabled">True to enable forwarding, false to disable.</param>
         public void SetOSGesture(RazerAPI.GestureType gestureType, bool enabled)
         {
             RazerAPI.GestureType newGesturesType;
@@ -248,18 +305,67 @@ namespace Sharparam.SharpBlade.Razer
             _allOSGestureEnabled = _activeGesturesType == RazerAPI.GestureType.All && !enabled;
         }
 
+        /// <summary>
+        /// Enables a gesture to be forwarded to the host operating system.
+        /// </summary>
+        /// <param name="gestureType">Gesture to forward.</param>
         public void EnableOSGesture(RazerAPI.GestureType gestureType)
         {
             SetOSGesture(gestureType, true);
         }
 
+        /// <summary>
+        /// Disables forwarding of a gesture.
+        /// </summary>
+        /// <param name="gestureType">Gesture to disable.</param>
         public void DisableOSGesture(RazerAPI.GestureType gestureType)
         {
             SetOSGesture(gestureType, false);
         }
 
+        /// <summary>
+        /// Renders a raw bitmap to the touchpad display.
+        /// </summary>
+        /// <param name="bitmap">The bitmap object to draw.</param>
+        /// <remarks>Please make sure your bitmap object size matches the size
+        /// of the touchpad display, or you may get unexpected results.</remarks>
+        public void DrawBitmap(Bitmap bitmap)
+        {
+            var data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                                       ImageLockMode.ReadOnly, PixelFormat.Format16bppRgb565);
+
+            var buffer = new RazerAPI.BufferParams
+            {
+                PixelType = RazerAPI.PixelType.RGB565,
+                DataSize = (uint) (bitmap.Width * bitmap.Height * sizeof (ushort)),
+                PtrData = data.Scan0
+            };
+
+            var ptrToImageStruct = Marshal.AllocHGlobal(Marshal.SizeOf(buffer));
+            Marshal.StructureToPtr(buffer, ptrToImageStruct, true);
+
+            var hResult = RazerAPI.RzSBRenderBuffer(RazerAPI.TargetDisplay.Widget, ptrToImageStruct);
+
+            // Free resources before handling return
+
+            Marshal.FreeHGlobal(ptrToImageStruct);
+            bitmap.UnlockBits(data);
+
+            bitmap.Dispose();
+
+            if (HRESULT.RZSB_FAILED(hResult))
+                RazerManager.NativeCallFailure("RzSBRenderBuffer", hResult);
+        }
+
+        /// <summary>
+        /// Draws the specified form to the touchpad.
+        /// </summary>
+        /// <param name="form">Form to draw.</param>
         public void DrawForm(Form form)
         {
+            // Big thanks to ben_a_adams at the Razer Developer forum
+            // for sharing his drawing code.
+
             if (form == null || form.IsDisposed)
                 return;
 
@@ -297,14 +403,32 @@ namespace Sharparam.SharpBlade.Razer
                 RazerManager.NativeCallFailure("RzSBRenderBuffer", hResult);
         }
 
+        /// <summary>
+        /// Draws a WPF window to the touchpad.
+        /// </summary>
+        /// <param name="window">Window object to draw.</param>
+        public void DrawWindow(Window window)
+        {
+            var rtb = new RenderTargetBitmap(RazerAPI.TouchpadWidth, RazerAPI.TouchpadHeight, 96, 96,
+                                                System.Windows.Media.PixelFormats.Pbgra32);
+            rtb.Render(window);
+
+            using (var stream = new MemoryStream())
+            {
+                BitmapEncoder enc = new BmpBitmapEncoder();
+                enc.Frames.Add(BitmapFrame.Create(rtb));
+                enc.Save(stream);
+                var bitmap = new Bitmap(stream);
+                DrawBitmap(bitmap);
+            }
+        }
+
         private HRESULT HandleTouchpadGesture(RazerAPI.GestureType gestureType, uint dwParameters, ushort wXPos, ushort wYPos, ushort wZPos)
         {
             OnGesture(gestureType, dwParameters, wXPos, wYPos, wZPos);
             return HRESULT.RZSB_OK;
         }
 
-        // Big thanks to ben_a_adams at the Razer Developer forum
-        // for sharing his drawing code.
         private void FormPaintHandler(object sender, PaintEventArgs e)
         {
             DrawForm(CurrentForm);

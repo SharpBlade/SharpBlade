@@ -40,7 +40,7 @@ namespace Sharparam.SharpBlade.Razer.Events
 
         internal KeyboardEventArgs(uint uMsg, UIntPtr wParam, IntPtr lParam)
         {
-            if (uMsg.ToString().Equals("258"))
+            if (uMsg.ToString().Equals(Sharparam.SharpBlade.Native.WinAPI.))
             {
                 KeyChar = ((char)wParam);
                 KeyModifier = lParam.ToString();

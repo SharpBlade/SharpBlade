@@ -19,7 +19,7 @@
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
- * Disclaimer: SwitchBladeSteam is in no way affiliated
+ * Disclaimer: SharpBlade is in no way affiliated
  * with Razer and/or any of its employees and/or licensors.
  * Adam Hellberg does not take responsibility for any harm caused, direct
  * or indirect, to any Razer peripherals via the use of SharpBlade.
@@ -31,6 +31,9 @@ using System;
 
 namespace Sharparam.SharpBlade.Razer.Exceptions
 {
+    /// <summary>
+    /// Exception for Razer-related issues.
+    /// </summary>
     public class RazerException : Exception
     {
         internal RazerException(string message = null, Exception innerException = null) : base(message, innerException)

@@ -19,7 +19,7 @@
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
- * Disclaimer: SwitchBladeSteam is in no way affiliated
+ * Disclaimer: SharpBlade is in no way affiliated
  * with Razer and/or any of its employees and/or licensors.
  * Adam Hellberg does not take responsibility for any harm caused, direct
  * or indirect, to any Razer peripherals via the use of SharpBlade.
@@ -31,8 +31,16 @@ using System.Threading;
 
 namespace Sharparam.SharpBlade.Helpers
 {
+    /// <summary>
+    /// Helper functions for threading operations.
+    /// </summary>
     public static class Threading
     {
+        /// <summary>
+        /// Changes the name of the currently executing thread.
+        /// </summary>
+        /// <param name="name">Name to give the current thread.</param>
+        /// <remarks>Will do nothing if a name has already been set for the thread.</remarks>
         public static void SetCurrentThreadName(string name)
         {
             if (string.IsNullOrEmpty(Thread.CurrentThread.Name))

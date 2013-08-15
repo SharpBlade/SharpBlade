@@ -19,7 +19,7 @@
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
- * Disclaimer: SwitchBladeSteam is in no way affiliated
+ * Disclaimer: SharpBlade is in no way affiliated
  * with Razer and/or any of its employees and/or licensors.
  * Adam Hellberg does not take responsibility for any harm caused, direct
  * or indirect, to any Razer peripherals via the use of SharpBlade.
@@ -31,9 +31,23 @@ using System;
 
 namespace Sharparam.SharpBlade.Logging
 {
+    /// <summary>
+    /// Generates <see cref="ILog" /> objects to write log messages.
+    /// </summary>
     public interface ILogProvider
     {
+        /// <summary>
+        /// Gets a logger object associated with the specified Type.
+        /// </summary>
+        /// <param name="type">Type to get logger for.</param>
+        /// <returns>An <see cref="ILog" /> associated with the Type.</returns>
         ILog GetLogger(Type type);
+
+        /// <summary>
+        /// Gets a named logger object.
+        /// </summary>
+        /// <param name="name">Name of logger.</param>
+        /// <returns>A named <see cref="ILog" /> object.</returns>
         ILog GetLogger(string name);
     }
 }

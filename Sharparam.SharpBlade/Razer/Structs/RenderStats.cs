@@ -19,7 +19,7 @@
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
- * Disclaimer: SwitchBladeSteam is in no way affiliated
+ * Disclaimer: SharpBlade is in no way affiliated
  * with Razer and/or any of its employees and/or licensors.
  * Adam Hellberg does not take responsibility for any harm caused, direct
  * or indirect, to any Razer peripherals via the use of SharpBlade.
@@ -27,13 +27,34 @@
  * "Razer" is a trademark of Razer USA Ltd.
  */
 
+using System;
+
 namespace Sharparam.SharpBlade.Razer.Structs
 {
+    /// <summary>
+    /// Information about touchpad rendering.
+    /// </summary>
+    [Obsolete("No longer used as the function that used to provide this info was deprecated.")]
     public struct RenderStats
     {
+        /// <summary>
+        /// Frame count(?).
+        /// </summary>
         public uint Count;
+
+        /// <summary>
+        /// Maximum render time recorded.
+        /// </summary>
         public uint MaxTime;
+
+        /// <summary>
+        /// Last render time recorded.
+        /// </summary>
         public uint LastTime;
+
+        /// <summary>
+        /// Average render time.
+        /// </summary>
         public uint AverageTime;
 
         internal RenderStats(uint count, uint maxTime, uint lastTime, uint averageTime)

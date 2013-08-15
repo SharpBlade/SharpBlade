@@ -5,6 +5,9 @@
  *   Added Razer error codes
  */
 
+// Disable "missing documentation" warning (CS1591: Missing XML comment for publicly visible type or member)
+#pragma warning disable 1591
+
 using System.Globalization;
 
 namespace Sharparam.SharpBlade.Native
