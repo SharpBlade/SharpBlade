@@ -37,13 +37,17 @@ namespace Sharparam.SharpBlade.Razer.Events
     {
         public readonly char KeyChar;
         public readonly string KeyModifier;
-               
-        internal KeyboardEventArgs(char keyChar, string keyModifier)
+
+        internal KeyboardEventArgs(uint uMsg, UIntPtr wParam, IntPtr lParam)
         {
-            KeyChar = keyChar;
-            KeyModifier = keyModifier;
+            if (uMsg.ToString().Equals("258"))
+            {
+                KeyChar = ((char)wParam);
+                KeyModifier = lParam.ToString();
+            }
            
         }
+              
     }
 
     public delegate void KeyboardEventHandler(object sender, KeyboardEventArgs e);

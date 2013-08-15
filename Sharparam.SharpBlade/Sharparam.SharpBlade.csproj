@@ -58,6 +58,7 @@
     <Compile Include="Native\RazerAPI.cs" />
     <Compile Include="Razer\DynamicKey.cs" />
     <Compile Include="Razer\Events\AppEvent.cs" />
+    <Compile Include="Razer\Events\Keyboard.cs" />
     <Compile Include="Razer\Events\DynamicKey.cs" />
     <Compile Include="Razer\Events\Gesture.cs" />
     <Compile Include="Razer\Events\KeyboardRaw.cs" />
