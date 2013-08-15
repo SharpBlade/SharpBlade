@@ -44,16 +44,17 @@ namespace Sharparam.SharpBlade.Razer.Events
         /// The type of event (KeyUp, Char, KeyDown)
         /// </summary>
         public readonly uint UMsg;
+       
         /// <summary>
         /// Data of each type
         /// </summary>
         public readonly UIntPtr WParam;
+       
         /// <summary>
         /// Modifiers applied during press
         /// </summary>
         public readonly IntPtr LParam;
-
-
+        
         internal KeyboardRawEventArgs(uint uMsg, UIntPtr wParam, IntPtr lParam)
         {
             UMsg = uMsg;

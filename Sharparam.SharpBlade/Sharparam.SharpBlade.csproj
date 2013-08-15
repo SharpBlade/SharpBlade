@@ -64,7 +64,7 @@
     <Compile Include="Native\RazerAPI.cs" />
     <Compile Include="Razer\DynamicKey.cs" />
     <Compile Include="Razer\Events\AppEvent.cs" />
-    <Compile Include="Razer\Events\Keyboard.cs" />
+    <Compile Include="Razer\Events\KeyboardChar.cs" />
     <Compile Include="Razer\Events\DynamicKey.cs" />
     <Compile Include="Razer\Events\Gesture.cs" />
     <Compile Include="Razer\Events\KeyboardRaw.cs" />
@@ -79,7 +79,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" BuildVersion_UseGlobalSettings="False" />
+      <UserProperties BuildVersion_UseGlobalSettings="False" BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

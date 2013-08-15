@@ -39,22 +39,22 @@ namespace Sharparam.SharpBlade.Razer.Events
     /// Only the cleaned char/modifier are raised.
     /// </summary>
     public class KeyboardCharEventArgs : EventArgs
-    {
+    { 
         /// <summary>
         /// Character pressed
         /// </summary>
         public readonly char KeyChar;
+       
         /// <summary>
         /// Modifier key applied during character press
         /// </summary>
+        /// 
         public readonly string KeyModifier;
 
         internal KeyboardCharEventArgs(char keyChar, string keyModifier)
         {
-
             KeyChar = keyChar;
             KeyModifier = keyModifier;
-          
         }
               
     }
