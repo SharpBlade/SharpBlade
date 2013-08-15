@@ -194,13 +194,13 @@ namespace Sharparam.SharpBlade.Razer
         /// Stops all Razer interaction.
         /// </summary>
         /// <param name="cleanup">True to delete the control file and clean up, false otherwise.</param>
-        public static void Stop(bool cleanup = true)
+        public void Stop(bool cleanup = true)
         {
-            StaticLog.Info("RazerManager is stopping! Calling RzSBStop...");
+            _log.Info("RazerManager is stopping! Calling RzSBStop...");
             RazerAPI.RzSBStop();
             if (cleanup)
                 DeleteControlFile();
-            StaticLog.Info("RazerManager has stopped.");
+            _log.Info("RazerManager has stopped.");
         }
 
         internal static void NativeCallFailure(string func, HRESULT result)
