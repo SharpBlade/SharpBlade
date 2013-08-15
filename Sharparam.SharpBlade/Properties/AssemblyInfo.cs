@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("F16Gaming")]
 [assembly: AssemblyProduct("Sharparam.SwitchBladeSteam")]
-[assembly: AssemblyCopyright("Copyright © 2013 by Adam Hellberg")]
+[assembly: AssemblyCopyright("Copyright © 2013 by Adam Hellberg and Brandon Scott.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

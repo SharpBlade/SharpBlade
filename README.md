@@ -11,18 +11,18 @@ Built using the SwitchBlade UI SDK from Razer.
 Contributing
 ------------
 
-Contributors are very welcome! If you got code fixes, please [submit a pull request](https://github.com/Sharparam/SharpBlade/pull/new/master) here on GitHub.
+Contributors are very welcome! If you got code fixes, please [submit a pull request][newpull] here on GitHub.
 
-If you want to join the development team, please contact [Sharparam](https://github.com/Sharparam) on GitHub.
+If you want to join the development team, please contact [Sharparam][sharp] on GitHub.
 
 All authors and contributors are listed in the **AUTHORS** file.
 
-Please read the wiki page about [contributing](https://github.com/Sharparam/SharpBlade/wiki/Contributing) before submitting pull requests.
+Please read the wiki page about [contributing][contrib] before submitting pull requests.
 
 License
 -------
 
-Copyright &copy; 2013 by Adam Hellberg.
+Copyright &copy; 2013 by [Adam Hellberg][sharp] and [Brandon Scott][bs].
 
 This project is licensed under the MIT license, please see the file **LICENSE** for more information.
 
@@ -38,11 +38,18 @@ Dependencies
 
 Sharparam.SharpBlade depends on the SwitchBlade UI SDK (RzSwitchbladeSDK2.dll).
 
-SwitchBlade UI SDK is provided by Razer and [can be obtained from their website](http://www.razerzone.com/switchblade-ui/developers).
+SwitchBlade UI SDK is provided by Razer and [can be obtained from their website][rzdev].
 
 Projects
 --------
 
 Current projects utilizing this or modified versions of this library:
 
- * [SwitchBladeSteam](https://github.com/Sharparam/SwitchBladeSteam)
+ * [SwitchBladeSteam][sbs]
+
+[newpull]: https://github.com/Sharparam/SharpBlade/pull/new/master
+[sharp]: https://github.com/Sharparam
+[contrib]: https://github.com/Sharparam/SharpBlade/wiki/Contributing
+[bs]: https://github.com/brandonscott
+[rzdev]: http://www.razerzone.com/switchblade-ui/developers
+[sbs]: https://github.com/Sharparam/SwitchBladeSteam
