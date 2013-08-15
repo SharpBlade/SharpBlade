@@ -62,6 +62,9 @@ namespace Sharparam.SharpBlade.Razer
         private static RazerAPI.AppEventCallbackDelegate _appEventCallback;
         private static RazerAPI.DynamicKeyCallbackFunctionDelegate _dkCallback;
 
+        /// <summary>
+        /// Gets the touchpad on the keyboard.
+        /// </summary>
         public Touchpad Touchpad { get; private set; }
 
         /// <summary>
