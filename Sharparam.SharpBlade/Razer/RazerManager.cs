@@ -1,31 +1,31 @@
 ﻿/* RazerManager.cs
-*
-* Copyright © 2013 by Adam Hellberg
-* 
-* Permission is hereby granted, free of charge, to any person obtaining a copy of
-* this software and associated documentation files (the "Software"), to deal in
-* the Software without restriction, including without limitation the rights to
-* use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-* of the Software, and to permit persons to whom the Software is furnished to do
-* so, subject to the following conditions:
-* 
-* The above copyright notice and this permission notice shall be included in all
-* copies or substantial portions of the Software.
-* 
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-* CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-* 
-* Disclaimer: SharpBlade is in no way affiliated
-* with Razer and/or any of its employees and/or licensors.
-* Adam Hellberg does not take responsibility for any harm caused, direct
-* or indirect, to any Razer peripherals via the use of SharpBlade.
-* 
-* "Razer" is a trademark of Razer USA Ltd.
-*/
+ *
+ * Copyright © 2013 by Adam Hellberg and Brandon Scott
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do
+ * so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * Disclaimer: SwitchBlade is in no way affiliated
+ * with Razer and/or any of its employees and/or licensors.
+ * Adam Hellberg does not take responsibility for any harm caused, direct
+ * or indirect, to any Razer peripherals via the use of SharpBlade.
+ * 
+ * "Razer" is a trademark of Razer USA Ltd.
+ */
 
 using System;
 using System.IO;
@@ -65,7 +65,7 @@ namespace Sharparam.SharpBlade.Razer
         private const string RazerControlFile = "DO_NOT_TOUCH__RAZER_CONTROL_FILE";
 
         private readonly ILog _log;
-        private static readonly ILog StaticLog = LogManager.GetLogger(typeof(RazerManager));
+        private static readonly ILog StaticLog = LogManager.GetLogger(typeof (RazerManager));
 
         private readonly DynamicKey[] _dynamicKeys;
 
@@ -275,7 +275,7 @@ namespace Sharparam.SharpBlade.Razer
         /// <returns><see cref="DynamicKey" /> object representing the specified key type.</returns>
         public DynamicKey GetDynamicKey(RazerAPI.DynamicKeyType keyType)
         {
-            return _dynamicKeys[(int)keyType - 1];
+            return _dynamicKeys[(int) keyType - 1];
         }
 
         /// <summary>
@@ -290,7 +290,7 @@ namespace Sharparam.SharpBlade.Razer
         /// <returns>The dynamic key that was enabled.</returns>
         public DynamicKey EnableDynamicKey(RazerAPI.DynamicKeyType keyType, DynamicKeyPressedEventHandler callback, string upImage, string downImage = null, bool replace = false)
         {
-            var index = (int)keyType - 1;
+            var index = (int) keyType - 1;
             if (_dynamicKeys[index] != null && !replace)
             {
                 _log.Info("Dynamic key already enabled and replace is false.");
@@ -320,7 +320,7 @@ namespace Sharparam.SharpBlade.Razer
         /// <param name="keyType">The key type to disable.</param>
         public void DisableDynamicKey(RazerAPI.DynamicKeyType keyType)
         {
-            var index = (int)keyType - 1;
+            var index = (int) keyType - 1;
             var dk = _dynamicKeys[index];
             if (dk != null)
                 dk.Disable();
@@ -336,7 +336,7 @@ namespace Sharparam.SharpBlade.Razer
                 return hResult;
             }
 
-            OnAppEvent(type, (RazerAPI.AppEventMode)appMode, processId);
+            OnAppEvent(type, (RazerAPI.AppEventMode) appMode, processId);
 
             return hResult;
         }
@@ -348,7 +348,7 @@ namespace Sharparam.SharpBlade.Razer
             _log.Debug("Raising DynamicKeyEvent event");
             OnDynamicKeyEvent(keyType, state);
 
-            var index = (int)keyType - 1;
+            var index = (int) keyType - 1;
             var dk = _dynamicKeys[index];
             if (dk == null)
             {
