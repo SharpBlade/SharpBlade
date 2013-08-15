@@ -51,6 +51,17 @@ namespace Sharparam.SharpBlade.Razer
         /// </summary>
         public event DynamicKeyEventHandler DynamicKeyEvent;
 
+        /// <summary>
+        /// Raised when a keyboard char event occurs.
+        /// </summary>
+        public event KeyboardCharEventHandler KeyboardCharEvent;
+
+        /// <summary>
+        /// Raised when a keyboard raw event occurs.
+        /// </summary>
+        public event KeyboardRawEventHandler KeyboardRawEvent;
+
+
         private const string RazerControlFile = "DO_NOT_TOUCH__RAZER_CONTROL_FILE";
 
         private readonly ILog _log;
@@ -61,6 +72,7 @@ namespace Sharparam.SharpBlade.Razer
         // Native code callbacks
         private static RazerAPI.AppEventCallbackDelegate _appEventCallback;
         private static RazerAPI.DynamicKeyCallbackFunctionDelegate _dkCallback;
+        private static RazerAPI.KeyboardCallbackFunctionDelegate _kbCallback;
 
         /// <summary>
         /// Gets the touchpad on the keyboard.
@@ -115,11 +127,31 @@ namespace Sharparam.SharpBlade.Razer
             if (HRESULT.RZSB_FAILED(hResult))
                 NativeCallFailure("RzSBDynamicKeySetCallback", hResult);
 
+            _log.Info("Setting up keyboard");
+            
+            //Raw keyboard event
+            _log.Debug("Creating keyboard callback");
+            _kbCallback = HandleKeyboardRawEvent;
+            _log.Debug("Calling RzSBDynamicKeySetCallback");
+            hResult = RazerAPI.RzSBKeyboardCaptureSetCallback(_kbCallback);
+            if (HRESULT.RZSB_FAILED(hResult))
+                NativeCallFailure("RzSBKeyboardCaptureSetCallback", hResult);
+
+            //Char keyboard event
+            _log.Debug("Creating keyboard callback");
+            _kbCallback = HandleKeyboardCharEvent;
+            _log.Debug("Calling RzSBDynamicKeySetCallback");
+            hResult = RazerAPI.RzSBKeyboardCaptureSetCallback(_kbCallback);
+            if (HRESULT.RZSB_FAILED(hResult))
+                NativeCallFailure("RzSBKeyboardCaptureSetCallback", hResult);
+
+
             _log.Debug("Initializing dynamic key arrays");
 
             _dynamicKeys = new DynamicKey[RazerAPI.DynamicKeysCount];
         }
 
+     
         /// <summary>
         /// Disposes of this <see cref="RazerManager" />.
         /// </summary>
@@ -150,6 +182,21 @@ namespace Sharparam.SharpBlade.Razer
             if (func != null)
                 func(this, new DynamicKeyEventArgs(keyType, state));
         }
+
+        private void OnKeyboardRawEvent(uint uMsg, UIntPtr wParam, IntPtr lParam)
+        {
+            var func = KeyboardRawEvent;
+            if (func != null)
+                func(this, new KeyboardRawEventArgs(uMsg, wParam, lParam)); 
+        }
+
+        private void OnKeyboardCharEvent(uint uMsg, UIntPtr wParam, IntPtr lParam)
+        {
+            var func = KeyboardCharEvent;
+            if (func != null)
+                func(this, new KeyboardCharEventArgs(((char)wParam), lParam.ToString()));
+        }
+
 
         /// <summary>
         /// Creates the Razer control file.
@@ -317,5 +364,30 @@ namespace Sharparam.SharpBlade.Razer
 
             return result;
         }
+
+        private HRESULT HandleKeyboardCharEvent(uint uMsg, UIntPtr wParam, IntPtr lParam)
+        {
+          
+            var result = HRESULT.RZSB_OK;
+            _log.Debug("Raising KeyboardCharEvent event");
+            if (uMsg == WinAPI.WM_CHAR)
+            {
+                OnKeyboardCharEvent(uMsg, wParam, lParam);
+            }
+            return result;
+
+        }
+
+        private HRESULT HandleKeyboardRawEvent(uint uMsg, UIntPtr wParam, IntPtr lParam)
+        {
+
+            var result = HRESULT.RZSB_OK;
+
+            _log.Debug("Raising KeyboardRawEvent event");
+            OnKeyboardRawEvent(uMsg, wParam, lParam);
+
+            return result;
+        }
+        
     }
 }
