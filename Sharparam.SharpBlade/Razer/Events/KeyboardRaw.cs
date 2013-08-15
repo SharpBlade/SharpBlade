@@ -27,7 +27,6 @@
  * "Razer" is a trademark of Razer USA Ltd.
  */
 
-
 using System;
 using Sharparam.SharpBlade.Native;
 
@@ -62,6 +61,7 @@ namespace Sharparam.SharpBlade.Razer.Events
             LParam = lParam;
         }
     }
+
     /// <summary>
     /// Handler delegate for keyboard raw event.
     /// </summary>

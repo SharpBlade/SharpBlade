@@ -1,4 +1,4 @@
-﻿/* Keyboard.cs
+﻿/* KeyboardChar.cs
  *
  * Copyright © 2013 by Adam Hellberg and Brandon Scott
  * 
@@ -27,7 +27,6 @@
  * "Razer" is a trademark of Razer USA Ltd.
  */
 
-
 using System;
 using Sharparam.SharpBlade.Native;
 
@@ -55,9 +54,9 @@ namespace Sharparam.SharpBlade.Razer.Events
         {
             KeyChar = keyChar;
             KeyModifier = keyModifier;
-        }
-              
+        }    
     }
+
     /// <summary>
     /// Handler delegate for keyboard char event.
     /// </summary>

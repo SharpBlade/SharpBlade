@@ -151,7 +151,6 @@ namespace Sharparam.SharpBlade.Razer
             _dynamicKeys = new DynamicKey[RazerAPI.DynamicKeysCount];
         }
 
-
         /// <summary>
         /// Disposes of this <see cref="RazerManager" />.
         /// </summary>
@@ -196,7 +195,6 @@ namespace Sharparam.SharpBlade.Razer
             if (func != null)
                 func(this, new KeyboardCharEventArgs(((char)wParam), lParam.ToString()));
         }
-
 
         /// <summary>
         /// Creates the Razer control file.
@@ -369,7 +367,6 @@ namespace Sharparam.SharpBlade.Razer
         {
             var result = HRESULT.RZSB_OK;
 
-            _log.Debug("Raising KeyboardCharEvent event");
             if (uMsg == WinAPI.WM_CHAR)
             {
                 OnKeyboardCharEvent(uMsg, wParam, lParam);
@@ -380,10 +377,7 @@ namespace Sharparam.SharpBlade.Razer
         private HRESULT HandleKeyboardRawEvent(uint uMsg, UIntPtr wParam, IntPtr lParam)
         {
             var result = HRESULT.RZSB_OK;
-
-            _log.Debug("Raising KeyboardRawEvent event");
             OnKeyboardRawEvent(uMsg, wParam, lParam);
-
             return result;
         }
 
