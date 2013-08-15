@@ -17,7 +17,7 @@ If you want to join the development team, please contact [Sharparam](https://git
 
 All authors and contributors are listed in the **AUTHORS** file.
 
-Please read the wiki page about [contributing](/Sharparam/SharpBlade/wiki/Contributing) before submitting pull requests.
+Please read the wiki page about [contributing](https://github.com/Sharparam/SharpBlade/wiki/Contributing) before submitting pull requests.
 
 License
 -------
