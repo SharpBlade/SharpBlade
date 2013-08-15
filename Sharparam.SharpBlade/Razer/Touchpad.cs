@@ -357,6 +357,9 @@ namespace Sharparam.SharpBlade.Razer
         /// <param name="form">Form to draw.</param>
         public void DrawForm(Form form)
         {
+            // Big thanks to ben_a_adams at the Razer Developer forum
+            // for sharing his drawing code.
+
             if (form == null || form.IsDisposed)
                 return;
 
@@ -420,8 +423,6 @@ namespace Sharparam.SharpBlade.Razer
             return HRESULT.RZSB_OK;
         }
 
-        // Big thanks to ben_a_adams at the Razer Developer forum
-        // for sharing his drawing code.
         private void FormPaintHandler(object sender, PaintEventArgs e)
         {
             DrawForm(CurrentForm);
