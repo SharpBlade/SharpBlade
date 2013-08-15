@@ -1,4 +1,4 @@
-﻿/* Keyboard.cs
+﻿/* KeyboardRaw.cs
  *
  * Copyright © 2013 by Adam Hellberg and Brandon Scott
  * 
@@ -33,18 +33,20 @@ using Sharparam.SharpBlade.Native;
 
 namespace Sharparam.SharpBlade.Razer.Events
 {
-    public class KeyboardEventArgs : EventArgs
+    public class KeyboardEventRawArgs : EventArgs
     {
-        public readonly char KeyChar;
-        public readonly string KeyModifier;
-               
-        internal KeyboardEventArgs(char keyChar, string keyModifier)
+        public readonly uint UMsg;
+        public readonly UIntPtr WParam;
+        public readonly IntPtr LParam;
+
+
+        internal KeyboardEventRawArgs(uint uMsg, UIntPtr wParam, IntPtr lParam)
         {
-            KeyChar = keyChar;
-            KeyModifier = keyModifier;
-           
+            UMsg = uMsg;
+            WParam = wParam;
+            LParam = lParam;
         }
     }
 
-    public delegate void KeyboardEventHandler(object sender, KeyboardEventArgs e);
+    public delegate void KeyboardEventRawHandler(object sender, KeyboardEventRawArgs e);
 }

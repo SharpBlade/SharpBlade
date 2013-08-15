@@ -42,7 +42,7 @@ namespace Sharparam.SharpBlade.Razer
     {
         public event AppEventEventHandler AppEvent;
         public event DynamicKeyEventHandler DynamicKeyEvent;
-        public event KeyboardEventHandler KeyboardEvent;
+        public event KeyboardEventRawHandler KeyboardEvent;
 
         private const string RazerControlFile = "DO_NOT_TOUCH__RAZER_CONTROL_FILE";
 
@@ -102,7 +102,7 @@ namespace Sharparam.SharpBlade.Razer
                 NativeCallFailure("RzSBDynamicKeySetCallback", hResult);
 
             _log.Debug("Creating keyboard callback");
-            _kbCallBack = HandleKeyboardEvent;
+            _kbCallBack = HandleKeyboardRawEvent;
             _log.Debug("Calling RzKeyboardSetCallback");
             hResult = RazerAPI.RzSBKeyboardCaptureSetCallback(_kbCallBack);
             if (HRESULT.RZSB_FAILED(hResult))
@@ -111,16 +111,6 @@ namespace Sharparam.SharpBlade.Razer
             _log.Debug("Initializing dynamic key arrays");
 
             _dynamicKeys = new DynamicKey[RazerAPI.DynamicKeysCount];
-        }
-
-        private HRESULT HandleKeyboardEvent(uint uMsg, UIntPtr wParam, IntPtr lParam)
-        {
-            var result = HRESULT.RZSB_OK;
-
-            _log.Debug("Raising DynamicKeyEvent event");
-            OnKeyboardEvent(uMsg, wParam, lParam);
-                    
-            return result;
         }
 
         public void Dispose()
@@ -151,11 +141,11 @@ namespace Sharparam.SharpBlade.Razer
                 func(this, new DynamicKeyEventArgs(keyType, state));
         }
 
-        private void OnKeyboardEvent(uint uMsg, UIntPtr wParam, IntPtr lParam)
+        private void OnKeyboardRawEvent(uint uMsg, UIntPtr wParam, IntPtr lParam)
         {
             var func = KeyboardEvent;
             if (func != null)
-                func(this, new KeyboardEventArgs(uMsg, wParam, lParam));
+                func(this, new KeyboardEventRawArgs(uMsg, wParam, lParam));
         }
 
         public static void CreateControlFile()
@@ -290,7 +280,15 @@ namespace Sharparam.SharpBlade.Razer
 
             return result;
         }
-       
 
+        private HRESULT HandleKeyboardRawEvent(uint uMsg, UIntPtr wParam, IntPtr lParam)
+        {
+            var result = HRESULT.RZSB_OK;
+
+            _log.Debug("Raising DynamicKeyEvent event");
+            OnKeyboardRawEvent(uMsg, wParam, lParam);
+
+            return result;
+        }
     }
 }
