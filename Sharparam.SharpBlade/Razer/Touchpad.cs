@@ -323,6 +323,12 @@ namespace Sharparam.SharpBlade.Razer
             SetOSGesture(gestureType, false);
         }
 
+        /// <summary>
+        /// Renders a raw bitmap to the touchpad display.
+        /// </summary>
+        /// <param name="bitmap">The bitmap object to draw.</param>
+        /// <remarks>Please make sure your bitmap object size matches the size
+        /// of the touchpad display, or you may get unexpected results.</remarks>
         public void DrawBitmap(Bitmap bitmap)
         {
             var data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height),
