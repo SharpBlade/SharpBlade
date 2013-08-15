@@ -56,12 +56,13 @@ namespace Sharparam.SharpBlade.Razer
         private readonly ILog _log;
         private static readonly ILog StaticLog = LogManager.GetLogger(typeof (RazerManager));
 
-        private Touchpad _touchpad;
         private readonly DynamicKey[] _dynamicKeys;
 
         // Native code callbacks
         private static RazerAPI.AppEventCallbackDelegate _appEventCallback;
         private static RazerAPI.DynamicKeyCallbackFunctionDelegate _dkCallback;
+
+        public Touchpad Touchpad { get; private set; }
 
         /// <summary>
         /// Creates a new <see cref="RazerManager" />.
@@ -102,7 +103,7 @@ namespace Sharparam.SharpBlade.Razer
                 NativeCallFailure("RzSBAppEventSetCallback", hResult);
 
             _log.Info("Setting up touchpad");
-            _touchpad = new Touchpad();
+            Touchpad = new Touchpad();
 
             _log.Debug("Creating dynamic key callback");
             _dkCallback = HandleDynamicKeyEvent;
@@ -123,10 +124,10 @@ namespace Sharparam.SharpBlade.Razer
         {
             _log.Debug("RazerManager is disposing...");
 
-            if (_touchpad != null)
+            if (Touchpad != null)
             {
-                _touchpad.Dispose();
-                _touchpad = null;
+                Touchpad.Dispose();
+                Touchpad = null;
             }
 
             _log.Debug("Dispose: Calling Stop()");
@@ -213,9 +214,10 @@ namespace Sharparam.SharpBlade.Razer
         /// Gets the SwitchBlade touchpad device.
         /// </summary>
         /// <returns></returns>
+        [Obsolete("Access the touchpad via the Touchpad property instead.")]
         public Touchpad GetTouchpad()
         {
-            return _touchpad;
+            return Touchpad;
         }
 
         /// <summary>
