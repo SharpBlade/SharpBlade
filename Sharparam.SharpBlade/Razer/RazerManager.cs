@@ -52,17 +52,28 @@ namespace Sharparam.SharpBlade.Razer
         public event DynamicKeyEventHandler DynamicKeyEvent;
 
         /// <summary>
-        /// Raised when a keyboard char event occurs.
-        /// </summary>
-        public event KeyboardCharEventHandler KeyboardCharEvent;
-
-        /// <summary>
         /// Raised when a keyboard raw event occurs.
         /// </summary>
         public event KeyboardRawEventHandler KeyboardRawEvent;
 
+        /// <summary>
+        /// Raised when a keyboard char event occurs.
+        /// </summary>
+        public event KeyboardCharEventHandler KeyboardCharTyped;
+
+        /// <summary>
+        /// Raised when a keyboard key is pressed.
+        /// </summary>
+        public event KeyboardKeyEventHandler KeyboardKeyDown;
+
+        /// <summary>
+        /// Raised when a keyboard key is released.
+        /// </summary>
+        public event KeyboardKeyEventHandler KeyboardKeyUp;
 
         private const string RazerControlFile = "DO_NOT_TOUCH__RAZER_CONTROL_FILE";
+
+        private bool _disposed;
 
         private readonly ILog _log;
         private static readonly ILog StaticLog = LogManager.GetLogger(typeof (RazerManager));
@@ -129,26 +140,22 @@ namespace Sharparam.SharpBlade.Razer
 
             _log.Info("Setting up keyboard");
 
-            //Raw keyboard event
+            // Keyboard capture callback
             _log.Debug("Creating keyboard callback");
-            _kbCallback = HandleKeyboardRawEvent;
+            _kbCallback = HandleKeyboardEvent;
             _log.Debug("Calling RzSBDynamicKeySetCallback");
             hResult = RazerAPI.RzSBKeyboardCaptureSetCallback(_kbCallback);
             if (HRESULT.RZSB_FAILED(hResult))
                 NativeCallFailure("RzSBKeyboardCaptureSetCallback", hResult);
-
-            //Char keyboard event
-            _log.Debug("Creating keyboard callback");
-            _kbCallback = HandleKeyboardCharEvent;
-            _log.Debug("Calling RzSBDynamicKeySetCallback");
-            hResult = RazerAPI.RzSBKeyboardCaptureSetCallback(_kbCallback);
-            if (HRESULT.RZSB_FAILED(hResult))
-                NativeCallFailure("RzSBKeyboardCaptureSetCallback", hResult);
-
 
             _log.Debug("Initializing dynamic key arrays");
 
             _dynamicKeys = new DynamicKey[RazerAPI.DynamicKeysCount];
+        }
+
+        ~RazerManager()
+        {
+            Dispose(false);
         }
 
         /// <summary>
@@ -156,16 +163,30 @@ namespace Sharparam.SharpBlade.Razer
         /// </summary>
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
             _log.Debug("RazerManager is disposing...");
 
-            if (Touchpad != null)
+            if (disposing)
             {
-                Touchpad.Dispose();
-                Touchpad = null;
+                if (Touchpad != null)
+                {
+                    Touchpad.Dispose();
+                    Touchpad = null;
+                }
             }
 
             _log.Debug("Dispose: Calling Stop()");
             Stop();
+
+            _disposed = true;
         }
 
         private void OnAppEvent(RazerAPI.AppEventType type, RazerAPI.AppEventMode mode, uint processId)
@@ -189,11 +210,25 @@ namespace Sharparam.SharpBlade.Razer
                 func(this, new KeyboardRawEventArgs(uMsg, wParam, lParam));
         }
 
-        private void OnKeyboardCharEvent(uint uMsg, UIntPtr wParam, IntPtr lParam)
+        private void OnKeyboardCharTyped(char character, IntPtr modifiers)
         {
-            var func = KeyboardCharEvent;
+            var func = KeyboardCharTyped;
             if (func != null)
-                func(this, new KeyboardCharEventArgs(((char)wParam), lParam.ToString()));
+                func(this, new KeyboardCharEventArgs(character, modifiers));
+        }
+
+        private void OnKeyboardKeyDown(WinAPI.VirtualKey key, IntPtr modifiers)
+        {
+            var func = KeyboardKeyDown;
+            if (func != null)
+                func(this, new KeyboardKeyEventArgs(key, modifiers));
+        }
+
+        private void OnKeyboardKeyUp(WinAPI.VirtualKey key, IntPtr modifiers)
+        {
+            var func = KeyboardKeyUp;
+            if (func != null)
+                func(this, new KeyboardKeyEventArgs(key, modifiers));
         }
 
         /// <summary>
@@ -308,7 +343,7 @@ namespace Sharparam.SharpBlade.Razer
             catch (RazerNativeException ex)
             {
                 _log.ErrorFormat("Failed to enable dynamic key {0}: {1}", keyType, ex.Hresult);
-                return null;
+                throw new RazerDynamicKeyException(String.Format("Failed to enable dynamic key {0} due to a native call exception.", keyType), ex);
             }
 
             return _dynamicKeys[index];
@@ -363,21 +398,25 @@ namespace Sharparam.SharpBlade.Razer
             return result;
         }
 
-        private HRESULT HandleKeyboardCharEvent(uint uMsg, UIntPtr wParam, IntPtr lParam)
+        private HRESULT HandleKeyboardEvent(uint uMsg, UIntPtr wParam, IntPtr lParam)
         {
             var result = HRESULT.RZSB_OK;
 
-            if (uMsg == WinAPI.WM_CHAR)
-            {
-                OnKeyboardCharEvent(uMsg, wParam, lParam);
-            }
-            return result;
-        }
+            var msgType = (WinAPI.MessageType) uMsg;
 
-        private HRESULT HandleKeyboardRawEvent(uint uMsg, UIntPtr wParam, IntPtr lParam)
-        {
-            var result = HRESULT.RZSB_OK;
             OnKeyboardRawEvent(uMsg, wParam, lParam);
+
+            if (msgType == WinAPI.MessageType.CHAR)
+                OnKeyboardCharTyped((char) wParam, lParam);
+            else // KEYDOWN or KEYUP
+            {
+                var key = (WinAPI.VirtualKey) (uint) wParam;
+                if (msgType == WinAPI.MessageType.KEYDOWN)
+                    OnKeyboardKeyDown(key, lParam);
+                else if (msgType == WinAPI.MessageType.KEYUP)
+                    OnKeyboardKeyUp(key, lParam);
+            }
+
             return result;
         }
 

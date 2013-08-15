@@ -257,46 +257,56 @@ namespace Sharparam.SharpBlade.Native
         /// </summary>
         public const uint ESB_DISABLE_RTDN = 2;
 
-        /// <summary>
-        /// Posted to the window with the keyboard focus when a nonsystem key is pressed.
-        /// A nonsystem key is a key that is pressed when the ALT key is not pressed. 
-        /// </summary>
-        public const int WM_KEYDOWN = 0x0100;
+        #region Message types
 
         /// <summary>
-        /// Posted to the window with the keyboard focus when a nonsystem key is released.
-        /// A nonsystem key is a key that is pressed when the ALT key is not pressed,
-        /// or a keyboard key that is pressed when a window has the keyboard focus.
+        /// Native windows message types.
         /// </summary>
-        public const int WM_KEYUP = 0x0101;
+        public enum MessageType : uint
+        {
+            /// <summary>
+            /// Posted to the window with the keyboard focus when a nonsystem key is pressed.
+            /// A nonsystem key is a key that is pressed when the ALT key is not pressed. 
+            /// </summary>
+            KEYDOWN = 0x0100,
 
-        /// <summary>
-        /// Posted to the window with the keyboard focus when a WM_KEYDOWN message is translated
-        /// by the TranslateMessage function.
-        /// The WM_CHAR message contains the character code of the key that was pressed.
-        /// </summary>
-        public const int WM_CHAR = 0x0102;
+            /// <summary>
+            /// Posted to the window with the keyboard focus when a nonsystem key is released.
+            /// A nonsystem key is a key that is pressed when the ALT key is not pressed,
+            /// or a keyboard key that is pressed when a window has the keyboard focus.
+            /// </summary>
+            KEYUP = 0x0101,
 
-        /// <summary>
-        /// The WM_HSCROLL message is sent to a window when a scroll event occurs in the window's
-        /// standard horizontal scroll bar. This message is also sent to the owner of a horizontal
-        /// scroll bar control when a scroll event occurs in the control. 
-        /// </summary>
-        public const int WM_HSCROLL = 0x0114;
+            /// <summary>
+            /// Posted to the window with the keyboard focus when a WM_KEYDOWN message is translated
+            /// by the TranslateMessage function.
+            /// The WM_CHAR message contains the character code of the key that was pressed.
+            /// </summary>
+            CHAR = 0x0102,
 
-        /// <summary>
-        /// The WM_VSCROLL message is sent to a window when a scroll event occurs in the window's
-        /// standard vertical scroll bar. This message is also sent to the owner of a vertical
-        /// scroll bar control when a scroll event occurs in the control. 
-        /// </summary>
-        public const int WM_VSCROLL = 0x0115;
+            /// <summary>
+            /// The WM_HSCROLL message is sent to a window when a scroll event occurs in the window's
+            /// standard horizontal scroll bar. This message is also sent to the owner of a horizontal
+            /// scroll bar control when a scroll event occurs in the control. 
+            /// </summary>
+            HSCROLL = 0x0114,
+
+            /// <summary>
+            /// The WM_VSCROLL message is sent to a window when a scroll event occurs in the window's
+            /// standard vertical scroll bar. This message is also sent to the owner of a vertical
+            /// scroll bar control when a scroll event occurs in the control. 
+            /// </summary>
+            VSCROLL = 0x0115
+        }
+
+        #endregion Message types
 
         #region Virtual-key codes
 
-                /// <summary>
+        /// <summary>
         /// Virtual-key codes used by the system.
         /// </summary>
-        public enum VirtualKey
+        public enum VirtualKey : uint
         {
             /// <summary>
             /// Left mouse button.
@@ -329,6 +339,11 @@ namespace Sharparam.SharpBlade.Native
             XBUTTON2 = 0x06,
 
             /// <summary>
+            /// Undefined.
+            /// </summary>
+            UNDEFINED1 = 0x07,
+
+            /// <summary>
             /// BACKSPACE key.
             /// </summary>
             BACK = 0x08,
@@ -339,6 +354,16 @@ namespace Sharparam.SharpBlade.Native
             TAB = 0x09,
 
             /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED1 = 0x0A,
+
+            /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED2 = 0x0B,
+
+            /// <summary>
             /// CLEAR key.
             /// </summary>
             CLEAR = 0x0C,
@@ -347,6 +372,16 @@ namespace Sharparam.SharpBlade.Native
             /// ENTER key.
             /// </summary>
             RETURN = 0x0D,
+
+            /// <summary>
+            /// Undefined.
+            /// </summary>
+            UNDEFINED2 = 0x0E,
+
+            /// <summary>
+            /// Undefined.
+            /// </summary>
+            UNDEFINED3 = 0x0F,
 
             /// <summary>
             /// SHIFT key.
@@ -389,6 +424,11 @@ namespace Sharparam.SharpBlade.Native
             HANGUL = 0x15,
 
             /// <summary>
+            /// Undefined.
+            /// </summary>
+            UNDEFINED4 = 0x16,
+
+            /// <summary>
             /// IME Junja mode.
             /// </summary>
             JUNJA = 0x17,
@@ -407,6 +447,11 @@ namespace Sharparam.SharpBlade.Native
             /// IME Kanji mode.
             /// </summary>
             KANJI = 0x19,
+
+            /// <summary>
+            /// Undefined.
+            /// </summary>
+            UNDEFINED5 = 0x0A,
 
             /// <summary>
             /// ESC key.
@@ -564,6 +609,41 @@ namespace Sharparam.SharpBlade.Native
             Nine = 0x39,
 
             /// <summary>
+            /// Undefined.
+            /// </summary>
+            UNDEFINED6 = 0x3A,
+
+            /// <summary>
+            /// Undefined.
+            /// </summary>
+            UNDEFINED7 = 0x3B,
+
+            /// <summary>
+            /// Undefined.
+            /// </summary>
+            UNDEFINED8 = 0x3C,
+
+            /// <summary>
+            /// Undefined.
+            /// </summary>
+            UNDEFINED9 = 0x3D,
+
+            /// <summary>
+            /// Undefined.
+            /// </summary>
+            UNDEFINED10 = 0x3E,
+
+            /// <summary>
+            /// Undefined.
+            /// </summary>
+            UNDEFINED11 = 0x3F,
+
+            /// <summary>
+            /// Undefined.
+            /// </summary>
+            UNDEFINED12 = 0x40,
+
+            /// <summary>
             /// A key.
             /// </summary>
             A = 0x41,
@@ -693,7 +773,6 @@ namespace Sharparam.SharpBlade.Native
             /// </summary>
             Z = 0x5A,
 
-
             /// <summary>
             /// Left Windows key (Natural keyboard) .
             /// </summary>
@@ -708,6 +787,11 @@ namespace Sharparam.SharpBlade.Native
             /// Applications key (Natural keyboard).
             /// </summary>
             APPS = 0x5D,
+
+            /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED3 = 0x5E,
 
             /// <summary>
             /// Computer Sleep key.
@@ -915,6 +999,46 @@ namespace Sharparam.SharpBlade.Native
             F24 = 0x87,
 
             /// <summary>
+            /// Unassigned.
+            /// </summary>
+            UNASSIGNED1 = 0x88,
+
+            /// <summary>
+            /// Unassigned.
+            /// </summary>
+            UNASSIGNED2 = 0x89,
+
+            /// <summary>
+            /// Unassigned.
+            /// </summary>
+            UNASSIGNED3 = 0x8A,
+
+            /// <summary>
+            /// Unassigned.
+            /// </summary>
+            UNASSIGNED4 = 0x8B,
+
+            /// <summary>
+            /// Unassigned.
+            /// </summary>
+            UNASSIGNED5 = 0x8C,
+
+            /// <summary>
+            /// Unassigned.
+            /// </summary>
+            UNASSIGNED6 = 0x8D,
+
+            /// <summary>
+            /// Unassigned.
+            /// </summary>
+            UNASSIGNED7 = 0x8E,
+
+            /// <summary>
+            /// Unassigned.
+            /// </summary>
+            UNASSIGNED8 = 0x8F,
+
+            /// <summary>
             /// NUM LOCK key.
             /// </summary>
             NUMLOCK = 0x90,
@@ -923,6 +1047,76 @@ namespace Sharparam.SharpBlade.Native
             /// SCROLL LOCK key.
             /// </summary>
             SCROLL = 0x91,
+
+            /// <summary>
+            /// OEM Specific.
+            /// </summary>
+            OEM1 = 0x92,
+
+            /// <summary>
+            /// OEM Specific.
+            /// </summary>
+            OEM2 = 0x93,
+
+            /// <summary>
+            /// OEM Specific.
+            /// </summary>
+            OEM3 = 0x94,
+
+            /// <summary>
+            /// OEM Specific.
+            /// </summary>
+            OEM4 = 0x95,
+
+            /// <summary>
+            /// OEM Specific.
+            /// </summary>
+            OEM5 = 0x96,
+
+            /// <summary>
+            /// Unassigned.
+            /// </summary>
+            UNASSIGNED9 = 0x97,
+
+            /// <summary>
+            /// Unassigned.
+            /// </summary>
+            UNASSIGNED10 = 0x97,
+
+            /// <summary>
+            /// Unassigned.
+            /// </summary>
+            UNASSIGNED11 = 0x97,
+
+            /// <summary>
+            /// Unassigned.
+            /// </summary>
+            UNASSIGNED12 = 0x97,
+
+            /// <summary>
+            /// Unassigned.
+            /// </summary>
+            UNASSIGNED13 = 0x97,
+
+            /// <summary>
+            /// Unassigned.
+            /// </summary>
+            UNASSIGNED14 = 0x97,
+
+            /// <summary>
+            /// Unassigned.
+            /// </summary>
+            UNASSIGNED15 = 0x97,
+
+            /// <summary>
+            /// Unassigned.
+            /// </summary>
+            UNASSIGNED16 = 0x97,
+
+            /// <summary>
+            /// Unassigned.
+            /// </summary>
+            UNASSIGNED17 = 0x97,
 
             /// <summary>
             /// Left SHIFT key.
@@ -1045,6 +1239,16 @@ namespace Sharparam.SharpBlade.Native
             LAUNCH_APP2 = 0xB7,
 
             /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED4 = 0xB8,
+
+            /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED5 = 0xB9,
+
+            /// <summary>
             /// Used for miscellaneous characters; it can vary by keyboard.
             /// For the US standard keyboard, the ';:' key.
             /// </summary>
@@ -1083,6 +1287,131 @@ namespace Sharparam.SharpBlade.Native
             OEM_3 = 0xC0,
 
             /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED6 = 0xC1,
+
+            /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED7 = 0xC2,
+
+            /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED8 = 0xC3,
+
+            /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED9 = 0xC4,
+
+            /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED12 = 0xC5,
+
+            /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED13 = 0xC6,
+
+            /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED14 = 0xC7,
+
+            /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED15 = 0xC8,
+
+            /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED16 = 0xC9,
+
+            /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED17 = 0xCA,
+
+            /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED18 = 0xCB,
+
+            /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED19 = 0xCC,
+
+            /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED20 = 0xCD,
+
+            /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED21 = 0xCE,
+
+            /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED22 = 0xCF,
+
+            /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED23 = 0xD1,
+
+            /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED24 = 0xD2,
+
+            /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED25 = 0xD3,
+
+            /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED26 = 0xD4,
+
+            /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED27 = 0xD5,
+
+            /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED28 = 0xD6,
+
+            /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED29 = 0xD7,
+
+            /// <summary>
+            /// Unassigned.
+            /// </summary>
+            UNASSIGNED18 = 0xD8,
+
+            /// <summary>
+            /// Unassigned.
+            /// </summary>
+            UNASSIGNED19 = 0xD9,
+
+            /// <summary>
+            /// Unassigned.
+            /// </summary>
+            UNASSIGNED20 = 0xDA,
+
+            /// <summary>
             /// Used for miscellaneous characters; it can vary by keyboard.
             /// For the US standard keyboard, the '[{' key.
             /// </summary>
@@ -1112,14 +1441,39 @@ namespace Sharparam.SharpBlade.Native
             OEM_8 = 0xDF,
 
             /// <summary>
+            /// Reserved.
+            /// </summary>
+            RESERVED30 = 0xE0,
+
+            /// <summary>
+            /// OEM Specific.
+            /// </summary>
+            OEM6 = 0xE1,
+
+            /// <summary>
             /// Either the angle bracket key or the backslash key on the RT 102-key keyboard.
             /// </summary>
             OEM_102 = 0xE2,
 
             /// <summary>
+            /// OEM Specific.
+            /// </summary>
+            OEM7 = 0xE3,
+
+            /// <summary>
+            /// OEM Specific.
+            /// </summary>
+            OEM8 = 0xE4,
+
+            /// <summary>
             /// IME PROCESS key.
             /// </summary>
             PROCESSKEY = 0xE5,
+
+            /// <summary>
+            /// OEM Specific.
+            /// </summary>
+            OEM9 = 0xE6,
 
             /// <summary>
             /// Used to pass Unicode characters as if they were keystrokes.
@@ -1128,6 +1482,71 @@ namespace Sharparam.SharpBlade.Native
             /// For more information, see Remark in KEYBDINPUT, SendInput, WM_KEYDOWN, and WM_KEYUP.
             /// </summary>
             PACKET = 0xE7,
+
+            /// <summary>
+            /// Unassigned.
+            /// </summary>
+            UNASSIGNED21 = 0xE8,
+
+            /// <summary>
+            /// OEM Specific.
+            /// </summary>
+            OEM10 = 0xE9,
+
+            /// <summary>
+            /// OEM Specific.
+            /// </summary>
+            OEM11 = 0xEA,
+
+            /// <summary>
+            /// OEM Specific.
+            /// </summary>
+            OEM12 = 0xEB,
+
+            /// <summary>
+            /// OEM Specific.
+            /// </summary>
+            OEM13 = 0xEC,
+
+            /// <summary>
+            /// OEM Specific.
+            /// </summary>
+            OEM14 = 0xED,
+
+            /// <summary>
+            /// OEM Specific.
+            /// </summary>
+            OEM15 = 0xEE,
+
+            /// <summary>
+            /// OEM Specific.
+            /// </summary>
+            OEM16 = 0xEF,
+
+            /// <summary>
+            /// OEM Specific.
+            /// </summary>
+            OEM17 = 0xF1,
+
+            /// <summary>
+            /// OEM Specific.
+            /// </summary>
+            OEM18 = 0xF2,
+
+            /// <summary>
+            /// OEM Specific.
+            /// </summary>
+            OEM19 = 0xF3,
+
+            /// <summary>
+            /// OEM Specific.
+            /// </summary>
+            OEM20 = 0xF4,
+
+            /// <summary>
+            /// OEM Specific.
+            /// </summary>
+            OEM21 = 0xF5,
 
             /// <summary>
             /// Attn key.
