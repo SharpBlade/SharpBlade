@@ -70,6 +70,11 @@ namespace Sharparam.SharpBlade.Razer
         public Form CurrentForm { get; private set; }
 
         /// <summary>
+        /// The currently rendering WPF window, null if no window set.
+        /// </summary>
+        public Window CurrentWindow { get; private set; }
+
+        /// <summary>
         /// Current image shown on the Touchpad, null if not using static image.
         /// </summary>
         public string CurrentImage { get; private set; }
@@ -110,7 +115,7 @@ namespace Sharparam.SharpBlade.Razer
 
             CurrentForm = form;
 
-            //CurrentForm.Paint += DrawForm;
+            CurrentForm.Paint += FormPaintHandler;
         }
 
         /// <summary>
@@ -120,9 +125,34 @@ namespace Sharparam.SharpBlade.Razer
         public void ClearForm()
         {
             if (CurrentForm != null)
-            {
-                //CurrentForm.Paint -= DrawForm;
-            }
+                CurrentForm.Paint -= FormPaintHandler;
+
+            CurrentForm = null;
+        }
+
+        /// <summary>
+        /// Sets the WPF window to be rendered to this touchpad.
+        /// </summary>
+        /// <param name="window">The new window to render.</param>
+        public void SetWindow(Window window)
+        {
+            ClearWindow();
+
+            CurrentWindow = window;
+
+            CurrentWindow.ContentRendered += WindowContentRenderedHandler;
+        }
+
+        /// <summary>
+        /// Clears the current WPF window from
+        /// touchpad and stops rendering of it.
+        /// </summary>
+        public void ClearWindow()
+        {
+            if (CurrentWindow != null)
+                CurrentWindow.ContentRendered -= WindowContentRenderedHandler;
+
+            CurrentWindow = null;
         }
 
         /// <summary>
@@ -433,6 +463,11 @@ namespace Sharparam.SharpBlade.Razer
         private void FormPaintHandler(object sender, PaintEventArgs e)
         {
             DrawForm(CurrentForm);
+        }
+
+        private void WindowContentRenderedHandler(object sender, EventArgs e)
+        {
+            DrawWindow(CurrentWindow);
         }
     }
 }
