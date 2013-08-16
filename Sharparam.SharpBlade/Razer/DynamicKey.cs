@@ -162,7 +162,7 @@ namespace Sharparam.SharpBlade.Razer
 
             var hResult = RazerAPI.RzSBSetImageDynamicKey(KeyType, state, IO.GetAbsolutePath(image));
             if (!HRESULT.RZSB_SUCCESS(hResult))
-                throw new RazerNativeException(hResult);
+                throw new RazerNativeException("RzSBSetImageDynamicKey", hResult);
 
             if (state == RazerAPI.DynamicKeyState.Up)
                 UpImage = image;

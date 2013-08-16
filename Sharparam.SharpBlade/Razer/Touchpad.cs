@@ -40,6 +40,7 @@ using Sharparam.SharpBlade.Helpers;
 using Sharparam.SharpBlade.Logging;
 using Sharparam.SharpBlade.Native;
 using Sharparam.SharpBlade.Razer.Events;
+using Sharparam.SharpBlade.Razer.Exceptions;
 
 namespace Sharparam.SharpBlade.Razer
 {
@@ -81,7 +82,7 @@ namespace Sharparam.SharpBlade.Razer
             _gestureCallback = HandleTouchpadGesture;
             var hResult = RazerAPI.RzSBGestureSetCallback(_gestureCallback);
             if (HRESULT.RZSB_FAILED(hResult))
-                RazerManager.NativeCallFailure("RzSBGestureSetCallback", hResult);
+                throw new RazerNativeException("RzSBGestureSetCallback", hResult);
         }
 
         /// <summary>
@@ -134,7 +135,7 @@ namespace Sharparam.SharpBlade.Razer
 
             var hResult = RazerAPI.RzSBSetImageTouchpad(image);
             if (HRESULT.RZSB_FAILED(hResult))
-                RazerManager.NativeCallFailure("RzSBSetImageTouchpad", hResult);
+                throw new RazerNativeException("RzSBSetImageTouchpad", hResult);
 
             CurrentImage = image;
         }
@@ -146,7 +147,7 @@ namespace Sharparam.SharpBlade.Razer
         {
             var hResult = RazerAPI.RzSBSetImageTouchpad(IO.GetAbsolutePath(Constants.BlankTouchpadImage));
             if (HRESULT.RZSB_FAILED(hResult))
-                RazerManager.NativeCallFailure("RzSBSetImageTouchpad", hResult);
+                throw new RazerNativeException("RzSBSetImageTouchpad", hResult);
 
             CurrentImage = null;
         }
@@ -223,11 +224,11 @@ namespace Sharparam.SharpBlade.Razer
 
             var hResult = RazerAPI.RzSBEnableGesture(newGesturesType, enabled);
             if (HRESULT.RZSB_FAILED(hResult))
-                RazerManager.NativeCallFailure("RzSBGestureEnable", hResult);
+                throw new RazerNativeException("RzSBGestureEnable", hResult);
 
             hResult = RazerAPI.RzSBGestureSetCallback(_gestureCallback);
             if (HRESULT.RZSB_FAILED(hResult))
-                RazerManager.NativeCallFailure("RzSBGestureSetCallback", hResult);
+                throw new RazerNativeException("RzSBGestureSetCallback", hResult);
 
             _activeGesturesType = newGesturesType;
             _allGestureEnabled = _activeGesturesType == RazerAPI.GestureType.All && !enabled;
@@ -295,11 +296,11 @@ namespace Sharparam.SharpBlade.Razer
 
             var hResult = RazerAPI.RzSBEnableGesture(newGesturesType, enabled);
             if (HRESULT.RZSB_FAILED(hResult))
-                RazerManager.NativeCallFailure("RzSBGestureEnable", hResult);
+                throw new RazerNativeException("RzSBGestureEnable", hResult);
 
             hResult = RazerAPI.RzSBEnableOSGesture(newGesturesType, enabled);
             if (HRESULT.RZSB_FAILED(hResult))
-                RazerManager.NativeCallFailure("RzSBGestureSetOSNotification", hResult);
+                throw new RazerNativeException("RzSBGestureSetOSNotification", hResult);
 
             _activeOSGesturesType = newGesturesType;
             _allOSGestureEnabled = _activeGesturesType == RazerAPI.GestureType.All && !enabled;
@@ -354,7 +355,7 @@ namespace Sharparam.SharpBlade.Razer
             bitmap.Dispose();
 
             if (HRESULT.RZSB_FAILED(hResult))
-                RazerManager.NativeCallFailure("RzSBRenderBuffer", hResult);
+                throw new RazerNativeException("RzSBRenderBuffer", hResult);
         }
 
         /// <summary>
@@ -400,7 +401,7 @@ namespace Sharparam.SharpBlade.Razer
             source.Dispose();
 
             if (HRESULT.RZSB_FAILED(hResult))
-                RazerManager.NativeCallFailure("RzSBRenderBuffer", hResult);
+                throw new RazerNativeException("RzSBRenderBuffer", hResult);
         }
 
         /// <summary>

@@ -116,7 +116,7 @@ namespace Sharparam.SharpBlade.Razer
                 // Try one more time
                 hResult = RazerAPI.RzSBStart();
                 if (HRESULT.RZSB_FAILED(hResult))
-                    NativeCallFailure("RzSBStart", hResult);
+                    throw new RazerNativeException("RzSBStart", hResult);
             }
 
             _log.Info("Setting up dynamic keys");
@@ -126,7 +126,7 @@ namespace Sharparam.SharpBlade.Razer
             _log.Debug("Calling RzSBAppEventSetCallback");
             hResult = RazerAPI.RzSBAppEventSetCallback(_appEventCallback);
             if (HRESULT.RZSB_FAILED(hResult))
-                NativeCallFailure("RzSBAppEventSetCallback", hResult);
+                throw new RazerNativeException("RzSBAppEventSetCallback", hResult);
 
             _log.Info("Setting up touchpad");
             Touchpad = new Touchpad();
@@ -136,7 +136,7 @@ namespace Sharparam.SharpBlade.Razer
             _log.Debug("Calling RzSBDynamicKeySetCallback");
             hResult = RazerAPI.RzSBDynamicKeySetCallback(_dkCallback);
             if (HRESULT.RZSB_FAILED(hResult))
-                NativeCallFailure("RzSBDynamicKeySetCallback", hResult);
+                throw new RazerNativeException("RzSBDynamicKeySetCallback", hResult);
 
             _log.Info("Setting up keyboard");
 
@@ -146,7 +146,7 @@ namespace Sharparam.SharpBlade.Razer
             _log.Debug("Calling RzSBDynamicKeySetCallback");
             hResult = RazerAPI.RzSBKeyboardCaptureSetCallback(_kbCallback);
             if (HRESULT.RZSB_FAILED(hResult))
-                NativeCallFailure("RzSBKeyboardCaptureSetCallback", hResult);
+                throw new RazerNativeException("RzSBKeyboardCaptureSetCallback", hResult);
 
             _log.Debug("Initializing dynamic key arrays");
 
@@ -286,11 +286,12 @@ namespace Sharparam.SharpBlade.Razer
             _log.Info("RazerManager has stopped.");
         }
 
+        [Obsolete("Throw a RazerNativeException directly instead (with the same arguments).")]
         internal static void NativeCallFailure(string func, HRESULT result)
         {
             StaticLog.FatalFormat("Call to RazerAPI native function {0} FAILED with error: {1}", func, result.ToString());
             StaticLog.Debug("Throwing exception...");
-            throw new RazerNativeException(result);
+            throw new RazerNativeException(func, result);
         }
 
         /// <summary>

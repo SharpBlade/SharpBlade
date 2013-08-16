@@ -27,6 +27,7 @@
  * "Razer" is a trademark of Razer USA Ltd.
  */
 
+using System;
 using Sharparam.SharpBlade.Native;
 
 namespace Sharparam.SharpBlade.Razer.Exceptions
@@ -37,13 +38,27 @@ namespace Sharparam.SharpBlade.Razer.Exceptions
     public class RazerNativeException : RazerException
     {
         /// <summary>
+        /// The name of the native function that failed.
+        /// </summary>
+        public readonly string Function;
+
+        /// <summary>
         /// <see cref="HRESULT" /> obtained from calling the native function.
         /// </summary>
         public readonly HRESULT Hresult;
-        
-        internal RazerNativeException(HRESULT hresult)
-            : base(Native.Helpers.GetErrorMessage(hresult), Native.Helpers.GetWin32Exception(hresult))
+
+        /// <summary>
+        /// Creates a new <see cref="RazerNativeException" />.
+        /// </summary>
+        /// <param name="function">The name of the function that failed.</param>
+        /// <param name="hresult"><see cref="HRESULT" /> returned from the native function.</param>
+        internal RazerNativeException(string function, HRESULT hresult)
+            : base(
+                String.Format("Call to native RazerAPI function {0} failed with error message: {1}", function,
+                              Native.Helpers.GetErrorMessage(hresult)),
+                Native.Helpers.GetWin32Exception(hresult))
         {
+            Function = function;
             Hresult = hresult;
         }
     }
