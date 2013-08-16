@@ -28,6 +28,7 @@
  */
 
 using System;
+using Sharparam.SharpBlade.Extensions;
 using Sharparam.SharpBlade.Native;
 
 namespace Sharparam.SharpBlade.Razer.Events
@@ -45,12 +46,37 @@ namespace Sharparam.SharpBlade.Razer.Events
         /// <summary>
         /// Modifiers pressed.
         /// </summary>
-        public readonly IntPtr Modifiers;
+        public readonly ModifierKey Modifiers;
 
-        internal KeyboardKeyEventArgs(WinAPI.VirtualKey key, IntPtr modifiers)
+        /// <summary>
+        /// Whether or not the shift key is pressed.
+        /// </summary>
+        public readonly bool ShiftPressed;
+
+        /// <summary>
+        /// Whether or not the control key is pressed.
+        /// </summary>
+        public readonly bool ControlPressed;
+
+        /// <summary>
+        /// Whether or not the alt key is pressed.
+        /// </summary>
+        public readonly bool AltPressed;
+
+        /// <summary>
+        /// Whether or not the caps lock key is active.
+        /// </summary>
+        public readonly bool CapsLockActive;
+
+        internal KeyboardKeyEventArgs(WinAPI.VirtualKey key, ModifierKey modifiers)
         {
             Key = key;
             Modifiers = modifiers;
+
+            ShiftPressed = Modifiers.Has(ModifierKey.Shift);
+            ControlPressed = Modifiers.Has(ModifierKey.Control);
+            AltPressed = Modifiers.Has(ModifierKey.Alt);
+            CapsLockActive = Modifiers.Has(ModifierKey.CapsLock);
         }
     }
 

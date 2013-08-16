@@ -175,6 +175,10 @@ namespace Sharparam.SharpBlade.Native
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
 
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true,
+            CallingConvention = CallingConvention.Winapi)]
+        public static extern short GetKeyState(int keyCode);
+
         // Constants
 
         /// <summary>
@@ -257,6 +261,18 @@ namespace Sharparam.SharpBlade.Native
         /// </summary>
         public const uint ESB_DISABLE_RTDN = 2;
 
+        /// <summary>
+        /// Toggled key (e.g. caps lock).
+        /// Used with <see cref="GetKeyState" />.
+        /// </summary>
+        public const int KEY_TOGGLED = 0x1;
+
+        /// <summary>
+        /// Pressed key.
+        /// Used with <see cref="GetKeyState" />.
+        /// </summary>
+        public const int KEY_PRESSED = 0x8000;
+
         #region Message types
 
         /// <summary>
@@ -306,7 +322,7 @@ namespace Sharparam.SharpBlade.Native
         /// <summary>
         /// Virtual-key codes used by the system.
         /// </summary>
-        public enum VirtualKey : uint
+        public enum VirtualKey : int
         {
             /// <summary>
             /// Left mouse button.

@@ -57,6 +57,7 @@
     <Compile Include="Logging\LogManager.cs" />
     <Compile Include="Logging\SimpleLog.cs" />
     <Compile Include="Logging\SimpleLogProvider.cs" />
+    <Compile Include="ModifierKey.cs" />
     <Compile Include="Native\Helpers.cs" />
     <Compile Include="Native\HRESULT.cs" />
     <Compile Include="Native\WinAPI.cs" />

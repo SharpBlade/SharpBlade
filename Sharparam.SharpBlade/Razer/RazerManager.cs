@@ -29,6 +29,7 @@
 
 using System;
 using System.IO;
+using Sharparam.SharpBlade.Extensions;
 using Sharparam.SharpBlade.Logging;
 using Sharparam.SharpBlade.Native;
 using Sharparam.SharpBlade.Razer.Events;
@@ -210,21 +211,21 @@ namespace Sharparam.SharpBlade.Razer
                 func(this, new KeyboardRawEventArgs(uMsg, wParam, lParam));
         }
 
-        private void OnKeyboardCharTyped(char character, IntPtr modifiers)
+        private void OnKeyboardCharTyped(char character)
         {
             var func = KeyboardCharTyped;
             if (func != null)
-                func(this, new KeyboardCharEventArgs(character, modifiers));
+                func(this, new KeyboardCharEventArgs(character));
         }
 
-        private void OnKeyboardKeyDown(WinAPI.VirtualKey key, IntPtr modifiers)
+        private void OnKeyboardKeyDown(WinAPI.VirtualKey key, ModifierKey modifiers)
         {
             var func = KeyboardKeyDown;
             if (func != null)
                 func(this, new KeyboardKeyEventArgs(key, modifiers));
         }
 
-        private void OnKeyboardKeyUp(WinAPI.VirtualKey key, IntPtr modifiers)
+        private void OnKeyboardKeyUp(WinAPI.VirtualKey key, ModifierKey modifiers)
         {
             var func = KeyboardKeyUp;
             if (func != null)
@@ -404,18 +405,38 @@ namespace Sharparam.SharpBlade.Razer
             var result = HRESULT.RZSB_OK;
 
             var msgType = (WinAPI.MessageType) uMsg;
+            var asChar = (char) wParam;
 
             OnKeyboardRawEvent(uMsg, wParam, lParam);
 
-            if (msgType == WinAPI.MessageType.CHAR)
-                OnKeyboardCharTyped((char) wParam, lParam);
-            else // KEYDOWN or KEYUP
+            // We only want to send the char event if it's a char that can actually be typed
+            // So it doesn't handle SHIFT and CONTROL as "characters"
+            if (msgType == WinAPI.MessageType.CHAR && !Char.IsControl(asChar))
+                OnKeyboardCharTyped(asChar);
+            else if (msgType == WinAPI.MessageType.KEYDOWN || msgType == WinAPI.MessageType.KEYUP)
             {
                 var key = (WinAPI.VirtualKey) (uint) wParam;
+
+                // Workaround to get the modifier keys
+                var modifiers = ModifierKey.None;
+
+                if ((WinAPI.GetKeyState((int) WinAPI.VirtualKey.SHIFT) & WinAPI.KEY_PRESSED) != 0)
+                    modifiers |= ModifierKey.Shift;
+
+                if ((WinAPI.GetKeyState((int) WinAPI.VirtualKey.CONTROL) & WinAPI.KEY_PRESSED) != 0)
+                    modifiers |= ModifierKey.Control;
+
+                // MENU == ALT
+                if ((WinAPI.GetKeyState((int) WinAPI.VirtualKey.MENU) & WinAPI.KEY_PRESSED) != 0)
+                    modifiers |= ModifierKey.Alt;
+
+                if ((WinAPI.GetKeyState((int)WinAPI.VirtualKey.CAPITAL) & WinAPI.KEY_TOGGLED) != 0)
+                    modifiers |= ModifierKey.CapsLock;
+
                 if (msgType == WinAPI.MessageType.KEYDOWN)
-                    OnKeyboardKeyDown(key, lParam);
+                    OnKeyboardKeyDown(key, modifiers);
                 else if (msgType == WinAPI.MessageType.KEYUP)
-                    OnKeyboardKeyUp(key, lParam);
+                    OnKeyboardKeyUp(key, modifiers);
             }
 
             return result;
