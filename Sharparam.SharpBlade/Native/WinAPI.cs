@@ -39,7 +39,8 @@ namespace Sharparam.SharpBlade.Native
     public static class WinAPI
     {
         // ReSharper disable InconsistentNaming
-        // Functions
+
+        #region Functions
 
         /// <summary>
         /// Retrieves a handle to the specified standard device (standard input, standard output, or standard error).
@@ -118,8 +119,8 @@ namespace Sharparam.SharpBlade.Native
         /// If the function fails, the return value is zero (false). To get extended error information, call GetLastError. 
         /// </returns>
         /// <remarks>You should not call this function to hide a scroll bar while processing a scroll bar message. </remarks>
-        [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
+        [DllImport("user32.dll")]
         public static extern bool ShowScrollBar(IntPtr hWnd, int wBar, [MarshalAs(UnmanagedType.Bool)] bool bShow);
 
         /// <summary>
@@ -135,6 +136,44 @@ namespace Sharparam.SharpBlade.Native
         /// </returns>
         [DllImport("user32.dll")]
         public static extern bool EnableScrollBar(IntPtr hWnd, uint wSBflags, uint wArrows);
+
+        /// <summary>
+        /// Places (posts) a message in the message queue associated with the thread that created
+        /// the specified window and returns without waiting for the thread to process the message.
+        /// </summary>
+        /// <param name="hWnd">A handle to the window whose window procedure is to receive the message.</param>
+        /// <param name="Msg">The message to be posted.</param>
+        /// <param name="wParam">Additional message-specific information.</param>
+        /// <param name="lParam">Additional message-specific information.</param>
+        /// <returns>
+        /// If the function succeeds, the return value is nonzero (true).
+        /// If the function fails, the return value is zero (false).
+        /// To get extended error information, call GetLastError.
+        /// GetLastError returns ERROR_NOT_ENOUGH_QUOTA when the limit is hit. 
+        /// </returns>
+        /// <remarks>
+        /// When a message is blocked by UIPI the last error, retrieved with GetLastError, is set to 5 (access denied).
+        /// Messages in a message queue are retrieved by calls to the GetMessage or PeekMessage function.
+        /// Applications that need to communicate using HWND_BROADCAST should use the RegisterWindowMessage
+        /// function to obtain a unique message for inter-application communication.
+        /// The system only does marshalling for system messages (those in the range 0 to (WM_USER-1)).
+        /// To send other messages (those >= WM_USER) to another process, you must do custom marshalling.
+        /// If you send a message in the range below WM_USER to the asynchronous message functions
+        /// (PostMessage, SendNotifyMessage, and SendMessageCallback), its message parameters cannot
+        /// include pointers. Otherwise, the operation will fail. The functions will return before the
+        /// receiving thread has had a chance to process the message and the sender will free the memory
+        /// before it is used.
+        /// Do not post the WM_QUIT message using PostMessage; use the PostQuitMessage function.
+        /// An accessibility application can use PostMessage to post WM_APPCOMMAND messages to
+        /// the shell to launch applications. This functionality is not guaranteed to work for
+        /// other types of applications.
+        /// There is a limit of 10,000 posted messages per message queue. This limit should be
+        /// sufficiently large. If your application exceeds the limit, it should be redesigned
+        /// to avoid consuming so many system resources.
+        /// </remarks>
+        [return: MarshalAs(UnmanagedType.Bool)]
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
         /// <summary>
         /// Sends the specified message to a window or windows.
@@ -179,7 +218,9 @@ namespace Sharparam.SharpBlade.Native
             CallingConvention = CallingConvention.Winapi)]
         public static extern short GetKeyState(int keyCode);
 
-        // Constants
+        #endregion Functions
+
+        #region Constants
 
         /// <summary>
         /// The standard input device. Initially, this is the console input buffer, CONIN$.
@@ -272,6 +313,8 @@ namespace Sharparam.SharpBlade.Native
         /// Used with <see cref="GetKeyState" />.
         /// </summary>
         public const int KEY_PRESSED = 0x8000;
+
+        #endregion Constants
 
         #region Message types
 

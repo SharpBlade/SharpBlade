@@ -29,7 +29,7 @@
 
 using System;
 using System.IO;
-using Sharparam.SharpBlade.Extensions;
+using Sharparam.SharpBlade.Integration;
 using Sharparam.SharpBlade.Logging;
 using Sharparam.SharpBlade.Native;
 using Sharparam.SharpBlade.Razer.Events;
@@ -74,22 +74,29 @@ namespace Sharparam.SharpBlade.Razer
 
         private const string RazerControlFile = "DO_NOT_TOUCH__RAZER_CONTROL_FILE";
 
-        private bool _disposed;
-
         private readonly ILog _log;
-        private static readonly ILog StaticLog = LogManager.GetLogger(typeof (RazerManager));
-
-        private readonly DynamicKey[] _dynamicKeys;
+        private static readonly ILog StaticLog = LogManager.GetLogger(typeof(RazerManager));
 
         // Native code callbacks
         private static RazerAPI.AppEventCallbackDelegate _appEventCallback;
         private static RazerAPI.DynamicKeyCallbackFunctionDelegate _dkCallback;
         private static RazerAPI.KeyboardCallbackFunctionDelegate _kbCallback;
 
+        private bool _disposed;
+
+        private readonly DynamicKey[] _dynamicKeys;
+
+        private KeyboardControl _keyboardControl;
+
         /// <summary>
         /// Gets the touchpad on the keyboard.
         /// </summary>
         public Touchpad Touchpad { get; private set; }
+
+        /// <summary>
+        /// Gets a boolean indicating whether keyboard capture is enabled or not.
+        /// </summary>
+        public bool KeyboardCapture { get; private set; }
 
         /// <summary>
         /// Creates a new <see cref="RazerManager" />.
@@ -218,14 +225,14 @@ namespace Sharparam.SharpBlade.Razer
                 func(this, new KeyboardCharEventArgs(character));
         }
 
-        private void OnKeyboardKeyDown(WinAPI.VirtualKey key, ModifierKey modifiers)
+        private void OnKeyboardKeyDown(WinAPI.VirtualKey key, ModifierKeys modifiers)
         {
             var func = KeyboardKeyDown;
             if (func != null)
                 func(this, new KeyboardKeyEventArgs(key, modifiers));
         }
 
-        private void OnKeyboardKeyUp(WinAPI.VirtualKey key, ModifierKey modifiers)
+        private void OnKeyboardKeyUp(WinAPI.VirtualKey key, ModifierKeys modifiers)
         {
             var func = KeyboardKeyUp;
             if (func != null)
@@ -364,6 +371,49 @@ namespace Sharparam.SharpBlade.Razer
             _dynamicKeys[index] = null;
         }
 
+        /// <summary>
+        /// Enables or disables keyboard capture.
+        /// </summary>
+        /// <param name="enabled"></param>
+        public void SetKeyboardCapture(bool enabled)
+        {
+            if (enabled == KeyboardCapture)
+                return;
+
+            var hresult = RazerAPI.RzSBCaptureKeyboard(enabled);
+            if (HRESULT.RZSB_FAILED(hresult))
+                throw new RazerNativeException("RzSBCaptureKeyboard", hresult);
+
+            if (!enabled)
+                _keyboardControl = null;
+
+            KeyboardCapture = enabled;
+        }
+
+        /// <summary>
+        /// Starts forwarding keyboard events to the specified WinForms control.
+        /// </summary>
+        /// <param name="control">THe control to forward input to.</param>
+        /// <param name="releaseOnEnter">If true, keyboard capture will cease when the enter key is pressed,
+        /// otherwise, <see cref="SetKeyboardCapture" /> has to be called explicitly with false as the argument.</param>
+        public void StartControlKeyboardCapture(System.Windows.Forms.Control control, bool releaseOnEnter = true)
+        {
+            SetKeyboardCapture(true);
+            _keyboardControl = new KeyboardControl(control, releaseOnEnter);
+        }
+
+        /// <summary>
+        /// Starts forwarding keyboard events to the specified WPF control.
+        /// </summary>
+        /// <param name="control">The control to forward input to.</param>
+        /// <param name="releaseOnEnter">If true, keyboard capture will cease when the enter key is pressed,
+        /// otherwise, <see cref="SetKeyboardCapture" /> has to be called explicitly with false as the argument.</param>
+        public void StartControlKeyboardCapture(System.Windows.Controls.Control control, bool releaseOnEnter = true)
+        {
+            SetKeyboardCapture(true);
+            _keyboardControl = new KeyboardControl(control, releaseOnEnter);
+        }
+
         private HRESULT HandleAppEvent(RazerAPI.AppEventType type, uint appMode, uint processId)
         {
             var hResult = HRESULT.RZSB_OK;
@@ -412,31 +462,47 @@ namespace Sharparam.SharpBlade.Razer
             // We only want to send the char event if it's a char that can actually be typed
             // So it doesn't handle SHIFT and CONTROL as "characters"
             if (msgType == WinAPI.MessageType.CHAR && !Char.IsControl(asChar))
+            {
                 OnKeyboardCharTyped(asChar);
+                if (_keyboardControl != null)
+                    _keyboardControl.SendChar(asChar);
+            }
             else if (msgType == WinAPI.MessageType.KEYDOWN || msgType == WinAPI.MessageType.KEYUP)
             {
                 var key = (WinAPI.VirtualKey) (uint) wParam;
 
                 // Workaround to get the modifier keys
-                var modifiers = ModifierKey.None;
+                var modifiers = ModifierKeys.None;
 
                 if ((WinAPI.GetKeyState((int) WinAPI.VirtualKey.SHIFT) & WinAPI.KEY_PRESSED) != 0)
-                    modifiers |= ModifierKey.Shift;
+                    modifiers |= ModifierKeys.Shift;
 
                 if ((WinAPI.GetKeyState((int) WinAPI.VirtualKey.CONTROL) & WinAPI.KEY_PRESSED) != 0)
-                    modifiers |= ModifierKey.Control;
+                    modifiers |= ModifierKeys.Control;
 
                 // MENU == ALT
                 if ((WinAPI.GetKeyState((int) WinAPI.VirtualKey.MENU) & WinAPI.KEY_PRESSED) != 0)
-                    modifiers |= ModifierKey.Alt;
+                    modifiers |= ModifierKeys.Alt;
 
                 if ((WinAPI.GetKeyState((int)WinAPI.VirtualKey.CAPITAL) & WinAPI.KEY_TOGGLED) != 0)
-                    modifiers |= ModifierKey.CapsLock;
+                    modifiers |= ModifierKeys.CapsLock;
 
                 if (msgType == WinAPI.MessageType.KEYDOWN)
+                {
                     OnKeyboardKeyDown(key, modifiers);
+                    if (_keyboardControl != null)
+                        _keyboardControl.SendKeyDown(key);
+                }
                 else if (msgType == WinAPI.MessageType.KEYUP)
+                {
                     OnKeyboardKeyUp(key, modifiers);
+                    if (_keyboardControl != null)
+                    {
+                        _keyboardControl.SendKeyUp(key);
+                        if (key == WinAPI.VirtualKey.RETURN && _keyboardControl.ReleaseOnEnter)
+                            SetKeyboardCapture(false);
+                    }
+                }
             }
 
             return result;

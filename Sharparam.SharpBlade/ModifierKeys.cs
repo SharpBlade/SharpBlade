@@ -1,4 +1,4 @@
-﻿/* KeyboardControl.cs
+﻿/* ModifierKey.cs
  *
  * Copyright © 2013 by Adam Hellberg and Brandon Scott.
  * 
@@ -29,33 +29,37 @@
 
 using System;
 
-namespace Sharparam.SharpBlade.Razer.Structs
+namespace Sharparam.SharpBlade
 {
     /// <summary>
-    /// Information provided by keyboard-enabled forms. [WIP]
+    /// Modifier keys.
     /// </summary>
-    [Obsolete("No longer used as the relevant functions in RazerAPI have been deprecated.")]
-    public struct KeyboardControl
+    [Flags]
+    public enum ModifierKeys
     {
         /// <summary>
-        /// Handle to the form.
+        /// No modifier key.
         /// </summary>
-        public IntPtr Handle;
+        None = 0x0,
 
         /// <summary>
-        /// Should keyboard capture be released when user presses enter?
+        /// The shift key.
         /// </summary>
-        public bool ReleaseOnEnter;
+        Shift = 0x1,
 
         /// <summary>
-        /// Creates a new <see cref="KeyboardControl" /> struct.
+        /// The control key.
         /// </summary>
-        /// <param name="handle">Handle to the form.</param>
-        /// <param name="releaseOnEnter">Release control on enter?</param>
-        public KeyboardControl(IntPtr handle, bool releaseOnEnter = true)
-        {
-            Handle = handle;
-            ReleaseOnEnter = releaseOnEnter;
-        }
+        Control = 0x2,
+
+        /// <summary>
+        /// The alt key.
+        /// </summary>
+        Alt = 0x4,
+
+        /// <summary>
+        /// The caps lock key.
+        /// </summary>
+        CapsLock = 0x8,
     }
 }

@@ -1,6 +1,6 @@
 ﻿/* KeyboardKey.cs
  *
- * Copyright © 2013 by Adam Hellberg and Brandon Scott
+ * Copyright © 2013 by Adam Hellberg and Brandon Scott.
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -19,7 +19,7 @@
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * 
- * Disclaimer: SwitchBlade is in no way affiliated
+ * Disclaimer: SharpBlade is in no way affiliated
  * with Razer and/or any of its employees and/or licensors.
  * Adam Hellberg does not take responsibility for any harm caused, direct
  * or indirect, to any Razer peripherals via the use of SharpBlade.
@@ -46,7 +46,7 @@ namespace Sharparam.SharpBlade.Razer.Events
         /// <summary>
         /// Modifiers pressed.
         /// </summary>
-        public readonly ModifierKey Modifiers;
+        public readonly ModifierKeys Modifiers;
 
         /// <summary>
         /// Whether or not the shift key is pressed.
@@ -68,15 +68,15 @@ namespace Sharparam.SharpBlade.Razer.Events
         /// </summary>
         public readonly bool CapsLockActive;
 
-        internal KeyboardKeyEventArgs(WinAPI.VirtualKey key, ModifierKey modifiers)
+        internal KeyboardKeyEventArgs(WinAPI.VirtualKey key, ModifierKeys modifiers)
         {
             Key = key;
             Modifiers = modifiers;
 
-            ShiftPressed = Modifiers.Has(ModifierKey.Shift);
-            ControlPressed = Modifiers.Has(ModifierKey.Control);
-            AltPressed = Modifiers.Has(ModifierKey.Alt);
-            CapsLockActive = Modifiers.Has(ModifierKey.CapsLock);
+            ShiftPressed = Modifiers.Has(ModifierKeys.Shift);
+            ControlPressed = Modifiers.Has(ModifierKeys.Control);
+            AltPressed = Modifiers.Has(ModifierKeys.Alt);
+            CapsLockActive = Modifiers.Has(ModifierKeys.CapsLock);
         }
     }
 
