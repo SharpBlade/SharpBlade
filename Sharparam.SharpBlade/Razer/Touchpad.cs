@@ -394,44 +394,10 @@ namespace Sharparam.SharpBlade.Razer
         /// <param name="form">Form to draw.</param>
         public void DrawForm(Form form)
         {
-            // Big thanks to ben_a_adams at the Razer Developer forum
-            // for sharing his drawing code.
-
-            if (form == null || form.IsDisposed)
-                return;
-
-            var source = new Bitmap(RazerAPI.TouchpadWidth, RazerAPI.TouchpadHeight);
-            var dest = new Bitmap(source.Width, source.Height, PixelFormat.Format16bppRgb565);
-            form.DrawToBitmap(dest, new Rectangle(0, 0, dest.Width, dest.Height));
-
-            using (var g = Graphics.FromImage(dest))
-                g.DrawImageUnscaled(dest, 0, 0);
-
-            var data = dest.LockBits(new Rectangle(0, 0, dest.Width, dest.Height),
-                                     ImageLockMode.ReadOnly, PixelFormat.Format16bppRgb565);
-
-            var buffer = new RazerAPI.BufferParams
-            {
-                PixelType = RazerAPI.PixelType.RGB565,
-                DataSize = (uint) (dest.Width * dest.Height * sizeof (short)),
-                PtrData = data.Scan0
-            };
-
-            var ptrToImageStruct = Marshal.AllocHGlobal(Marshal.SizeOf(buffer));
-            Marshal.StructureToPtr(buffer, ptrToImageStruct, true);
-
-            var hResult = RazerAPI.RzSBRenderBuffer(RazerAPI.TargetDisplay.Widget, ptrToImageStruct);
-
-            // Free resources before handling return
-
-            Marshal.FreeHGlobal(ptrToImageStruct);
-            dest.UnlockBits(data);
-
-            dest.Dispose();
-            source.Dispose();
-
-            if (HRESULT.RZSB_FAILED(hResult))
-                throw new RazerNativeException("RzSBRenderBuffer", hResult);
+            var bmp = new Bitmap(RazerAPI.TouchpadWidth, RazerAPI.TouchpadHeight);
+            form.DrawToBitmap(bmp, form.Bounds);
+            DrawBitmap(bmp);
+            bmp.Dispose();
         }
 
         /// <summary>
