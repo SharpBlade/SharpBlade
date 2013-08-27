@@ -133,12 +133,6 @@ namespace Sharparam.SharpBlade.Razer
                 OnKeyPressed();
         }
 
-        [Obsolete("UpdateState now handles setting the previous state")]
-        internal void UpdatePreviousState(RazerAPI.DynamicKeyState state)
-        {
-            PreviousState = state;
-        }
-
         /// <summary>
         /// Sets the image that is displayed on this key.
         /// </summary>
