@@ -56,11 +56,7 @@
     <Compile Include="Helpers\IO.cs" />
     <Compile Include="Helpers\Threading.cs" />
     <Compile Include="Integration\KeyboardControl.cs" />
-    <Compile Include="Logging\ILog.cs" />
-    <Compile Include="Logging\ILogProvider.cs" />
     <Compile Include="Logging\LogManager.cs" />
-    <Compile Include="Logging\SimpleLog.cs" />
-    <Compile Include="Logging\SimpleLogProvider.cs" />
     <Compile Include="ModifierKeys.cs" />
     <Compile Include="Native\Helpers.cs" />
     <Compile Include="Native\HRESULT.cs" />

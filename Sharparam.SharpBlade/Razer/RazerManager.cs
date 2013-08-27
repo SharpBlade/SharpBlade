@@ -74,8 +74,8 @@ namespace Sharparam.SharpBlade.Razer
 
         private const string RazerControlFile = "DO_NOT_TOUCH__RAZER_CONTROL_FILE";
 
-        private readonly ILog _log;
-        private static readonly ILog StaticLog = LogManager.GetLogger(typeof(RazerManager));
+        private readonly log4net.ILog _log;
+        private static readonly log4net.ILog StaticLog = LogManager.GetLogger(typeof(RazerManager));
 
         // Native code callbacks
         private static RazerAPI.AppEventCallbackDelegate _appEventCallback;

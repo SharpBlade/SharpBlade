@@ -46,7 +46,7 @@ namespace Sharparam.SharpBlade.Razer
         /// </summary>
         public event DynamicKeyPressedEventHandler KeyPressed;
 
-        private readonly ILog _log;
+        private readonly log4net.ILog _log;
 
         /// <summary>
         /// The <see cref="RazerAPI.DynamicKeyType" /> of this key.

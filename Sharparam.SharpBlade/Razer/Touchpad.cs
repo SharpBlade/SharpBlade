@@ -54,7 +54,7 @@ namespace Sharparam.SharpBlade.Razer
         /// </summary>
         public event GestureEventHandler Gesture;
 
-        private readonly ILog _log;
+        private readonly log4net.ILog _log;
 
         private RazerAPI.GestureType _activeGesturesType;
         private RazerAPI.GestureType _activeOSGesturesType;

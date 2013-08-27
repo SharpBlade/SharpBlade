@@ -30,6 +30,8 @@
 using System;
 using System.IO;
 using System.Linq;
+using log4net;
+using log4net.Config;
 
 #if DEBUG
 using Sharparam.SharpBlade.Native;
@@ -44,22 +46,42 @@ namespace Sharparam.SharpBlade.Logging
     /// </summary>
     public static class LogManager
     {
+        private static bool _loaded;
+
 #if DEBUG
         private static bool _consoleLoaded;
 #endif
 
         /// <summary>
-        /// The <see cref="ILogProvider" /> object that <see cref="LogManager" />
-        /// will use for providing <see cref="ILog" /> object to calling code.
+        /// Loads a configuration for the log4net library.
         /// </summary>
-        /// <remarks>This field must be set by code using the SharpBlade library
-        /// before any library code is invoked, or code that uses logging features will fail.
-        /// The <see cref="SimpleLogProvider" /> can be used for very basic logging.</remarks>
-// ReSharper disable FieldCanBeMadeReadOnly.Global
-// ReSharper disable MemberCanBePrivate.Global
-        public static ILogProvider LogProvider = null;
-// ReSharper restore MemberCanBePrivate.Global
-// ReSharper restore FieldCanBeMadeReadOnly.Global
+        /// <param name="file">
+        /// The configuration file to load.
+        /// If null, tries to automatically load a config file based on assembly name,
+        /// falls back to using default log4net configuration.
+        /// </param>
+        public static void LoadConfig(string file = null)
+        {
+            if (file == null)
+            {
+                if (File.Exists(AppDomain.CurrentDomain.FriendlyName + ".config"))
+                    XmlConfigurator.Configure();
+                else
+                    BasicConfigurator.Configure();
+            }
+            else
+            {
+                if (File.Exists(file))
+                    XmlConfigurator.Configure(new FileInfo(file));
+                else
+                {
+                    LoadConfig();
+                    return;
+                }
+            }
+
+            _loaded = true;
+        }
 
         /// <summary>
         /// Gets a logger object associated with the specified object.
@@ -68,10 +90,12 @@ namespace Sharparam.SharpBlade.Logging
         /// <returns>An <see cref="ILog" /> that provides logging features.</returns>
         public static ILog GetLogger(object sender)
         {
-            if (LogProvider == null)
-                throw new Exception("LogProvider is null! Assign LogProvider before calling GetLogger!");
+            if (!_loaded)
+                LoadConfig();
 
-            return LogProvider.GetLogger(sender.GetType().ToString() == "System.RuntimeType" ? (Type) sender : sender.GetType());
+            return log4net.LogManager.GetLogger(sender.GetType().ToString() == "System.RuntimeType"
+                                                 ? (Type) sender
+                                                 : sender.GetType());
         }
 
         /// <summary>
