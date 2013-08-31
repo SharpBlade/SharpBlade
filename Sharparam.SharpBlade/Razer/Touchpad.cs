@@ -293,7 +293,8 @@ namespace Sharparam.SharpBlade.Razer
             if (gestureType == RazerAPI.GestureType.All)
             {
                 // Invert the enabled value because of how Razer API works
-                enabled = !enabled;
+                // UPDATE (2013-08-31): Seems to have changed, we no longer need to invert
+                //enabled = !enabled;
                 // "ALL" replaces any other gesture, so we don't want to include/remove it
                 newGesturesType = gestureType;
             }
