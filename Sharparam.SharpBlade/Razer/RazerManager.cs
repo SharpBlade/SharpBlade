@@ -162,6 +162,12 @@ namespace Sharparam.SharpBlade.Razer
             _dynamicKeys = new DynamicKey[RazerAPI.DynamicKeysCount];
         }
 
+        /// <summary>
+        /// Allows an object to try to free resources and perform other
+        /// cleanup operations before it is reclaimed by garbage collection.
+        /// <see cref="RazerManager" /> will call <see cref="RazerAPI.RzSBStop" />
+        /// if not disposed at the point of finalization.
+        /// </summary>
         ~RazerManager()
         {
             Dispose(false);
