@@ -102,19 +102,20 @@ namespace Sharparam.SharpBlade.Razer
         /// Creates a new <see cref="RazerManager" />.
         /// </summary>
         /// <remarks>Only one Razer manager should be active at any one time.</remarks>
-        public RazerManager()
+        public RazerManager(bool useControlFile = false)
         {
             _log = LogManager.GetLogger(this);
 
             _log.Info("RazerManager is initializing");
 
-            if (File.Exists(RazerControlFile))
+            if (useControlFile && File.Exists(RazerControlFile))
             {
                 _log.Error("Detected control file presence, throwing exception.");
                 throw new RazerUnstableShutdownException();
             }
 
-            CreateControlFile();
+            if (useControlFile)
+                CreateControlFile();
 
             _log.Debug("Calling RzSBStart()");
 
