@@ -58,6 +58,7 @@
     <Compile Include="Extensions\EnumerationExtensions.cs" />
     <Compile Include="Helpers\IO.cs" />
     <Compile Include="Helpers\Threading.cs" />
+    <Compile Include="Integration\EmbeddedWinFormsControl.cs" />
     <Compile Include="Integration\KeyboardControl.cs" />
     <Compile Include="Logging\LogManager.cs" />
     <Compile Include="ModifierKeys.cs" />
