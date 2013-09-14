@@ -28,19 +28,23 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Forms.Integration;
 using System.Windows.Media.Imaging;
 using Sharparam.SharpBlade.Extensions;
 using Sharparam.SharpBlade.Helpers;
+using Sharparam.SharpBlade.Integration;
 using Sharparam.SharpBlade.Logging;
 using Sharparam.SharpBlade.Native;
 using Sharparam.SharpBlade.Razer.Events;
 using Sharparam.SharpBlade.Razer.Exceptions;
+using Point = System.Drawing.Point;
 
 namespace Sharparam.SharpBlade.Razer
 {
@@ -405,7 +409,9 @@ namespace Sharparam.SharpBlade.Razer
         /// Draws a WPF window to the touchpad.
         /// </summary>
         /// <param name="window">Window object to draw.</param>
-        public void DrawWindow(Window window)
+        /// <param name="winFormsComponents">Array of KeyValuePairs containing a WindowsFormsHost as the key and a WinForms control as the value.
+        /// These pairs will be overlayed on the bitmap that is passed to the SwitchBlade device.</param>
+        public void DrawWindow(Window window, IEnumerable<EmbeddedWinFormsControl> winFormsComponents = null)
         {
             var rtb = new RenderTargetBitmap(RazerAPI.TouchpadWidth, RazerAPI.TouchpadHeight, 96, 96,
                                                 System.Windows.Media.PixelFormats.Pbgra32);
@@ -417,6 +423,10 @@ namespace Sharparam.SharpBlade.Razer
                 enc.Frames.Add(BitmapFrame.Create(rtb));
                 enc.Save(stream);
                 var bitmap = new Bitmap(stream);
+                if (winFormsComponents != null)
+                    using (var graphics = Graphics.FromImage(bitmap))
+                        foreach (var component in winFormsComponents)
+                            graphics.DrawImage(component.Draw(), component.Bounds);
                 DrawBitmap(bitmap);
             }
         }
