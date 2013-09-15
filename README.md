@@ -1,6 +1,8 @@
 Sharparam.SharpBlade
 ====================
 
+[![Build Status](http://ci.sharparam.com/buildStatus/icon?job=SharpBlade)](http://ci.sharparam.com/job/SharpBlade/)
+
 A C# wrapper/implementation for the SwitchBlade UI API
 ------------------------------------------------------
 
