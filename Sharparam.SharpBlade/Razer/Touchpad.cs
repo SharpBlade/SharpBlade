@@ -349,14 +349,19 @@ namespace Sharparam.SharpBlade.Razer
                                                 System.Windows.Media.PixelFormats.Pbgra32);
             rtb.Render(window);
 
+            BitmapEncoder encoder = new BmpBitmapEncoder();
+
             using (var stream = new MemoryStream())
             {
-                BitmapEncoder enc = new BmpBitmapEncoder();
-                enc.Frames.Add(BitmapFrame.Create(rtb));
-                enc.Save(stream);
+                encoder.Frames.Add(BitmapFrame.Create(rtb));
+                encoder.Save(stream);
                 var bitmap = new Bitmap(stream);
                 DrawBitmap(bitmap);
+                bitmap.Dispose();
+                encoder.Frames.Clear();
             }
+
+            rtb.Clear();
         }
 
         /// <summary>
