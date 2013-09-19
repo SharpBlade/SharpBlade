@@ -355,9 +355,10 @@ namespace Sharparam.SharpBlade.Razer
             {
                 encoder.Frames.Add(BitmapFrame.Create(rtb));
                 encoder.Save(stream);
-                var bitmap = new Bitmap(stream);
-                DrawBitmap(bitmap);
-                bitmap.Dispose();
+
+                using(var bitmap = new Bitmap(stream))
+                    DrawBitmap(bitmap);
+
                 encoder.Frames.Clear();
             }
 
