@@ -367,7 +367,7 @@ namespace Sharparam.SharpBlade.Razer
         /// <param name="interval">Interval to poll drawing functions at,
         /// only used if RenderMethod is set to Polling.
         /// Default value 55ms (ca 18 FPS).</param>
-        public void SetForm(Form form, RenderMethod method, int interval = 55)
+        public void SetForm(Form form, RenderMethod method = RenderMethod.Event, int interval = 55)
         {
             ClearForm();
 
@@ -404,7 +404,7 @@ namespace Sharparam.SharpBlade.Razer
         /// </summary>
         /// <param name="window">The new window to render.</param>
         /// <param name="method">The method to use for rendering the window.</param>
-        public void SetWindow(Window window, RenderMethod method)
+        public void SetWindow(Window window, RenderMethod method = RenderMethod.Event)
         {
             SetWindow(window, method, new TimeSpan(0, 0, 0, 0, 42));
         }
