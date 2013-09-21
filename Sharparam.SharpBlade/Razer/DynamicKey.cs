@@ -129,7 +129,7 @@ namespace Sharparam.SharpBlade.Razer
         {
             PreviousState = State;
             State = state;
-            if (State == RazerAPI.DynamicKeyState.Down && PreviousState == RazerAPI.DynamicKeyState.Up)
+            if (State == RazerAPI.DynamicKeyState.Down && (PreviousState == RazerAPI.DynamicKeyState.Up || PreviousState == RazerAPI.DynamicKeyState.None))
                 OnKeyPressed();
         }
 

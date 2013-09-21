@@ -60,6 +60,7 @@
     <Compile Include="Helpers\Threading.cs" />
     <Compile Include="Integration\EmbeddedWinFormsControl.cs" />
     <Compile Include="Integration\KeyboardControl.cs" />
+    <Compile Include="Integration\Renderer.cs" />
     <Compile Include="Logging\LogManager.cs" />
     <Compile Include="ModifierKeys.cs" />
     <Compile Include="Native\Helpers.cs" />

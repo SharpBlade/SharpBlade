@@ -54,6 +54,27 @@ namespace Sharparam.SharpBlade.Razer
     public class Touchpad : IDisposable
     {
         /// <summary>
+        /// Specifies what method to use for
+        /// rendering a form or window.
+        /// </summary>
+        public enum RenderMethod
+        {
+            /// <summary>
+            /// Event-based. Subscribes to the form's/window's
+            /// paint/draw event and performs an update to the SBUI.
+            /// This method is the most resource intensive.
+            /// </summary>
+            Event,
+
+            /// <summary>
+            /// Creates a timer and performs drawing update
+            /// at a specified interval.
+            /// Less resource intensive than event-based drawing.
+            /// </summary>
+            Polling
+        }
+
+        /// <summary>
         /// Raised when a gesture occurs on the touchpad.
         /// </summary>
         public event GestureEventHandler Gesture;
@@ -65,6 +86,8 @@ namespace Sharparam.SharpBlade.Razer
 
         private bool _allGestureEnabled;
         private bool _allOSGestureEnabled;
+
+        private Renderer _renderer;
 
         private static RazerAPI.TouchpadGestureCallbackFunctionDelegate _gestureCallback;
 
@@ -101,7 +124,9 @@ namespace Sharparam.SharpBlade.Razer
         {
             
         }
-        
+
+        #region Event Dispatchers
+
         private void OnGesture(RazerAPI.GestureType gestureType, uint parameter, ushort x, ushort y, ushort z)
         {
             var func = Gesture;
@@ -109,100 +134,9 @@ namespace Sharparam.SharpBlade.Razer
                 func(this, new GestureEventArgs(gestureType, parameter, x, y, z));
         }
 
-        /// <summary>
-        /// Sets the form to be rendered to this touchpad.
-        /// </summary>
-        /// <param name="form">The new form to render.</param>
-        public void SetForm(Form form)
-        {
-            ClearForm();
+        #endregion Event Dispatchers
 
-            CurrentForm = form;
-
-            CurrentForm.Paint += FormPaintHandler;
-        }
-
-        /// <summary>
-        /// Clears the current form from touchpad
-        /// and stops rendering of it.
-        /// </summary>
-        public void ClearForm()
-        {
-            if (CurrentForm != null)
-                CurrentForm.Paint -= FormPaintHandler;
-
-            CurrentForm = null;
-        }
-
-        /// <summary>
-        /// Sets the WPF window to be rendered to this touchpad.
-        /// </summary>
-        /// <param name="window">The new window to render.</param>
-        public void SetWindow(Window window)
-        {
-            ClearWindow();
-
-            CurrentWindow = window;
-
-            CurrentWindow.ContentRendered += WindowContentRenderedHandler;
-        }
-
-        /// <summary>
-        /// Clears the current WPF window from
-        /// touchpad and stops rendering of it.
-        /// </summary>
-        public void ClearWindow()
-        {
-            if (CurrentWindow != null)
-                CurrentWindow.ContentRendered -= WindowContentRenderedHandler;
-
-            CurrentWindow = null;
-        }
-
-        /// <summary>
-        /// Set a static image to be displayed on the touchpad.
-        /// </summary>
-        /// <param name="image">Path to image.</param>
-        public void SetImage(string image)
-        {
-            image = IO.GetAbsolutePath(image);
-
-            var hResult = RazerAPI.RzSBSetImageTouchpad(image);
-            if (HRESULT.RZSB_FAILED(hResult))
-                throw new RazerNativeException("RzSBSetImageTouchpad", hResult);
-
-            CurrentImage = image;
-        }
-
-        /// <summary>
-        /// Clears the image currently on the touchpad.
-        /// </summary>
-        public void ClearImage()
-        {
-            var hResult = RazerAPI.RzSBSetImageTouchpad(IO.GetAbsolutePath(Constants.BlankTouchpadImage));
-            if (HRESULT.RZSB_FAILED(hResult))
-                throw new RazerNativeException("RzSBSetImageTouchpad", hResult);
-
-            CurrentImage = null;
-        }
-
-        /// <summary>
-        /// Clears current form and image on the touchpad (if any).
-        /// </summary>
-        public void ClearAll()
-        {
-            ClearForm();
-            ClearImage();
-        }
-
-        /// <summary>
-        /// Stops rendering of forms and images.
-        /// </summary>
-        [Obsolete("Renamed to ClearAll")]
-        public void StopAll()
-        {
-            ClearAll();
-        }
+        #region Gesture Methods
 
         /// <summary>
         /// Sets whether a gesture should be handled by the touchpad.
@@ -359,6 +293,10 @@ namespace Sharparam.SharpBlade.Razer
             SetOSGesture(gestureType, false);
         }
 
+        #endregion Gesture Methods
+
+        #region Drawing Methods
+
         /// <summary>
         /// Renders a raw bitmap to the touchpad display.
         /// </summary>
@@ -417,25 +355,173 @@ namespace Sharparam.SharpBlade.Razer
                                                 System.Windows.Media.PixelFormats.Pbgra32);
             rtb.Render(window);
 
+            BitmapEncoder encoder = new BmpBitmapEncoder();
+
             using (var stream = new MemoryStream())
             {
-                BitmapEncoder enc = new BmpBitmapEncoder();
-                enc.Frames.Add(BitmapFrame.Create(rtb));
-                enc.Save(stream);
-                var bitmap = new Bitmap(stream);
-                if (winFormsComponents != null)
-                    using (var graphics = Graphics.FromImage(bitmap))
-                        foreach (var component in winFormsComponents)
-                            graphics.DrawImage(component.Draw(), component.Bounds);
-                DrawBitmap(bitmap);
+                encoder.Frames.Add(BitmapFrame.Create(rtb));
+                encoder.Save(stream);
+
+                using(var bitmap = new Bitmap(stream))
+                {
+                    if (winFormsComponents != null)
+                        using (var graphics = Graphics.FromImage(bitmap))
+                            foreach (var component in winFormsComponents)
+                                graphics.DrawImage(component.Draw(), component.Bounds);
+                    DrawBitmap(bitmap);
+                }
+                
+                encoder.Frames.Clear();
             }
+
+            rtb.Clear();
         }
+
+        /// <summary>
+        /// Sets the form to be rendered to this touchpad.
+        /// </summary>
+        /// <param name="form">The new form to render.</param>
+        /// <param name="method">The method to use for rendering the form.</param>
+        /// <param name="interval">Interval to poll drawing functions at,
+        /// only used if RenderMethod is set to Polling.
+        /// Default value 55ms (ca 18 FPS).</param>
+        public void SetForm(Form form, RenderMethod method = RenderMethod.Event, int interval = 55)
+        {
+            ClearForm();
+
+            CurrentForm = form;
+
+            if (method == RenderMethod.Event)
+                CurrentForm.Paint += FormPaintHandler;
+            else
+                _renderer = new Renderer(this, CurrentForm, interval);
+        }
+
+        /// <summary>
+        /// Clears the current form from touchpad
+        /// and stops rendering of it.
+        /// </summary>
+        public void ClearForm()
+        {
+            if (CurrentForm != null && _renderer == null)
+                CurrentForm.Paint -= FormPaintHandler;
+
+            if (_renderer != null)
+            {
+                _renderer.Dispose();
+                _renderer = null;
+            }
+
+            CurrentForm = null;
+        }
+
+        /// <summary>
+        /// Sets the WPF window to be rendered to this touchpad.
+        /// Initializes the polling interval to 42ms (ca 24 FPS)
+        /// if called with RenderMethod set to Polling.
+        /// </summary>
+        /// <param name="window">The new window to render.</param>
+        /// <param name="method">The method to use for rendering the window.</param>
+        public void SetWindow(Window window, RenderMethod method = RenderMethod.Event)
+        {
+            SetWindow(window, method, new TimeSpan(0, 0, 0, 0, 42));
+        }
+
+        /// <summary>
+        /// Sets the WPF window to be rendered to this touchpad.
+        /// </summary>
+        /// <param name="window">The new window to render.</param>
+        /// <param name="method">The method to use for rendering the window</param>
+        /// <param name="interval">The interval to poll the window at,
+        /// only used if RenderMethod is Polling.</param>
+        public void SetWindow(Window window, RenderMethod method, TimeSpan interval)
+        {
+            ClearWindow();
+
+            CurrentWindow = window;
+
+            if (method == RenderMethod.Event)
+                CurrentWindow.ContentRendered += WindowContentRenderedHandler;
+            else
+                _renderer = new Renderer(this, CurrentWindow, interval);
+        }
+
+        /// <summary>
+        /// Clears the current WPF window from
+        /// touchpad and stops rendering of it.
+        /// </summary>
+        public void ClearWindow()
+        {
+            if (CurrentWindow != null && _renderer == null)
+                CurrentWindow.ContentRendered -= WindowContentRenderedHandler;
+
+            if (_renderer != null)
+            {
+                _renderer.Dispose();
+                _renderer = null;
+            }
+
+            CurrentWindow = null;
+        }
+
+        /// <summary>
+        /// Set a static image to be displayed on the touchpad.
+        /// </summary>
+        /// <param name="image">Path to image.</param>
+        public void SetImage(string image)
+        {
+            image = IO.GetAbsolutePath(image);
+
+            var hResult = RazerAPI.RzSBSetImageTouchpad(image);
+            if (HRESULT.RZSB_FAILED(hResult))
+                throw new RazerNativeException("RzSBSetImageTouchpad", hResult);
+
+            CurrentImage = image;
+        }
+
+        /// <summary>
+        /// Clears the image currently on the touchpad.
+        /// </summary>
+        public void ClearImage()
+        {
+            var hResult = RazerAPI.RzSBSetImageTouchpad(IO.GetAbsolutePath(Constants.BlankTouchpadImage));
+            if (HRESULT.RZSB_FAILED(hResult))
+                throw new RazerNativeException("RzSBSetImageTouchpad", hResult);
+
+            CurrentImage = null;
+        }
+
+        /// <summary>
+        /// Clears current form and image on the touchpad (if any).
+        /// </summary>
+        public void ClearAll()
+        {
+            ClearForm();
+            ClearImage();
+        }
+
+        /// <summary>
+        /// Stops rendering of forms and images.
+        /// </summary>
+        [Obsolete("Renamed to ClearAll")]
+        public void StopAll()
+        {
+            ClearAll();
+        }
+
+        #endregion Drawing Methods
+
+        #region Native Handlers
 
         private HRESULT HandleTouchpadGesture(RazerAPI.GestureType gestureType, uint dwParameters, ushort wXPos, ushort wYPos, ushort wZPos)
         {
             OnGesture(gestureType, dwParameters, wXPos, wYPos, wZPos);
             return HRESULT.RZSB_OK;
         }
+
+        #endregion Native Handlers
+
+        #region Form/Window draw handlers
 
         private void FormPaintHandler(object sender, PaintEventArgs e)
         {
@@ -446,5 +532,7 @@ namespace Sharparam.SharpBlade.Razer
         {
             DrawWindow(CurrentWindow);
         }
+
+        #endregion Form/Window draw handlers
     }
 }
