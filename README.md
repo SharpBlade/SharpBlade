@@ -1,7 +1,7 @@
 Sharparam.SharpBlade
 ====================
 
-[![Build Status](http://ci.sharparam.com/buildStatus/icon?job=SharpBlade)](http://ci.sharparam.com/job/SharpBlade/)
+[![Build Status](http://ci.sharpblade.net/buildStatus/icon?job=SharpBlade)](http://ci.sharpblade.net/job/SharpBlade/)
 
 A C# wrapper/implementation for the SwitchBlade UI API
 ------------------------------------------------------
@@ -48,6 +48,9 @@ Projects
 Current projects utilizing this or modified versions of this library:
 
  * [SwitchBladeSteam][sbs]
+ * Razer Notes
+ * Razer Default Audio
+ * Razer Spotify
 
 [newpull]: https://github.com/Sharparam/SharpBlade/pull/new/master
 [sharp]: https://github.com/Sharparam
