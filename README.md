@@ -48,6 +48,9 @@ Projects
 Current projects utilizing this or modified versions of this library:
 
  * [SwitchBladeSteam][sbs]
+ * Razer Notes
+ * Razer Default Audio
+ * Razer Spotify
 
 [newpull]: https://github.com/Sharparam/SharpBlade/pull/new/master
 [sharp]: https://github.com/Sharparam
