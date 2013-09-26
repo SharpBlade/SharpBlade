@@ -70,23 +70,32 @@
     <Compile Include="Native\RazerAPI.cs" />
     <Compile Include="Razer\DynamicKey.cs" />
     <Compile Include="Razer\Events\AppEvent.cs" />
+    <Compile Include="Razer\Events\FlickEvent.cs" />
     <Compile Include="Razer\Events\KeyboardChar.cs" />
     <Compile Include="Razer\Events\DynamicKey.cs" />
-    <Compile Include="Razer\Events\Gesture.cs" />
+    <Compile Include="Razer\Events\GestureEvent.cs" />
     <Compile Include="Razer\Events\KeyboardKey.cs" />
     <Compile Include="Razer\Events\KeyboardRaw.cs" />
+    <Compile Include="Razer\Events\MoveEvent.cs" />
+    <Compile Include="Razer\Events\PressEvent.cs" />
+    <Compile Include="Razer\Events\ReleaseEvent.cs" />
+    <Compile Include="Razer\Events\RotateEvent.cs" />
+    <Compile Include="Razer\Events\TapEvent.cs" />
+    <Compile Include="Razer\Events\ZoomEvent.cs" />
     <Compile Include="Razer\Exceptions\RazerDynamicKeyException.cs" />
     <Compile Include="Razer\Exceptions\RazerException.cs" />
     <Compile Include="Razer\Exceptions\RazerNativeException.cs" />
     <Compile Include="Razer\Exceptions\RazerUnstableShutdownException.cs" />
     <Compile Include="Razer\RazerManager.cs" />
+    <Compile Include="Razer\RotateDirection.cs" />
     <Compile Include="Razer\Structs\RenderStats.cs" />
     <Compile Include="Razer\Touchpad.cs" />
+    <Compile Include="Razer\ZoomDirection.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" BuildVersion_UseGlobalSettings="False" />
+      <UserProperties BuildVersion_UseGlobalSettings="False" BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
