@@ -253,10 +253,7 @@ namespace Sharparam.SharpBlade.Razer
         {
             RazerAPI.GestureType newGesturesType;
             if (gestureType == RazerAPI.GestureType.All)
-            {
                 newGesturesType = gestureType;
-                //enabled = !enabled;
-            }
             else if (gestureType == RazerAPI.GestureType.None)
             {
                 if (_activeGesturesType == RazerAPI.GestureType.None)
@@ -276,7 +273,8 @@ namespace Sharparam.SharpBlade.Razer
             }
             else if (enabled)
             {
-                if (_activeGesturesType.Has(gestureType) && !(_activeGesturesType == RazerAPI.GestureType.All && !_allGestureEnabled))
+                if (_activeGesturesType.Has(gestureType) &&
+                    !(_activeGesturesType == RazerAPI.GestureType.All && !_allGestureEnabled))
                 {
                     _log.Debug("Active gestures already have requested value");
                     _log.DebugFormat("_activeGestures == {0}", _activeGesturesType);
