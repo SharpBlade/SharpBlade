@@ -101,8 +101,17 @@ namespace Sharparam.SharpBlade.Razer
         /// <summary>
         /// Creates a new <see cref="RazerManager" />.
         /// </summary>
+        /// <param name="disableOSGestures">
+        /// If true, all OS gestures will by default be disabled on the touchpad,
+        /// making it do nothing until gestures are enabled manually.
+        /// </param>
+        /// <param name="useControlFile">
+        /// If true, creates a control file that is checked on subsequent creations
+        /// of <see cref="RazerManager" />, initialization will fail if a control file
+        /// is found and useControlFile is true.
+        /// </param>
         /// <remarks>Only one Razer manager should be active at any one time.</remarks>
-        public RazerManager(bool useControlFile = false)
+        public RazerManager(bool disableOSGestures = true, bool useControlFile = false)
         {
             _log = LogManager.GetLogger(this);
 
@@ -139,6 +148,9 @@ namespace Sharparam.SharpBlade.Razer
 
             _log.Info("Setting up touchpad");
             Touchpad = new Touchpad();
+
+            if (disableOSGestures)
+                Touchpad.DisableOSGesture(RazerAPI.GestureType.All);
 
             _log.Debug("Creating dynamic key callback");
             _dkCallback = HandleDynamicKeyEvent;

@@ -35,7 +35,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Forms;
-using System.Windows.Forms.Integration;
 using System.Windows.Media.Imaging;
 using Sharparam.SharpBlade.Extensions;
 using Sharparam.SharpBlade.Helpers;
@@ -44,7 +43,6 @@ using Sharparam.SharpBlade.Logging;
 using Sharparam.SharpBlade.Native;
 using Sharparam.SharpBlade.Razer.Events;
 using Sharparam.SharpBlade.Razer.Exceptions;
-using Point = System.Drawing.Point;
 
 namespace Sharparam.SharpBlade.Razer
 {
@@ -78,6 +76,51 @@ namespace Sharparam.SharpBlade.Razer
         /// Raised when a gesture occurs on the touchpad.
         /// </summary>
         public event GestureEventHandler Gesture;
+
+        /// <summary>
+        /// Raised when the touchpad is pressed.
+        /// </summary>
+        public event PressEventHandler Press;
+
+        /// <summary>
+        /// Raised when the touchpad is tapped.
+        /// </summary>
+        public event TapEventHandler Tap;
+
+        /// <summary>
+        /// Raised when a finger(s?) flick on the touchpad.
+        /// </summary>
+        public event FlickEventHandler Flick;
+
+        /// <summary>
+        /// Raised when a pinch motion is performed on the touchpad.
+        /// </summary>
+        public event ZoomEventHandler Zoom;
+
+        /// <summary>
+        /// Raised when a rotating motion is performed on the touchpad.
+        /// </summary>
+        public event RotateEventHandler Rotate;
+
+        /// <summary>
+        /// Raised when the finger moves on the touchpad.
+        /// </summary>
+        public event MoveEventHandler Move;
+
+        /// <summary>
+        /// Raised when a finger is held on the touchpad.
+        /// </summary>
+        public event GestureEventHandler Hold;
+
+        /// <summary>
+        /// Raised when a finger is released from the touchpad.
+        /// </summary>
+        public event ReleaseEventHandler Release;
+
+        /// <summary>
+        /// Raised when a scrolling motion is performed on the touchpad.
+        /// </summary>
+        public event GestureEventHandler Scroll;
 
         private readonly log4net.ILog _log;
 
@@ -132,6 +175,69 @@ namespace Sharparam.SharpBlade.Razer
             var func = Gesture;
             if (func != null)
                 func(this, new GestureEventArgs(gestureType, parameter, x, y, z));
+        }
+
+        private void OnPress(uint touchCount, ushort x, ushort y)
+        {
+            var func = Press;
+            if (func != null)
+                func(this, new PressEventArgs(touchCount, x, y));
+        }
+
+        private void OnTap(ushort x, ushort y)
+        {
+            var func = Tap;
+            if (func != null)
+                func(this, new TapEventArgs(x, y));
+        }
+
+        private void OnFlick(uint touchCount, RazerAPI.Direction direction)
+        {
+            var func = Flick;
+            if (func != null)
+                func(this, new FlickEventArgs(touchCount, direction));
+        }
+
+        private void OnZoom(ZoomDirection direction)
+        {
+            var func = Zoom;
+            if (func != null)
+                func(this, new ZoomEventArgs(direction));
+        }
+
+        private void OnRotate(RotateDirection direction)
+        {
+            var func = Rotate;
+            if (func != null)
+                func(this, new RotateEventArgs(direction));
+        }
+
+        private void OnMove(ushort x, ushort y)
+        {
+            var func = Move;
+            if (func != null)
+                func(this, new MoveEventArgs(x, y));
+        }
+
+        private void OnHold(uint param, ushort x, ushort y, ushort z)
+        {
+            var func = Hold;
+            if (func != null)
+                func(this, new GestureEventArgs(RazerAPI.GestureType.Hold, param, x, y, z));
+        }
+
+        private void OnRelease(uint touchCount, ushort x, ushort y)
+        {
+            var func = Release;
+            if (func != null)
+                func(this, new ReleaseEventArgs(touchCount, x, y));
+        }
+
+        private void OnScroll(uint param, ushort x, ushort y, ushort z)
+        {
+            var func = Scroll;
+            if (func != null)
+                func(this, new GestureEventArgs(RazerAPI.GestureType.Scroll, param, x, y, z));
         }
 
         #endregion Event Dispatchers
@@ -516,6 +622,71 @@ namespace Sharparam.SharpBlade.Razer
         private HRESULT HandleTouchpadGesture(RazerAPI.GestureType gestureType, uint dwParameters, ushort wXPos, ushort wYPos, ushort wZPos)
         {
             OnGesture(gestureType, dwParameters, wXPos, wYPos, wZPos);
+
+            switch (gestureType)
+            {
+                case RazerAPI.GestureType.Press:
+                    OnPress(dwParameters, wXPos, wYPos);
+                    break;
+                case RazerAPI.GestureType.Tap:
+                    OnTap(wXPos, wYPos);
+                    break;
+                case RazerAPI.GestureType.Flick:
+                {
+                    var direction = (RazerAPI.Direction) wZPos;
+                    OnFlick(dwParameters, direction);
+                    break;
+                }
+                case RazerAPI.GestureType.Zoom:
+                {
+                    ZoomDirection direction;
+                    switch (dwParameters)
+                    {
+                        case 1:
+                            direction = ZoomDirection.In;
+                            break;
+                        case 2:
+                            direction = ZoomDirection.Out;
+                            break;
+                        default:
+                            direction = ZoomDirection.Invalid;
+                            break;
+                    }
+                    OnZoom(direction);
+                    break;
+                }
+                case RazerAPI.GestureType.Rotate:
+                {
+                    RotateDirection direction;
+                    switch (dwParameters)
+                    {
+                        case 1:
+                            direction = RotateDirection.Clockwise;
+                            break;
+                        case 2:
+                            direction = RotateDirection.CounterClockwise;
+                            break;
+                        default:
+                            direction = RotateDirection.Invalid;
+                            break;
+                    }
+                    OnRotate(direction);
+                    break;
+                }
+                case RazerAPI.GestureType.Move:
+                    OnMove(wXPos, wYPos);
+                    break;
+                case RazerAPI.GestureType.Hold:
+                    OnHold(dwParameters, wXPos, wYPos, wZPos);
+                    break;
+                case RazerAPI.GestureType.Release:
+                    OnRelease(dwParameters, wXPos, wYPos);
+                    break;
+                case RazerAPI.GestureType.Scroll:
+                    OnScroll(dwParameters, wXPos, wYPos, wZPos);
+                    break;
+            }
+
             return HRESULT.RZSB_OK;
         }
 
