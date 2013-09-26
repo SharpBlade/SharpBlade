@@ -255,7 +255,7 @@ namespace Sharparam.SharpBlade.Razer
             if (gestureType == RazerAPI.GestureType.All)
             {
                 newGesturesType = gestureType;
-                enabled = !enabled;
+                //enabled = !enabled;
             }
             else if (gestureType == RazerAPI.GestureType.None)
             {
