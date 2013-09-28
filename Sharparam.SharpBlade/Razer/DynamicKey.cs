@@ -145,6 +145,17 @@ namespace Sharparam.SharpBlade.Razer
         }
 
         /// <summary>
+        /// Sets the images that are displayed on this key.
+        /// </summary>
+        /// <param name="upImage">Path to image displayed when this key is in the "UP" state.</param>
+        /// <param name="downImage">Path to the image displayed when this key is in the "DOWN" state.</param>
+        public void SetImages(string upImage, string downImage)
+        {
+            SetUpImage(upImage);
+            SetDownImage(downImage);
+        }
+
+        /// <summary>
         /// Sets an image for a specific key state.
         /// </summary>
         /// <param name="image">Path to image.</param>
