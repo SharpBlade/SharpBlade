@@ -165,6 +165,8 @@ namespace Sharparam.SharpBlade.Razer
             if (state != RazerAPI.DynamicKeyState.Up && state != RazerAPI.DynamicKeyState.Down)
                 throw new ArgumentException("State can only be up or down", "state");
 
+            _log.DebugFormat("Setting {0} on {1} to {2}", state, KeyType, image);
+
             var hResult = RazerAPI.RzSBSetImageDynamicKey(KeyType, state, IO.GetAbsolutePath(image));
             if (!HRESULT.RZSB_SUCCESS(hResult))
                 throw new RazerNativeException("RzSBSetImageDynamicKey", hResult);
@@ -191,6 +193,15 @@ namespace Sharparam.SharpBlade.Razer
         public void SetDownImage(string image)
         {
             SetImage(image, RazerAPI.DynamicKeyState.Down);
+        }
+
+        /// <summary>
+        /// Refreshes this dynamic key to make sure its
+        /// images are up to date.
+        /// </summary>
+        public void Refresh()
+        {
+            SetImages(UpImage, DownImage);
         }
 
         /// <summary>
