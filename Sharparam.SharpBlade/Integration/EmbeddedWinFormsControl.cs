@@ -55,14 +55,11 @@ namespace Sharparam.SharpBlade.Integration
         /// </summary>
         public Rectangle Bounds
         {
-            get
-            {
-                return new Rectangle((int) Host.Margin.Left, (int) Host.Margin.Top, Control.Width, Control.Height);
-            }
+            get { return new Rectangle((int)Host.Margin.Left, (int)Host.Margin.Top, Control.Width, Control.Height); }
         }
 
         /// <summary>
-        /// Creates a new <see cref="EmbeddedWinFormsControl" />.
+        /// Initializes a new instance of the <see cref="EmbeddedWinFormsControl" /> struct.
         /// </summary>
         /// <param name="host">The WindowsFormsHost object containing the control.</param>
         /// <param name="control">The WinForms control contained in the host.</param>

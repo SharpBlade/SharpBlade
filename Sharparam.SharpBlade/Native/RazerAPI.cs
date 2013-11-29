@@ -29,6 +29,8 @@
 
 // Credits to itsbth for helping with P/Invoke
 
+// 2013-04-05: Major update to reflect changes in the new SDK.
+
 /* ╔══════════════════════════════╗
  * ║ Help table for mapping types ║
  * ╠════════╦═════════╦═══════════╩──────────┐
@@ -45,8 +47,6 @@
  * └────────┴─────────┴──────────────────────┘
  */
 
-// 2013-04-05: Major update to reflect changes in the new SDK.
-
 using System;
 using System.Runtime.InteropServices;
 
@@ -56,10 +56,11 @@ namespace Sharparam.SharpBlade.Native
     /// Static class containing all functions
     /// provided by the Razer SwitchBlade UI SDK.
     /// </summary>
+    /// <remarks>
+    /// Native functions from SwitchBladeSDK32.dll, all functions are __cdecl calls.
+    /// </remarks>
     public static class RazerAPI
     {
-        // Native functions from SwitchBladeSDK32.dll, all functions are __cdecl calls
-
         #region File Constants
 
         /// <summary>
@@ -271,6 +272,7 @@ namespace Sharparam.SharpBlade.Native
         /// </summary>
         /// <param name="dynamicKeyType">The key type that was changed.</param>
         /// <param name="dynamicKeyState">The new state of the key.</param>
+        /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate HRESULT DynamicKeyCallbackFunctionDelegate(DynamicKeyType dynamicKeyType, DynamicKeyState dynamicKeyState);
 
@@ -334,12 +336,12 @@ namespace Sharparam.SharpBlade.Native
         public struct Capabilities
         {
             /// <summary>
-            /// Version.
+            /// Version of SDK/hardware.
             /// </summary>
             public ulong Version;
 
             /// <summary>
-            /// BEVersion
+            /// BEVersion.
             /// </summary>
             public ulong BEVersion;
 
@@ -420,12 +422,12 @@ namespace Sharparam.SharpBlade.Native
             None = 0,
 
             /// <summary>
-            /// Depressed.
+            /// Depressed state.
             /// </summary>
             Up,
 
             /// <summary>
-            /// Pressed.
+            /// Pressed state.
             /// </summary>
             Down,
 
@@ -855,14 +857,20 @@ namespace Sharparam.SharpBlade.Native
         /// </summary>
         /// <param name="a">Gesture type value to check.</param>
         /// <returns>True if valid gesture, false otherwise.</returns>
-        public static bool ValidGesture(uint a) { return (a & (uint) GestureType.All) != 0; }
+        public static bool ValidGesture(uint a)
+        {
+            return (a & (uint)GestureType.All) != 0;
+        }
         
         /// <summary>
         /// Checks if the gesture type value denotes a single gesture.
         /// </summary>
         /// <param name="a">Gesture type value to check.</param>
         /// <returns>True if this is a single gesture, false if multiple.</returns>
-        public static bool SingleGesture(uint a) { return 0 == ((a - a) & a); }
+        public static bool SingleGesture(uint a)
+        {
+            return 0 == ((a - a) & a);
+        }
 
         #endregion Macros
     }

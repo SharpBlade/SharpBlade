@@ -45,12 +45,12 @@ namespace Sharparam.SharpBlade
         /// <summary>
         /// Image used for the UP state.
         /// </summary>
-        public readonly string UpImage;
+        public readonly string Image;
 
         /// <summary>
         /// Image used for the DOWN state.
         /// </summary>
-        public readonly string DownImage;
+        public readonly string PressedImage;
 
         /// <summary>
         /// Handler function called when this key is pressed.
@@ -58,7 +58,7 @@ namespace Sharparam.SharpBlade
         public readonly DynamicKeyPressedEventHandler Handler;
 
         /// <summary>
-        /// Creates a new <see cref="DynamicKeySettings" /> structure.
+        /// Initializes a new instance of the <see cref="DynamicKeySettings" /> struct.
         /// </summary>
         /// <param name="key">The key for which these settings are.</param>
         /// <param name="image">Image to use for both UP and DOWN states.</param>
@@ -66,22 +66,20 @@ namespace Sharparam.SharpBlade
         public DynamicKeySettings(RazerAPI.DynamicKeyType key, string image, DynamicKeyPressedEventHandler handler)
             : this(key, image, image, handler)
         {
-            
         }
 
         /// <summary>
-        /// Creates a new <see cref="DynamicKeySettings" /> structure.
+        /// Initializes a new instance of the <see cref="DynamicKeySettings" /> struct.
         /// </summary>
         /// <param name="key">The key for which these settings are.</param>
-        /// <param name="upImage">Image to use for the UP state.</param>
-        /// <param name="downImage">Image to use for the DOWN state.</param>
+        /// <param name="image">Image to use for the UP state.</param>
+        /// <param name="pressedImage">Image to use for the DOWN state.</param>
         /// <param name="handler">Handler called when this key is pressed.</param>
-        public DynamicKeySettings(RazerAPI.DynamicKeyType key, string upImage, string downImage,
-                                  DynamicKeyPressedEventHandler handler)
+        public DynamicKeySettings(RazerAPI.DynamicKeyType key, string image, string pressedImage, DynamicKeyPressedEventHandler handler)
         {
             Key = key;
-            UpImage = upImage;
-            DownImage = downImage;
+            Image = image;
+            PressedImage = pressedImage;
             Handler = handler;
         }
     }

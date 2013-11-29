@@ -34,9 +34,9 @@ using log4net;
 using log4net.Config;
 
 #if DEBUG
-using Sharparam.SharpBlade.Native;
 using System.Text;
 using Microsoft.Win32.SafeHandles;
+using Sharparam.SharpBlade.Native;
 #endif
 
 namespace Sharparam.SharpBlade.Logging
@@ -46,9 +46,16 @@ namespace Sharparam.SharpBlade.Logging
     /// </summary>
     public static class LogManager
     {
+        /// <summary>
+        /// Whether or not a log4net instance (and thus its config)
+        /// has been loaded.
+        /// </summary>
         private static bool _loaded;
 
 #if DEBUG
+        /// <summary>
+        /// Whether or not a console has been loaded and allocated for log output.
+        /// </summary>
         private static bool _consoleLoaded;
 #endif
 
@@ -94,8 +101,8 @@ namespace Sharparam.SharpBlade.Logging
                 LoadConfig();
 
             return log4net.LogManager.GetLogger(sender.GetType().ToString() == "System.RuntimeType"
-                                                 ? (Type) sender
-                                                 : sender.GetType());
+                                                    ? (Type)sender
+                                                    : sender.GetType());
         }
 
         /// <summary>
@@ -115,7 +122,7 @@ namespace Sharparam.SharpBlade.Logging
             var safeFileHandle = new SafeFileHandle(stdHandle, true);
             var fileStream = new FileStream(safeFileHandle, FileAccess.Write);
             var encoding = Encoding.GetEncoding(WinAPI.CODE_PAGE);
-            var stdOut = new StreamWriter(fileStream, encoding) {AutoFlush = true};
+            var stdOut = new StreamWriter(fileStream, encoding) { AutoFlush = true };
             Console.SetOut(stdOut);
             _consoleLoaded = true;
 #endif
@@ -146,7 +153,7 @@ namespace Sharparam.SharpBlade.Logging
         public static void ClearOldLogs(int daysOld = 7, string logsDir = "logs")
 // ReSharper restore UnusedMember.Global
         {
-            var log = GetLogger(typeof (LogManager));
+            var log = GetLogger(typeof(LogManager));
 
             if (!Directory.Exists(logsDir))
             {

@@ -27,7 +27,6 @@
  * "Razer" is a trademark of Razer USA Ltd.
  */
 
-
 using System;
 using System.Windows;
 using System.Windows.Forms;
@@ -41,17 +40,38 @@ namespace Sharparam.SharpBlade.Integration
     /// </summary>
     internal class Renderer : IDisposable
     {
+        /// <summary>
+        /// Local instance of the SwitchBlade touchpad.
+        /// </summary>
         private readonly Touchpad _touchpad;
 
+        /// <summary>
+        /// WinForms Form to render.
+        /// Null if no WinForms Form assigned.
+        /// </summary>
         private readonly Form _form;
+
+        /// <summary>
+        /// WPF Window to render.
+        /// Null if no WPF Window assigned.
+        /// </summary>
         private readonly Window _window;
 
+        /// <summary>
+        /// Timer used to control rendering of form when
+        /// poll mode is in use.
+        /// </summary>
         private readonly Timer _winformTimer;
+
+        /// <summary>
+        /// Timer to control rendering of window when
+        /// poll mode is in use.
+        /// </summary>
         private readonly DispatcherTimer _wpfTimer;
 
         /// <summary>
-        /// Creates a new <see cref="Renderer" /> instance for rendering
-        /// a WinForms form at the specified interval.
+        /// Initializes a new instance of the <see cref="Renderer" /> class.
+        /// For rendering a WinForms form at the specified interval.
         /// </summary>
         /// <param name="touchpad">Touchpad reference.</param>
         /// <param name="form">WinForms form to render.</param>
@@ -73,8 +93,8 @@ namespace Sharparam.SharpBlade.Integration
         }
 
         /// <summary>
-        /// Creates a new <see cref="Renderer" /> instance for rendering
-        /// a WPF window at the specified interval.
+        /// Initializes a new instance of the <see cref="Renderer" /> class.
+        /// For rendering a WPF window at the specified interval.
         /// </summary>
         /// <param name="touchpad">Touchpad reference.</param>
         /// <param name="window">WPF window to render.</param>
@@ -88,6 +108,9 @@ namespace Sharparam.SharpBlade.Integration
             _wpfTimer.Start();
         }
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
         public void Dispose()
         {
             if (_winformTimer != null)
@@ -97,11 +120,21 @@ namespace Sharparam.SharpBlade.Integration
                 _wpfTimer.Stop();
         }
 
+        /// <summary>
+        /// Callback for the tick event on the WinForms render timer.
+        /// </summary>
+        /// <param name="sender">The object that raised the event.</param>
+        /// <param name="e">Event arguments.</param>
         private void WinformTimerOnTick(object sender, EventArgs e)
         {
             _touchpad.DrawForm(_form);
         }
 
+        /// <summary>
+        /// Callback for the tick event on the WPF render timer.
+        /// </summary>
+        /// <param name="sender">The object that raised the event.</param>
+        /// <param name="e">Event arguments.</param>
         private void WpfTimerTick(object sender, EventArgs e)
         {
             _touchpad.DrawWindow(_window);
