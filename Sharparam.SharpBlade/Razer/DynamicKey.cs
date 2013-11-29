@@ -42,60 +42,35 @@ namespace Sharparam.SharpBlade.Razer
     public class DynamicKey
     {
         /// <summary>
-        /// Raised when a dynamic key is pressed.
+        /// The log instance associated with this object.
         /// </summary>
-        public event DynamicKeyPressedEventHandler Pressed;
-
         private readonly log4net.ILog _log;
 
         /// <summary>
-        /// The <see cref="RazerAPI.DynamicKeyType" /> of this key.
+        /// Initializes a new instance of the <see cref="DynamicKey" /> class.
         /// </summary>
-        public RazerAPI.DynamicKeyType KeyType { get; private set; }
-
-        /// <summary>
-        /// The current state of this key.
-        /// </summary>
-        public RazerAPI.DynamicKeyState State { get; private set; }
-        
-        /// <summary>
-        /// The previous state of this key.
-        /// </summary>
-        public RazerAPI.DynamicKeyState PreviousState { get; private set; }
-
-        /// <summary>
-        /// Gets the image displayed on this key when in the UP state.
-        /// </summary>
-        public string UpImage { get; private set; }
-
-        /// <summary>
-        /// Gets the image displayed on this key when in DOWN state.
-        /// </summary>
-        public string DownImage { get; private set; }
-
-        /// <summary>
-        /// Gets whether this key is using a single image for both UP and DOWN states.
-        /// </summary>
-        public bool SingleImage { get { return UpImage == DownImage; } }
-
-        internal DynamicKey(RazerAPI.DynamicKeyType keyType, string upImage, string downImage = null, DynamicKeyPressedEventHandler callback = null)
+        /// <param name="keyType">The type of dynamic key being initialized.</param>
+        /// <param name="image">Image to set for this key's depressed state.</param>
+        /// <param name="pressedImage">Image to set for this key's pressed state.</param>
+        /// <param name="callback">The function to call when this key is pressed.</param>
+        internal DynamicKey(RazerAPI.DynamicKeyType keyType, string image, string pressedImage = null, EventHandler callback = null)
         {
             _log = LogManager.GetLogger(this);
 
-            if (string.IsNullOrEmpty(upImage))
-                throw new ArgumentException("Can't be null or empty", "upImage");
+            if (string.IsNullOrEmpty(image))
+                throw new ArgumentException("Can't be null or empty", "image");
 
-            if (string.IsNullOrEmpty(downImage))
+            if (string.IsNullOrEmpty(pressedImage))
             {
-                _log.Debug("downImage is null, setting to value of upImage");
-                downImage = upImage;
+                _log.Debug("pressedImage is null, setting to value of image");
+                pressedImage = image;
             }
 
             _log.Debug("Setting default states");
             State = RazerAPI.DynamicKeyState.None;
             PreviousState = RazerAPI.DynamicKeyState.None;
-            UpImage = upImage;
-            DownImage = downImage;
+            UpImage = image;
+            DownImage = pressedImage;
             KeyType = keyType;
 
             _log.Debug("Setting images");
@@ -109,29 +84,44 @@ namespace Sharparam.SharpBlade.Razer
             }
         }
 
-        private void OnPressed()
-        {
-            var func = Pressed;
-            if (func == null)
-                return;
+        /// <summary>
+        /// Raised when a dynamic key is pressed.
+        /// </summary>
+        public event EventHandler Pressed;
 
-            try
-            {
-                func(this, null);
-            }
-            catch (ObjectDisposedException ex)
-            {
-                _log.ErrorFormat("OnKeyPressed: ObjectDisposedException: {0}", ex.Message);
-            }
+        /// <summary>
+        /// Gets the image displayed on this key when in the UP state.
+        /// </summary>
+        public string UpImage { get; private set; }
+
+        /// <summary>
+        /// Gets the image displayed on this key when in DOWN state.
+        /// </summary>
+        public string DownImage { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether this key is
+        /// using a single image for both UP and DOWN states.
+        /// </summary>
+        public bool SingleImage
+        {
+            get { return UpImage == DownImage; }
         }
 
-        internal void UpdateState(RazerAPI.DynamicKeyState state)
-        {
-            PreviousState = State;
-            State = state;
-            if (State == RazerAPI.DynamicKeyState.Up && (PreviousState == RazerAPI.DynamicKeyState.Down || PreviousState == RazerAPI.DynamicKeyState.None))
-                OnPressed();
-        }
+        /// <summary>
+        /// Gets the <see cref="RazerAPI.DynamicKeyType" /> of this key.
+        /// </summary>
+        public RazerAPI.DynamicKeyType KeyType { get; private set; }
+
+        /// <summary>
+        /// Gets the current state of this key.
+        /// </summary>
+        public RazerAPI.DynamicKeyState State { get; private set; }
+
+        /// <summary>
+        /// Gets the previous state of this key.
+        /// </summary>
+        public RazerAPI.DynamicKeyState PreviousState { get; private set; }
 
         /// <summary>
         /// Sets the image that is displayed on this key.
@@ -147,12 +137,12 @@ namespace Sharparam.SharpBlade.Razer
         /// <summary>
         /// Sets the images that are displayed on this key.
         /// </summary>
-        /// <param name="upImage">Path to image displayed when this key is in the "UP" state.</param>
-        /// <param name="downImage">Path to the image displayed when this key is in the "DOWN" state.</param>
-        public void SetImages(string upImage, string downImage)
+        /// <param name="image">Path to image displayed when this key is in the "UP" state.</param>
+        /// <param name="pressedImage">Path to the image displayed when this key is in the "DOWN" state.</param>
+        public void SetImages(string image, string pressedImage)
         {
-            SetUpImage(upImage);
-            SetDownImage(downImage);
+            SetUpImage(image);
+            SetDownImage(pressedImage);
         }
 
         /// <summary>
@@ -167,9 +157,9 @@ namespace Sharparam.SharpBlade.Razer
 
             _log.DebugFormat("Setting {0} on {1} to {2}", state, KeyType, image);
 
-            var hResult = RazerAPI.RzSBSetImageDynamicKey(KeyType, state, IO.GetAbsolutePath(image));
-            if (!HRESULT.RZSB_SUCCESS(hResult))
-                throw new RazerNativeException("RzSBSetImageDynamicKey", hResult);
+            var result = RazerAPI.RzSBSetImageDynamicKey(KeyType, state, IO.GetAbsolutePath(image));
+            if (!HRESULT.RZSB_SUCCESS(result))
+                throw new RazerNativeException("RzSBSetImageDynamicKey", result);
 
             if (state == RazerAPI.DynamicKeyState.Up)
                 UpImage = image;
@@ -210,6 +200,37 @@ namespace Sharparam.SharpBlade.Razer
         public void Disable()
         {
             SetImage(Constants.DisabledDynamicKeyImage);
+        }
+
+        /// <summary>
+        /// Updates this key's state and handles events.
+        /// </summary>
+        /// <param name="state">The new state to assign to this key.</param>
+        internal void UpdateState(RazerAPI.DynamicKeyState state)
+        {
+            PreviousState = State;
+            State = state;
+            if (State == RazerAPI.DynamicKeyState.Up && (PreviousState == RazerAPI.DynamicKeyState.Down || PreviousState == RazerAPI.DynamicKeyState.None))
+                OnPressed();
+        }
+
+        /// <summary>
+        /// Raises Pressed event to subscribers.
+        /// </summary>
+        private void OnPressed()
+        {
+            var func = Pressed;
+            if (func == null)
+                return;
+
+            try
+            {
+                func(this, null);
+            }
+            catch (ObjectDisposedException ex)
+            {
+                _log.ErrorFormat("OnKeyPressed: ObjectDisposedException: {0}", ex.Message);
+            }
         }
     }
 }

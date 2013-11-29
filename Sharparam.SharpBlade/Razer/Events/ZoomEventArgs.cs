@@ -42,16 +42,13 @@ namespace Sharparam.SharpBlade.Razer.Events
         /// </summary>
         public readonly ZoomDirection Direction;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ZoomEventArgs" /> class.
+        /// </summary>
+        /// <param name="direction">Direction of the zoom.</param>
         internal ZoomEventArgs(ZoomDirection direction)
         {
             Direction = direction;
         }
     }
-
-    /// <summary>
-    /// Handler delegate for touchpad zoom events.
-    /// </summary>
-    /// <param name="sender">Object that raised the event.</param>
-    /// <param name="args">Event arguments.</param>
-    public delegate void ZoomEventHandler(object sender, ZoomEventArgs args);
 }

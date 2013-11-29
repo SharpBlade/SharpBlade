@@ -40,9 +40,6 @@ namespace Sharparam.SharpBlade.Integration
     /// </summary>
     internal class KeyboardControl
     {
-        private readonly System.Windows.Forms.Control _winFormControl;
-        private readonly System.Windows.Controls.Control _wpfControl;
-
         /// <summary>
         /// Specifies if the caller wishes for keyboard capture
         /// to be disabled (released) after the ENTER key has
@@ -51,10 +48,22 @@ namespace Sharparam.SharpBlade.Integration
         internal readonly bool ReleaseOnEnter;
 
         /// <summary>
-        /// Creates a new WinForms keyboard control class.
+        /// The WinForms control that receives keyboard input.
+        /// This field is null if a WPF control is used.
+        /// </summary>
+        private readonly System.Windows.Forms.Control _winFormControl;
+
+        /// <summary>
+        /// The WPF control that receives keyboard input.
+        /// This field is null if a WinForms control is used.
+        /// </summary>
+        private readonly System.Windows.Controls.Control _wpfControl;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KeyboardControl" /> class.
         /// </summary>
         /// <param name="control">The WinForms control to receive input.</param>
-        /// <param name="releaseOnEnter">Whether or not to relase control when enter is pressed.</param>
+        /// <param name="releaseOnEnter">Whether or not to release control when enter is pressed.</param>
         internal KeyboardControl(System.Windows.Forms.Control control, bool releaseOnEnter)
         {
             _winFormControl = control;
@@ -63,10 +72,10 @@ namespace Sharparam.SharpBlade.Integration
         }
 
         /// <summary>
-        /// Creates a new WPF keyboard control class.
+        /// Initializes a new instance of the <see cref="KeyboardControl" /> class.
         /// </summary>
         /// <param name="control">The WPF control to receive input.</param>
-        /// <param name="releaseOnEnter">Whether or not to relase control when enter is pressed.</param>
+        /// <param name="releaseOnEnter">Whether or not to release control when enter is pressed.</param>
         internal KeyboardControl(System.Windows.Controls.Control control, bool releaseOnEnter)
         {
             _winFormControl = null;
@@ -110,25 +119,41 @@ namespace Sharparam.SharpBlade.Integration
                 SendWPFChar(character);
         }
 
+        /// <summary>
+        /// Sends WM_KEYDOWN to WinForms control.
+        /// </summary>
+        /// <param name="key">Key that was pressed.</param>
         private void SendWinFormKeyDown(WinAPI.VirtualKey key)
         {
-            WinAPI.PostMessage(_winFormControl.Handle, (uint) WinAPI.MessageType.KEYDOWN, (IntPtr) key, IntPtr.Zero);
+            WinAPI.PostMessage(_winFormControl.Handle, (uint)WinAPI.MessageType.KEYDOWN, (IntPtr)key, IntPtr.Zero);
         }
 
+        /// <summary>
+        /// Sends WM_KEYUP to WinForms control.
+        /// </summary>
+        /// <param name="key">Key that was released.</param>
         private void SendWinFormKeyUp(WinAPI.VirtualKey key)
         {
-            WinAPI.PostMessage(_winFormControl.Handle, (uint) WinAPI.MessageType.KEYUP, (IntPtr) key, IntPtr.Zero);
+            WinAPI.PostMessage(_winFormControl.Handle, (uint)WinAPI.MessageType.KEYUP, (IntPtr)key, IntPtr.Zero);
         }
 
+        /// <summary>
+        /// Sends WM_CHAR to WinForms control.
+        /// </summary>
+        /// <param name="character">Character that was typed.</param>
         private void SendWinFormChar(char character)
         {
-            WinAPI.PostMessage(_winFormControl.Handle, (uint) WinAPI.MessageType.CHAR, (IntPtr) character, IntPtr.Zero);
+            WinAPI.PostMessage(_winFormControl.Handle, (uint)WinAPI.MessageType.CHAR, (IntPtr)character, IntPtr.Zero);
         }
 
+        /// <summary>
+        /// Sends a WPF KeyDown event to the WPF control.
+        /// </summary>
+        /// <param name="key">Key that was pressed.</param>
         private void SendWPFKeyDown(WinAPI.VirtualKey key)
         {
             // Conversion magic, don't blink!
-            var wpfKey = KeyInterop.KeyFromVirtualKey((int) key);
+            var wpfKey = KeyInterop.KeyFromVirtualKey((int)key);
 
             _wpfControl.RaiseEvent(
                 new KeyEventArgs(Keyboard.PrimaryDevice, PresentationSource.FromVisual(_wpfControl), 0, wpfKey)
@@ -143,10 +168,14 @@ namespace Sharparam.SharpBlade.Integration
                 });
         }
 
+        /// <summary>
+        /// Sends a WPF KeyUp event to the WPF control.
+        /// </summary>
+        /// <param name="key">Key that was released.</param>
         private void SendWPFKeyUp(WinAPI.VirtualKey key)
         {
             // Conversion magic, don't blink!
-            var wpfKey = KeyInterop.KeyFromVirtualKey((int) key);
+            var wpfKey = KeyInterop.KeyFromVirtualKey((int)key);
 
             _wpfControl.RaiseEvent(
                 new KeyEventArgs(Keyboard.PrimaryDevice, PresentationSource.FromVisual(_wpfControl), 0, wpfKey)
@@ -161,13 +190,18 @@ namespace Sharparam.SharpBlade.Integration
                 });
         }
 
+        /// <summary>
+        /// Sends a TextComposition event to the WPF control.
+        /// </summary>
+        /// <param name="character">The character that was typed.</param>
         private void SendWPFChar(char character)
         {
             // Because MS CBA to let us send chars directly
             var str = character.ToString(CultureInfo.InvariantCulture);
             _wpfControl.RaiseEvent(
-                new TextCompositionEventArgs(InputManager.Current.PrimaryKeyboardDevice,
-                                             new TextComposition(InputManager.Current, _wpfControl, str))
+                new TextCompositionEventArgs(
+                    InputManager.Current.PrimaryKeyboardDevice,
+                    new TextComposition(InputManager.Current, _wpfControl, str))
                 {
                     RoutedEvent = TextCompositionManager.TextInputEvent
                 });

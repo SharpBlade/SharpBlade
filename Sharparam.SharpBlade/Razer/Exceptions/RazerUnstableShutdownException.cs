@@ -34,10 +34,12 @@ namespace Sharparam.SharpBlade.Razer.Exceptions
     /// </summary>
     public class RazerUnstableShutdownException : RazerException
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RazerUnstableShutdownException" /> class.
+        /// </summary>
         internal RazerUnstableShutdownException()
             : base("The application did not properly call RzSBStop() on the last shutdown.")
         {
-            
         }
     }
 }
