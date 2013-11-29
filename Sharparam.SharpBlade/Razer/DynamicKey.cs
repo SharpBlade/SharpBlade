@@ -47,42 +47,6 @@ namespace Sharparam.SharpBlade.Razer
         private readonly log4net.ILog _log;
 
         /// <summary>
-        /// Raised when a dynamic key is pressed.
-        /// </summary>
-        public event DynamicKeyPressedEventHandler Pressed;
-
-        /// <summary>
-        /// Gets the <see cref="RazerAPI.DynamicKeyType" /> of this key.
-        /// </summary>
-        public RazerAPI.DynamicKeyType KeyType { get; private set; }
-
-        /// <summary>
-        /// Gets the current state of this key.
-        /// </summary>
-        public RazerAPI.DynamicKeyState State { get; private set; }
-        
-        /// <summary>
-        /// Gets the previous state of this key.
-        /// </summary>
-        public RazerAPI.DynamicKeyState PreviousState { get; private set; }
-
-        /// <summary>
-        /// Gets the image displayed on this key when in the UP state.
-        /// </summary>
-        public string UpImage { get; private set; }
-
-        /// <summary>
-        /// Gets the image displayed on this key when in DOWN state.
-        /// </summary>
-        public string DownImage { get; private set; }
-
-        /// <summary>
-        /// Gets a value indicating whether this key is
-        /// using a single image for both UP and DOWN states.
-        /// </summary>
-        public bool SingleImage { get { return UpImage == DownImage; } }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="DynamicKey" /> class.
         /// </summary>
         /// <param name="keyType">The type of dynamic key being initialized.</param>
@@ -120,13 +84,44 @@ namespace Sharparam.SharpBlade.Razer
             }
         }
 
-        internal void UpdateState(RazerAPI.DynamicKeyState state)
+        /// <summary>
+        /// Raised when a dynamic key is pressed.
+        /// </summary>
+        public event DynamicKeyPressedEventHandler Pressed;
+
+        /// <summary>
+        /// Gets the image displayed on this key when in the UP state.
+        /// </summary>
+        public string UpImage { get; private set; }
+
+        /// <summary>
+        /// Gets the image displayed on this key when in DOWN state.
+        /// </summary>
+        public string DownImage { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether this key is
+        /// using a single image for both UP and DOWN states.
+        /// </summary>
+        public bool SingleImage
         {
-            PreviousState = State;
-            State = state;
-            if (State == RazerAPI.DynamicKeyState.Up && (PreviousState == RazerAPI.DynamicKeyState.Down || PreviousState == RazerAPI.DynamicKeyState.None))
-                OnPressed();
+            get { return UpImage == DownImage; }
         }
+
+        /// <summary>
+        /// Gets the <see cref="RazerAPI.DynamicKeyType" /> of this key.
+        /// </summary>
+        public RazerAPI.DynamicKeyType KeyType { get; private set; }
+
+        /// <summary>
+        /// Gets the current state of this key.
+        /// </summary>
+        public RazerAPI.DynamicKeyState State { get; private set; }
+
+        /// <summary>
+        /// Gets the previous state of this key.
+        /// </summary>
+        public RazerAPI.DynamicKeyState PreviousState { get; private set; }
 
         /// <summary>
         /// Sets the image that is displayed on this key.
@@ -162,9 +157,9 @@ namespace Sharparam.SharpBlade.Razer
 
             _log.DebugFormat("Setting {0} on {1} to {2}", state, KeyType, image);
 
-            var hResult = RazerAPI.RzSBSetImageDynamicKey(KeyType, state, IO.GetAbsolutePath(image));
-            if (!HRESULT.RZSB_SUCCESS(hResult))
-                throw new RazerNativeException("RzSBSetImageDynamicKey", hResult);
+            var result = RazerAPI.RzSBSetImageDynamicKey(KeyType, state, IO.GetAbsolutePath(image));
+            if (!HRESULT.RZSB_SUCCESS(result))
+                throw new RazerNativeException("RzSBSetImageDynamicKey", result);
 
             if (state == RazerAPI.DynamicKeyState.Up)
                 UpImage = image;
@@ -207,6 +202,21 @@ namespace Sharparam.SharpBlade.Razer
             SetImage(Constants.DisabledDynamicKeyImage);
         }
 
+        /// <summary>
+        /// Updates this key's state and handles events.
+        /// </summary>
+        /// <param name="state">The new state to assign to this key.</param>
+        internal void UpdateState(RazerAPI.DynamicKeyState state)
+        {
+            PreviousState = State;
+            State = state;
+            if (State == RazerAPI.DynamicKeyState.Up && (PreviousState == RazerAPI.DynamicKeyState.Down || PreviousState == RazerAPI.DynamicKeyState.None))
+                OnPressed();
+        }
+
+        /// <summary>
+        /// Raises Pressed event to subscribers.
+        /// </summary>
         private void OnPressed()
         {
             var func = Pressed;

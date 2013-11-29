@@ -57,6 +57,13 @@ namespace Sharparam.SharpBlade.Razer.Structs
         /// </summary>
         public uint AverageTime;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RenderStats" /> struct.
+        /// </summary>
+        /// <param name="count">Number of render calls.</param>
+        /// <param name="maxTime">Maximum time spent for a render call.</param>
+        /// <param name="lastTime">Time spent for last render call.</param>
+        /// <param name="averageTime">Average time spent on a render call.</param>
         internal RenderStats(uint count, uint maxTime, uint lastTime, uint averageTime)
         {
             Count = count;

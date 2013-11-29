@@ -51,14 +51,6 @@ namespace Sharparam.SharpBlade.Integration
         public readonly Control Control;
 
         /// <summary>
-        /// Gets the size and location of the component, in pixels.
-        /// </summary>
-        public Rectangle Bounds
-        {
-            get { return new Rectangle((int)Host.Margin.Left, (int)Host.Margin.Top, Control.Width, Control.Height); }
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="EmbeddedWinFormsControl" /> struct.
         /// </summary>
         /// <param name="host">The WindowsFormsHost object containing the control.</param>
@@ -67,6 +59,14 @@ namespace Sharparam.SharpBlade.Integration
         {
             Host = host;
             Control = control;
+        }
+
+        /// <summary>
+        /// Gets the size and location of the component, in pixels.
+        /// </summary>
+        public Rectangle Bounds
+        {
+            get { return new Rectangle((int)Host.Margin.Left, (int)Host.Margin.Top, Control.Width, Control.Height); }
         }
 
         /// <summary>

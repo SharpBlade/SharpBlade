@@ -52,24 +52,52 @@ namespace Sharparam.SharpBlade.Razer
     public class Touchpad : IDisposable
     {
         /// <summary>
-        /// Specifies what method to use for
-        /// rendering a form or window.
+        /// Gesture callback that is used as parameter in <see cref="RazerAPI.RzSBGestureSetCallback" />.
         /// </summary>
-        public enum RenderMethod
-        {
-            /// <summary>
-            /// Event-based. Subscribes to the form's/window's
-            /// paint/draw event and performs an update to the SBUI.
-            /// This method is the most resource intensive.
-            /// </summary>
-            Event,
+        private static RazerAPI.TouchpadGestureCallbackFunctionDelegate _gestureCallback;
 
-            /// <summary>
-            /// Creates a timer and performs drawing update
-            /// at a specified interval.
-            /// Less resource intensive than event-based drawing.
-            /// </summary>
-            Polling
+        /// <summary>
+        /// Log object for the <see cref="Touchpad" />.
+        /// </summary>
+        private readonly log4net.ILog _log;
+
+        /// <summary>
+        /// Currently active gestures.
+        /// </summary>
+        private RazerAPI.GestureType _activeGesturesType;
+
+        /// <summary>
+        /// Currently active gestures that are being forwarded to the OS.
+        /// </summary>
+        private RazerAPI.GestureType _activeOSGesturesType;
+        
+        /// <summary>
+        /// Whether or not all gestures are currently enabled.
+        /// </summary>
+        private bool _allGestureEnabled;
+
+        /// <summary>
+        /// Whether or not all gestures are currently being forwarded to the OS.
+        /// </summary>
+        private bool _allOSGestureEnabled;
+
+        /// <summary>
+        /// <see cref="Renderer" /> instance used to render forms or windows.
+        /// </summary>
+        private Renderer _renderer;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Touchpad" /> class.
+        /// </summary>
+        internal Touchpad()
+        {
+            _log = LogManager.GetLogger(this);
+            _log.Info("Setting disabled image");
+            _log.Debug("Setting gesture callback");
+            _gestureCallback = HandleTouchpadGesture;
+            var result = RazerAPI.RzSBGestureSetCallback(_gestureCallback);
+            if (HRESULT.RZSB_FAILED(result))
+                throw new RazerNativeException("RzSBGestureSetCallback", result);
         }
 
         /// <summary>
@@ -122,125 +150,49 @@ namespace Sharparam.SharpBlade.Razer
         /// </summary>
         public event GestureEventHandler Scroll;
 
-        private readonly log4net.ILog _log;
+        /// <summary>
+        /// Specifies what method to use for
+        /// rendering a form or window.
+        /// </summary>
+        public enum RenderMethod
+        {
+            /// <summary>
+            /// Event-based. Subscribes to the form's/window's
+            /// paint/draw event and performs an update to the SBUI.
+            /// This method is the most resource intensive.
+            /// </summary>
+            Event,
 
-        private RazerAPI.GestureType _activeGesturesType;
-        private RazerAPI.GestureType _activeOSGesturesType;
-
-        private bool _allGestureEnabled;
-        private bool _allOSGestureEnabled;
-
-        private Renderer _renderer;
-
-        private static RazerAPI.TouchpadGestureCallbackFunctionDelegate _gestureCallback;
+            /// <summary>
+            /// Creates a timer and performs drawing update
+            /// at a specified interval.
+            /// Less resource intensive than event-based drawing.
+            /// </summary>
+            Polling
+        }
 
         /// <summary>
-        /// Will be set to null if no active form.
+        /// Gets the currently active form, null if no form is set.
         /// </summary>
         public Form CurrentForm { get; private set; }
 
         /// <summary>
-        /// The currently rendering WPF window, null if no window set.
+        /// Gets the currently rendering WPF window, null if no window is set.
         /// </summary>
         public Window CurrentWindow { get; private set; }
 
         /// <summary>
-        /// Current image shown on the Touchpad, null if not using static image.
+        /// Gets the path to the image currently shown on the touchpad,
+        /// or null if no image is showing.
         /// </summary>
         public string CurrentImage { get; private set; }
-
-        internal Touchpad()
-        {
-            _log = LogManager.GetLogger(this);
-            _log.Info("Setting disabled image");
-            _log.Debug("Setting gesture callback");
-            _gestureCallback = HandleTouchpadGesture;
-            var hResult = RazerAPI.RzSBGestureSetCallback(_gestureCallback);
-            if (HRESULT.RZSB_FAILED(hResult))
-                throw new RazerNativeException("RzSBGestureSetCallback", hResult);
-        }
 
         /// <summary>
         /// Disposes of this touchpad.
         /// </summary>
         public void Dispose()
         {
-            
         }
-
-        #region Event Dispatchers
-
-        private void OnGesture(RazerAPI.GestureType gestureType, uint parameter, ushort x, ushort y, ushort z)
-        {
-            var func = Gesture;
-            if (func != null)
-                func(this, new GestureEventArgs(gestureType, parameter, x, y, z));
-        }
-
-        private void OnPress(uint touchCount, ushort x, ushort y)
-        {
-            var func = Press;
-            if (func != null)
-                func(this, new PressEventArgs(touchCount, x, y));
-        }
-
-        private void OnTap(ushort x, ushort y)
-        {
-            var func = Tap;
-            if (func != null)
-                func(this, new TapEventArgs(x, y));
-        }
-
-        private void OnFlick(uint touchCount, RazerAPI.Direction direction)
-        {
-            var func = Flick;
-            if (func != null)
-                func(this, new FlickEventArgs(touchCount, direction));
-        }
-
-        private void OnZoom(ZoomDirection direction)
-        {
-            var func = Zoom;
-            if (func != null)
-                func(this, new ZoomEventArgs(direction));
-        }
-
-        private void OnRotate(RotateDirection direction)
-        {
-            var func = Rotate;
-            if (func != null)
-                func(this, new RotateEventArgs(direction));
-        }
-
-        private void OnMove(ushort x, ushort y)
-        {
-            var func = Move;
-            if (func != null)
-                func(this, new MoveEventArgs(x, y));
-        }
-
-        private void OnHold(uint param, ushort x, ushort y, ushort z)
-        {
-            var func = Hold;
-            if (func != null)
-                func(this, new GestureEventArgs(RazerAPI.GestureType.Hold, param, x, y, z));
-        }
-
-        private void OnRelease(uint touchCount, ushort x, ushort y)
-        {
-            var func = Release;
-            if (func != null)
-                func(this, new ReleaseEventArgs(touchCount, x, y));
-        }
-
-        private void OnScroll(uint param, ushort x, ushort y, ushort z)
-        {
-            var func = Scroll;
-            if (func != null)
-                func(this, new GestureEventArgs(RazerAPI.GestureType.Scroll, param, x, y, z));
-        }
-
-        #endregion Event Dispatchers
 
         #region Gesture Methods
 
@@ -261,6 +213,7 @@ namespace Sharparam.SharpBlade.Razer
                     _log.Debug("Active gestures already set to none, aborting.");
                     return;
                 }
+
                 if (!enabled)
                 {
                     // Request to "disable no gesture"?
@@ -269,6 +222,7 @@ namespace Sharparam.SharpBlade.Razer
                     SetGesture(RazerAPI.GestureType.All, true);
                     return;
                 }
+
                 newGesturesType = gestureType;
             }
             else if (enabled)
@@ -281,6 +235,7 @@ namespace Sharparam.SharpBlade.Razer
                     _log.DebugFormat("_allGestureEnabled == {0}", _allGestureEnabled);
                     return;
                 }
+
                 newGesturesType = _activeOSGesturesType.Include(gestureType);
             }
             else
@@ -291,16 +246,17 @@ namespace Sharparam.SharpBlade.Razer
                     _log.DebugFormat("_activeGestures == {0}", _activeGesturesType);
                     return;
                 }
+
                 newGesturesType = _activeOSGesturesType.Remove(gestureType);
             }
 
-            var hResult = RazerAPI.RzSBEnableGesture(newGesturesType, enabled);
-            if (HRESULT.RZSB_FAILED(hResult))
-                throw new RazerNativeException("RzSBGestureEnable", hResult);
+            var result = RazerAPI.RzSBEnableGesture(newGesturesType, enabled);
+            if (HRESULT.RZSB_FAILED(result))
+                throw new RazerNativeException("RzSBGestureEnable", result);
 
-            hResult = RazerAPI.RzSBGestureSetCallback(_gestureCallback);
-            if (HRESULT.RZSB_FAILED(hResult))
-                throw new RazerNativeException("RzSBGestureSetCallback", hResult);
+            result = RazerAPI.RzSBGestureSetCallback(_gestureCallback);
+            if (HRESULT.RZSB_FAILED(result))
+                throw new RazerNativeException("RzSBGestureSetCallback", result);
 
             _activeGesturesType = newGesturesType;
             _allGestureEnabled = _activeGesturesType == RazerAPI.GestureType.All && !enabled;
@@ -336,7 +292,7 @@ namespace Sharparam.SharpBlade.Razer
             {
                 // Invert the enabled value because of how Razer API works
                 // UPDATE (2013-08-31): Seems to have changed, we no longer need to invert
-                //enabled = !enabled;
+                ////enabled = !enabled;
                 // "ALL" replaces any other gesture, so we don't want to include/remove it
                 newGesturesType = gestureType;
             }
@@ -344,6 +300,7 @@ namespace Sharparam.SharpBlade.Razer
             {
                 if (_activeOSGesturesType == RazerAPI.GestureType.None)
                     return;
+
                 if (!enabled) 
                 {
                     // Request to "disable no gesture"?
@@ -351,6 +308,7 @@ namespace Sharparam.SharpBlade.Razer
                     SetOSGesture(RazerAPI.GestureType.All, true);
                     return;
                 }
+
                 // "NONE" replaces any other gesture, so we don't want to include/remove it
                 newGesturesType = gestureType;
             }
@@ -367,13 +325,13 @@ namespace Sharparam.SharpBlade.Razer
                 newGesturesType = _activeOSGesturesType.Remove(gestureType);
             }
 
-            var hResult = RazerAPI.RzSBEnableGesture(newGesturesType, enabled);
-            if (HRESULT.RZSB_FAILED(hResult))
-                throw new RazerNativeException("RzSBGestureEnable", hResult);
+            var result = RazerAPI.RzSBEnableGesture(newGesturesType, enabled);
+            if (HRESULT.RZSB_FAILED(result))
+                throw new RazerNativeException("RzSBGestureEnable", result);
 
-            hResult = RazerAPI.RzSBEnableOSGesture(newGesturesType, enabled);
-            if (HRESULT.RZSB_FAILED(hResult))
-                throw new RazerNativeException("RzSBGestureSetOSNotification", hResult);
+            result = RazerAPI.RzSBEnableOSGesture(newGesturesType, enabled);
+            if (HRESULT.RZSB_FAILED(result))
+                throw new RazerNativeException("RzSBGestureSetOSNotification", result);
 
             _activeOSGesturesType = newGesturesType;
             _allOSGestureEnabled = _activeGesturesType == RazerAPI.GestureType.All && !enabled;
@@ -409,30 +367,29 @@ namespace Sharparam.SharpBlade.Razer
         /// of the touchpad display, or you may get unexpected results.</remarks>
         public void DrawBitmap(Bitmap bitmap)
         {
-            var data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height),
-                                       ImageLockMode.ReadOnly, PixelFormat.Format16bppRgb565);
+            var data = bitmap.LockBits(
+                new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format16bppRgb565);
 
             var buffer = new RazerAPI.BufferParams
             {
                 PixelType = RazerAPI.PixelType.RGB565,
-                DataSize = (uint) (bitmap.Width * bitmap.Height * sizeof (ushort)),
+                DataSize = (uint)(bitmap.Width * bitmap.Height * sizeof(ushort)),
                 PtrData = data.Scan0
             };
 
             var ptrToImageStruct = Marshal.AllocHGlobal(Marshal.SizeOf(buffer));
             Marshal.StructureToPtr(buffer, ptrToImageStruct, true);
 
-            var hResult = RazerAPI.RzSBRenderBuffer(RazerAPI.TargetDisplay.Widget, ptrToImageStruct);
+            var result = RazerAPI.RzSBRenderBuffer(RazerAPI.TargetDisplay.Widget, ptrToImageStruct);
 
             // Free resources before handling return
-
             Marshal.FreeHGlobal(ptrToImageStruct);
             bitmap.UnlockBits(data);
 
             bitmap.Dispose();
 
-            if (HRESULT.RZSB_FAILED(hResult))
-                throw new RazerNativeException("RzSBRenderBuffer", hResult);
+            if (HRESULT.RZSB_FAILED(result))
+                throw new RazerNativeException("RzSBRenderBuffer", result);
         }
 
         /// <summary>
@@ -452,11 +409,12 @@ namespace Sharparam.SharpBlade.Razer
         /// </summary>
         /// <param name="window">Window object to draw.</param>
         /// <param name="winFormsComponents">Array of KeyValuePairs containing a WindowsFormsHost as the key and a WinForms control as the value.
-        /// These pairs will be overlayed on the bitmap that is passed to the SwitchBlade device.</param>
+        /// These pairs will be overlaid on the bitmap that is passed to the SwitchBlade device.</param>
         public void DrawWindow(Window window, IEnumerable<EmbeddedWinFormsControl> winFormsComponents = null)
         {
-            var rtb = new RenderTargetBitmap(RazerAPI.TouchpadWidth, RazerAPI.TouchpadHeight, 96, 96,
-                                                System.Windows.Media.PixelFormats.Pbgra32);
+            var rtb = new RenderTargetBitmap(
+                RazerAPI.TouchpadWidth, RazerAPI.TouchpadHeight, 96, 96, System.Windows.Media.PixelFormats.Pbgra32);
+
             rtb.Render(window);
 
             BitmapEncoder encoder = new BmpBitmapEncoder();
@@ -466,7 +424,7 @@ namespace Sharparam.SharpBlade.Razer
                 encoder.Frames.Add(BitmapFrame.Create(rtb));
                 encoder.Save(stream);
 
-                using(var bitmap = new Bitmap(stream))
+                using (var bitmap = new Bitmap(stream))
                 {
                     if (winFormsComponents != null)
                         using (var graphics = Graphics.FromImage(bitmap))
@@ -488,7 +446,7 @@ namespace Sharparam.SharpBlade.Razer
         /// <param name="method">The method to use for rendering the form.</param>
         /// <param name="interval">Interval to poll drawing functions at,
         /// only used if RenderMethod is set to Polling.
-        /// Default value 55ms (ca 18 FPS).</param>
+        /// Default value 55ms (circa 18 FPS).</param>
         public void SetForm(Form form, RenderMethod method = RenderMethod.Event, int interval = 55)
         {
             ClearForm();
@@ -521,7 +479,7 @@ namespace Sharparam.SharpBlade.Razer
 
         /// <summary>
         /// Sets the WPF window to be rendered to this touchpad.
-        /// Initializes the polling interval to 42ms (ca 24 FPS)
+        /// Initializes the polling interval to 42ms (circa 24 FPS)
         /// if called with RenderMethod set to Polling.
         /// </summary>
         /// <param name="window">The new window to render.</param>
@@ -576,9 +534,9 @@ namespace Sharparam.SharpBlade.Razer
         {
             image = IO.GetAbsolutePath(image);
 
-            var hResult = RazerAPI.RzSBSetImageTouchpad(image);
-            if (HRESULT.RZSB_FAILED(hResult))
-                throw new RazerNativeException("RzSBSetImageTouchpad", hResult);
+            var result = RazerAPI.RzSBSetImageTouchpad(image);
+            if (HRESULT.RZSB_FAILED(result))
+                throw new RazerNativeException("RzSBSetImageTouchpad", result);
 
             CurrentImage = image;
         }
@@ -588,9 +546,9 @@ namespace Sharparam.SharpBlade.Razer
         /// </summary>
         public void ClearImage()
         {
-            var hResult = RazerAPI.RzSBSetImageTouchpad(IO.GetAbsolutePath(Constants.BlankTouchpadImage));
-            if (HRESULT.RZSB_FAILED(hResult))
-                throw new RazerNativeException("RzSBSetImageTouchpad", hResult);
+            var result = RazerAPI.RzSBSetImageTouchpad(IO.GetAbsolutePath(Constants.BlankTouchpadImage));
+            if (HRESULT.RZSB_FAILED(result))
+                throw new RazerNativeException("RzSBSetImageTouchpad", result);
 
             CurrentImage = null;
         }
@@ -615,30 +573,171 @@ namespace Sharparam.SharpBlade.Razer
 
         #endregion Drawing Methods
 
+        #region Event Dispatchers
+
+        /// <summary>
+        /// Raises gesture event to subscribers.
+        /// </summary>
+        /// <param name="gestureType">Type of gesture.</param>
+        /// <param name="parameter">Contextual parameter associated with gesture.</param>
+        /// <param name="x">X position of gesture.</param>
+        /// <param name="y">Y position of gesture.</param>
+        /// <param name="z">Z position of gesture.</param>
+        private void OnGesture(RazerAPI.GestureType gestureType, uint parameter, ushort x, ushort y, ushort z)
+        {
+            var func = Gesture;
+            if (func != null)
+                func(this, new GestureEventArgs(gestureType, parameter, x, y, z));
+        }
+
+        /// <summary>
+        /// Raises press gesture event to subscribers.
+        /// </summary>
+        /// <param name="touchCount">Number of touch points.</param>
+        /// <param name="x">X position of press.</param>
+        /// <param name="y">Y position of press.</param>
+        private void OnPress(uint touchCount, ushort x, ushort y)
+        {
+            var func = Press;
+            if (func != null)
+                func(this, new PressEventArgs(touchCount, x, y));
+        }
+
+        /// <summary>
+        /// Raises tap gesture event to subscribers.
+        /// </summary>
+        /// <param name="x">X position of tap.</param>
+        /// <param name="y">Y position of tap.</param>
+        private void OnTap(ushort x, ushort y)
+        {
+            var func = Tap;
+            if (func != null)
+                func(this, new TapEventArgs(x, y));
+        }
+
+        /// <summary>
+        /// Raises flick gesture event to subscribers.
+        /// </summary>
+        /// <param name="touchCount">Number of touch points</param>
+        /// <param name="direction">Direction of flick.</param>
+        private void OnFlick(uint touchCount, RazerAPI.Direction direction)
+        {
+            var func = Flick;
+            if (func != null)
+                func(this, new FlickEventArgs(touchCount, direction));
+        }
+
+        /// <summary>
+        /// Raises zoom gesture event to subscribers.
+        /// </summary>
+        /// <param name="direction">Zoom direction.</param>
+        private void OnZoom(ZoomDirection direction)
+        {
+            var func = Zoom;
+            if (func != null)
+                func(this, new ZoomEventArgs(direction));
+        }
+
+        /// <summary>
+        /// Raises rotate gesture event to subscribers.
+        /// </summary>
+        /// <param name="direction">Rotate direction.</param>
+        private void OnRotate(RotateDirection direction)
+        {
+            var func = Rotate;
+            if (func != null)
+                func(this, new RotateEventArgs(direction));
+        }
+
+        /// <summary>
+        /// Raises move gesture event to subscribers.
+        /// </summary>
+        /// <param name="x">New X position.</param>
+        /// <param name="y">New Y position.</param>
+        private void OnMove(ushort x, ushort y)
+        {
+            var func = Move;
+            if (func != null)
+                func(this, new MoveEventArgs(x, y));
+        }
+
+        /// <summary>
+        /// Raises hold gesture event to subscribers.
+        /// </summary>
+        /// <param name="param">Parameter associated with hold gesture.</param>
+        /// <param name="x">X position of hold.</param>
+        /// <param name="y">Y position of hold.</param>
+        /// <param name="z">Z position of hold.</param>
+        private void OnHold(uint param, ushort x, ushort y, ushort z)
+        {
+            var func = Hold;
+            if (func != null)
+                func(this, new GestureEventArgs(RazerAPI.GestureType.Hold, param, x, y, z));
+        }
+
+        /// <summary>
+        /// Raises release gesture event to subscribers.
+        /// </summary>
+        /// <param name="touchCount">Number of touch points.</param>
+        /// <param name="x">X position of release.</param>
+        /// <param name="y">Y position of release.</param>
+        private void OnRelease(uint touchCount, ushort x, ushort y)
+        {
+            var func = Release;
+            if (func != null)
+                func(this, new ReleaseEventArgs(touchCount, x, y));
+        }
+
+        /// <summary>
+        /// Raises scroll gesture event to subscribers.
+        /// </summary>
+        /// <param name="param">Parameter associated with this scroll event.</param>
+        /// <param name="x">X position of scroll.</param>
+        /// <param name="y">Y position of scroll.</param>
+        /// <param name="z">Z position of scroll.</param>
+        private void OnScroll(uint param, ushort x, ushort y, ushort z)
+        {
+            var func = Scroll;
+            if (func != null)
+                func(this, new GestureEventArgs(RazerAPI.GestureType.Scroll, param, x, y, z));
+        }
+
+        #endregion Event Dispatchers
+
         #region Native Handlers
 
-        private HRESULT HandleTouchpadGesture(RazerAPI.GestureType gestureType, uint dwParameters, ushort wXPos, ushort wYPos, ushort wZPos)
+        /// <summary>
+        /// Handles the native gesture event sent from Razer SDK.
+        /// </summary>
+        /// <param name="gestureType">Type of gesture.</param>
+        /// <param name="parameters">Parameters associated with gesture event.</param>
+        /// <param name="x">X position.</param>
+        /// <param name="y">Y position.</param>
+        /// <param name="z">Z position.</param>
+        /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
+        private HRESULT HandleTouchpadGesture(RazerAPI.GestureType gestureType, uint parameters, ushort x, ushort y, ushort z)
         {
-            OnGesture(gestureType, dwParameters, wXPos, wYPos, wZPos);
+            OnGesture(gestureType, parameters, x, y, z);
 
             switch (gestureType)
             {
                 case RazerAPI.GestureType.Press:
-                    OnPress(dwParameters, wXPos, wYPos);
+                    OnPress(parameters, x, y);
                     break;
                 case RazerAPI.GestureType.Tap:
-                    OnTap(wXPos, wYPos);
+                    OnTap(x, y);
                     break;
                 case RazerAPI.GestureType.Flick:
                 {
-                    var direction = (RazerAPI.Direction) wZPos;
-                    OnFlick(dwParameters, direction);
+                    var direction = (RazerAPI.Direction)z;
+                    OnFlick(parameters, direction);
                     break;
                 }
+
                 case RazerAPI.GestureType.Zoom:
                 {
                     ZoomDirection direction;
-                    switch (dwParameters)
+                    switch (parameters)
                     {
                         case 1:
                             direction = ZoomDirection.In;
@@ -650,13 +749,15 @@ namespace Sharparam.SharpBlade.Razer
                             direction = ZoomDirection.Invalid;
                             break;
                     }
+
                     OnZoom(direction);
                     break;
                 }
+
                 case RazerAPI.GestureType.Rotate:
                 {
                     RotateDirection direction;
-                    switch (dwParameters)
+                    switch (parameters)
                     {
                         case 1:
                             direction = RotateDirection.Clockwise;
@@ -668,20 +769,22 @@ namespace Sharparam.SharpBlade.Razer
                             direction = RotateDirection.Invalid;
                             break;
                     }
+
                     OnRotate(direction);
                     break;
                 }
+
                 case RazerAPI.GestureType.Move:
-                    OnMove(wXPos, wYPos);
+                    OnMove(x, y);
                     break;
                 case RazerAPI.GestureType.Hold:
-                    OnHold(dwParameters, wXPos, wYPos, wZPos);
+                    OnHold(parameters, x, y, z);
                     break;
                 case RazerAPI.GestureType.Release:
-                    OnRelease(dwParameters, wXPos, wYPos);
+                    OnRelease(parameters, x, y);
                     break;
                 case RazerAPI.GestureType.Scroll:
-                    OnScroll(dwParameters, wXPos, wYPos, wZPos);
+                    OnScroll(parameters, x, y, z);
                     break;
             }
 
@@ -692,11 +795,23 @@ namespace Sharparam.SharpBlade.Razer
 
         #region Form/Window draw handlers
 
+        /// <summary>
+        /// Wrapper method to listen for the Paint event on a WinForms Form
+        /// and render to touchpad.
+        /// </summary>
+        /// <param name="sender">Object that raised the event.</param>
+        /// <param name="e">Event arguments.</param>
         private void FormPaintHandler(object sender, PaintEventArgs e)
         {
             DrawForm(CurrentForm);
         }
 
+        /// <summary>
+        /// Wrapper method to listen for the ContentRendered event on a WPF
+        /// Window and render to touchpad.
+        /// </summary>
+        /// <param name="sender">Object that raised the event.</param>
+        /// <param name="e">Event arguments.</param>
         private void WindowContentRenderedHandler(object sender, EventArgs e)
         {
             DrawWindow(CurrentWindow);

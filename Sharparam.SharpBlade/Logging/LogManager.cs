@@ -30,11 +30,15 @@
 using System;
 using System.IO;
 using System.Linq;
+
+#if DEBUG
+using System.Text;
+#endif
+
 using log4net;
 using log4net.Config;
 
 #if DEBUG
-using System.Text;
 using Microsoft.Win32.SafeHandles;
 using Sharparam.SharpBlade.Native;
 #endif

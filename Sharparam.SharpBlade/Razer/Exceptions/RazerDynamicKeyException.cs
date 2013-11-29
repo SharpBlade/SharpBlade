@@ -36,9 +36,13 @@ namespace Sharparam.SharpBlade.Razer.Exceptions
     /// </summary>
     public class RazerDynamicKeyException : RazerException
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RazerDynamicKeyException" /> class.
+        /// </summary>
+        /// <param name="message">The message associated with the exception.</param>
+        /// <param name="inner">Inner exception object.</param>
         internal RazerDynamicKeyException(string message = null, Exception inner = null) : base(message, inner)
         {
-            
         }
     }
 }

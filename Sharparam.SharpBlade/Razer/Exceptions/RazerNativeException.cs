@@ -48,14 +48,16 @@ namespace Sharparam.SharpBlade.Razer.Exceptions
         public readonly HRESULT Hresult;
 
         /// <summary>
-        /// Creates a new <see cref="RazerNativeException" />.
+        /// Initializes a new instance of the <see cref="RazerNativeException" /> class.
         /// </summary>
         /// <param name="function">The name of the function that failed.</param>
         /// <param name="hresult"><see cref="HRESULT" /> returned from the native function.</param>
         internal RazerNativeException(string function, HRESULT hresult)
             : base(
-                String.Format("Call to native RazerAPI function {0} failed with error message: {1}", function,
-                              Native.Helpers.GetErrorMessage(hresult)),
+                string.Format(
+                    "Call to native RazerAPI function {0} failed with error message: {1}",
+                    function,
+                    Native.Helpers.GetErrorMessage(hresult)),
                 Native.Helpers.GetWin32Exception(hresult))
         {
             Function = function;
