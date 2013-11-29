@@ -103,52 +103,52 @@ namespace Sharparam.SharpBlade.Razer
         /// <summary>
         /// Raised when a gesture occurs on the touchpad.
         /// </summary>
-        public event GestureEventHandler Gesture;
+        public event EventHandler<GestureEventArgs> Gesture;
 
         /// <summary>
         /// Raised when the touchpad is pressed.
         /// </summary>
-        public event PressEventHandler Press;
+        public event EventHandler<PressEventArgs> Press;
 
         /// <summary>
         /// Raised when the touchpad is tapped.
         /// </summary>
-        public event TapEventHandler Tap;
+        public event EventHandler<TapEventArgs> Tap;
 
         /// <summary>
         /// Raised when a finger(s?) flick on the touchpad.
         /// </summary>
-        public event FlickEventHandler Flick;
+        public event EventHandler<FlickEventArgs> Flick;
 
         /// <summary>
         /// Raised when a pinch motion is performed on the touchpad.
         /// </summary>
-        public event ZoomEventHandler Zoom;
+        public event EventHandler<ZoomEventArgs> Zoom;
 
         /// <summary>
         /// Raised when a rotating motion is performed on the touchpad.
         /// </summary>
-        public event RotateEventHandler Rotate;
+        public event EventHandler<RotateEventArgs> Rotate;
 
         /// <summary>
         /// Raised when the finger moves on the touchpad.
         /// </summary>
-        public event MoveEventHandler Move;
+        public event EventHandler<MoveEventArgs> Move;
 
         /// <summary>
         /// Raised when a finger is held on the touchpad.
         /// </summary>
-        public event GestureEventHandler Hold;
+        public event EventHandler<GestureEventArgs> Hold;
 
         /// <summary>
         /// Raised when a finger is released from the touchpad.
         /// </summary>
-        public event ReleaseEventHandler Release;
+        public event EventHandler<ReleaseEventArgs> Release;
 
         /// <summary>
         /// Raised when a scrolling motion is performed on the touchpad.
         /// </summary>
-        public event GestureEventHandler Scroll;
+        public event EventHandler<GestureEventArgs> Scroll;
 
         /// <summary>
         /// Specifies what method to use for

@@ -53,7 +53,7 @@ namespace Sharparam.SharpBlade.Razer
         /// <param name="image">Image to set for this key's depressed state.</param>
         /// <param name="pressedImage">Image to set for this key's pressed state.</param>
         /// <param name="callback">The function to call when this key is pressed.</param>
-        internal DynamicKey(RazerAPI.DynamicKeyType keyType, string image, string pressedImage = null, DynamicKeyPressedEventHandler callback = null)
+        internal DynamicKey(RazerAPI.DynamicKeyType keyType, string image, string pressedImage = null, EventHandler callback = null)
         {
             _log = LogManager.GetLogger(this);
 
@@ -87,7 +87,7 @@ namespace Sharparam.SharpBlade.Razer
         /// <summary>
         /// Raised when a dynamic key is pressed.
         /// </summary>
-        public event DynamicKeyPressedEventHandler Pressed;
+        public event EventHandler Pressed;
 
         /// <summary>
         /// Gets the image displayed on this key when in the UP state.

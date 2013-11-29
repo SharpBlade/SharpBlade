@@ -180,32 +180,32 @@ namespace Sharparam.SharpBlade.Razer
         /// <summary>
         /// Raised when an app event occurs.
         /// </summary>
-        public event AppEventEventHandler AppEvent;
+        public event EventHandler<AppEventEventArgs> AppEvent;
 
         /// <summary>
         /// Raised when a dynamic key event occurs.
         /// </summary>
-        public event DynamicKeyEventHandler DynamicKeyEvent;
+        public event EventHandler<DynamicKeyEventArgs> DynamicKeyEvent;
 
         /// <summary>
         /// Raised when a keyboard raw event occurs.
         /// </summary>
-        public event KeyboardRawEventHandler KeyboardRawEvent;
+        public event EventHandler<KeyboardRawEventArgs> KeyboardRawEvent;
 
         /// <summary>
         /// Raised when a keyboard char event occurs.
         /// </summary>
-        public event KeyboardCharEventHandler KeyboardCharTyped;
+        public event EventHandler<KeyboardCharEventArgs> KeyboardCharTyped;
 
         /// <summary>
         /// Raised when a keyboard key is pressed.
         /// </summary>
-        public event KeyboardKeyEventHandler KeyboardKeyDown;
+        public event EventHandler<KeyboardKeyEventArgs> KeyboardKeyDown;
 
         /// <summary>
         /// Raised when a keyboard key is released.
         /// </summary>
-        public event KeyboardKeyEventHandler KeyboardKeyUp;
+        public event EventHandler<KeyboardKeyEventArgs> KeyboardKeyUp;
 
         /// <summary>
         /// Gets the touchpad on the keyboard.
@@ -315,7 +315,7 @@ namespace Sharparam.SharpBlade.Razer
         /// <param name="replace">True to override this key's previous configuration
         /// if it has already been enabled, otherwise returns current key if already enabled.</param>
         /// <returns>The dynamic key that was enabled.</returns>
-        public DynamicKey EnableDynamicKey(RazerAPI.DynamicKeyType keyType, DynamicKeyPressedEventHandler callback, string image, string pressedImage = null, bool replace = false)
+        public DynamicKey EnableDynamicKey(RazerAPI.DynamicKeyType keyType, EventHandler callback, string image, string pressedImage = null, bool replace = false)
         {
             var index = (int)keyType - 1;
             if (_dynamicKeys[index] != null && !replace)

@@ -34,13 +34,6 @@ using Sharparam.SharpBlade.Native;
 namespace Sharparam.SharpBlade.Razer.Events
 {
     /// <summary>
-    /// Handler delegate for the KeyboardKey event.
-    /// </summary>
-    /// <param name="sender">The object that raised the event.</param>
-    /// <param name="e">Event arguments.</param>
-    public delegate void KeyboardKeyEventHandler(object sender, KeyboardKeyEventArgs e);
-
-    /// <summary>
     /// EventArgs class for the KeyboardKey event.
     /// </summary>
     public class KeyboardKeyEventArgs : EventArgs

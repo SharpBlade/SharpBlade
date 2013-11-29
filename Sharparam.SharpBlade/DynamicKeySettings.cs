@@ -27,6 +27,7 @@
  * "Razer" is a trademark of Razer USA Ltd.
  */
 
+using System;
 using Sharparam.SharpBlade.Native;
 using Sharparam.SharpBlade.Razer.Events;
 
@@ -55,7 +56,7 @@ namespace Sharparam.SharpBlade
         /// <summary>
         /// Handler function called when this key is pressed.
         /// </summary>
-        public readonly DynamicKeyPressedEventHandler Handler;
+        public readonly EventHandler Handler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicKeySettings" /> struct.
@@ -63,7 +64,7 @@ namespace Sharparam.SharpBlade
         /// <param name="key">The key for which these settings are.</param>
         /// <param name="image">Image to use for both UP and DOWN states.</param>
         /// <param name="handler">Handler called when this key is pressed.</param>
-        public DynamicKeySettings(RazerAPI.DynamicKeyType key, string image, DynamicKeyPressedEventHandler handler)
+        public DynamicKeySettings(RazerAPI.DynamicKeyType key, string image, EventHandler handler)
             : this(key, image, image, handler)
         {
         }
@@ -75,7 +76,7 @@ namespace Sharparam.SharpBlade
         /// <param name="image">Image to use for the UP state.</param>
         /// <param name="pressedImage">Image to use for the DOWN state.</param>
         /// <param name="handler">Handler called when this key is pressed.</param>
-        public DynamicKeySettings(RazerAPI.DynamicKeyType key, string image, string pressedImage, DynamicKeyPressedEventHandler handler)
+        public DynamicKeySettings(RazerAPI.DynamicKeyType key, string image, string pressedImage, EventHandler handler)
         {
             Key = key;
             Image = image;
