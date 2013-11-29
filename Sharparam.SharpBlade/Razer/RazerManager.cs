@@ -400,7 +400,7 @@ namespace Sharparam.SharpBlade.Razer
         /// <summary>
         /// Disposes of this <see cref="RazerManager" />.
         /// </summary>
-        /// <param name="disposing"><c>true</c> if called from parameter-less <see cref="Dispose" />, false otherwise.</param>
+        /// <param name="disposing"><c>true</c> if called from parameter-less <see cref="Dispose()" />, false otherwise.</param>
         private void Dispose(bool disposing)
         {
             if (_disposed)

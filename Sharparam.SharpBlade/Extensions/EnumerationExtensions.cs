@@ -19,7 +19,7 @@ namespace Sharparam.SharpBlade.Extensions
         /// <typeparam name="T">The type of the value(s) being appended.</typeparam>
         /// <param name="value">The <see cref="Enum" /> to add values to.</param>
         /// <param name="append">The value(s) to append.</param>
-        /// <returns>A new enumeration of type <see cref="T" /> with the
+        /// <returns>A new enumeration of the specified type with the
         /// value(s) in the parameter append included.</returns>
         public static T Include<T>(this Enum value, T append)
         {
@@ -47,8 +47,8 @@ namespace Sharparam.SharpBlade.Extensions
         /// <typeparam name="T">The type of the value(s) being removed.</typeparam>
         /// <param name="value">The <see cref="Enum" /> to remove values from.</param>
         /// <param name="remove">The value(s) to remove from the enumeration.</param>
-        /// <returns>A new enumeration of type <see cref="T" /> with the value(s)
-        /// supplied in <see cref="remove" /> removed.</returns>
+        /// <returns>A new enumeration of the specified type with the value(s)
+        /// supplied in <c>remove</c> removed.</returns>
         public static T Remove<T>(this Enum value, T remove)
         {
             Type type = value.GetType();
@@ -72,11 +72,11 @@ namespace Sharparam.SharpBlade.Extensions
         /// <summary>
         /// Checks if an enumerated type contains a value
         /// </summary>
-        /// <typeparam name="T">The type of the <see cref="check" /> parameter.</typeparam>
+        /// <typeparam name="T">The type of the <c>check</c> parameter.</typeparam>
         /// <param name="value">The enumeration value to check.</param>
         /// <param name="check">The value(s) to test for.</param>
-        /// <returns>True if <see cref="value" /> contains all values
-        /// in <see cref="check" />, false otherwise.</returns>
+        /// <returns>True if <c>value</c> contains all values
+        /// in <c>check</c>, false otherwise.</returns>
         public static bool Has<T>(this Enum value, T check)
         {
             var type = value.GetType();
@@ -96,11 +96,11 @@ namespace Sharparam.SharpBlade.Extensions
         /// <summary>
         /// Checks if an enumerated type is missing a value
         /// </summary>
-        /// <typeparam name="T">The type of the <see cref="value" /> parameter.</typeparam>
+        /// <typeparam name="T">The type of the <c>value</c> parameter.</typeparam>
         /// <param name="obj">The enumeration value to check.</param>
         /// <param name="value">The value(s) to test for.</param>
-        /// <returns>True if <see cref="obj" /> is missing all values
-        /// in <see cref="value" />, false otherwise.</returns>
+        /// <returns>True if <c>obj</c> is missing all values
+        /// in <c>value</c>, false otherwise.</returns>
         public static bool Missing<T>(this Enum obj, T value)
         {
             return !Has(obj, value);
@@ -143,7 +143,7 @@ namespace Sharparam.SharpBlade.Extensions
             /// Initializes a new instance of the <see cref="_Value" /> class.
             /// </summary>
             /// <param name="value">The value.</param>
-            /// <param name="type">The type of <see cref="value" />.</param>
+            /// <param name="type">The type of <c>value</c>.</param>
             public _Value(object value, Type type)
             {
                 // make sure it is even an enum to work with
