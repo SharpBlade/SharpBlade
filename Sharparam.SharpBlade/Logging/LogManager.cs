@@ -30,10 +30,10 @@
 using System;
 using System.IO;
 using System.Linq;
-
 #if DEBUG
 using System.Text;
 #endif
+using System.Xml.Linq;
 
 using log4net;
 using log4net.Config;
@@ -75,9 +75,20 @@ namespace Sharparam.SharpBlade.Logging
         {
             if (file == null)
             {
-                if (File.Exists(AppDomain.CurrentDomain.FriendlyName + ".config"))
-                    XmlConfigurator.Configure();
-                else
+                var appConfigFile = AppDomain.CurrentDomain.FriendlyName + ".config";
+                var appConfigLoaded = false;
+
+                if (File.Exists(appConfigFile))
+                {
+                    var doc = XDocument.Load(appConfigFile);
+                    if (doc.Element("configuration") != null && doc.Element("configuration").Element("log4net") != null)
+                    {
+                        XmlConfigurator.Configure();
+                        appConfigLoaded = true;
+                    }
+                }
+
+                if (!appConfigLoaded)
                     BasicConfigurator.Configure();
             }
             else
