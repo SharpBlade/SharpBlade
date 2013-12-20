@@ -259,7 +259,7 @@ namespace Sharparam.SharpBlade.Razer
                 throw new RazerNativeException("RzSBGestureSetCallback", result);
 
             _activeGesturesType = newGesturesType;
-            _allGestureEnabled = _activeGesturesType == RazerAPI.GestureType.All && !enabled;
+            _allGestureEnabled = _activeGesturesType == RazerAPI.GestureType.All && enabled;
         }
 
         /// <summary>
@@ -334,7 +334,7 @@ namespace Sharparam.SharpBlade.Razer
                 throw new RazerNativeException("RzSBGestureSetOSNotification", result);
 
             _activeOSGesturesType = newGesturesType;
-            _allOSGestureEnabled = _activeGesturesType == RazerAPI.GestureType.All && !enabled;
+            _allOSGestureEnabled = _activeGesturesType == RazerAPI.GestureType.All && enabled;
         }
 
         /// <summary>
