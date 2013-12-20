@@ -236,7 +236,7 @@ namespace Sharparam.SharpBlade.Razer
                     return;
                 }
 
-                newGesturesType = _activeOSGesturesType.Include(gestureType);
+                newGesturesType = _activeGesturesType.Include(gestureType);
             }
             else
             {
@@ -247,7 +247,7 @@ namespace Sharparam.SharpBlade.Razer
                     return;
                 }
 
-                newGesturesType = _activeOSGesturesType.Remove(gestureType);
+                newGesturesType = _activeGesturesType.Remove(gestureType);
             }
 
             var result = RazerAPI.RzSBEnableGesture(newGesturesType, enabled);
