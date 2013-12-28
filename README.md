@@ -36,6 +36,8 @@ All other trademarks are property of their respective owners.
 
 This project is in no way endorsed, sponsored or approved by Razer.
 
+Apache log4net Copyright 2004-2011 The Apache Software Foundation (Apache License 2.0).
+
 Dependencies
 ------------
 
