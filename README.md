@@ -45,6 +45,8 @@ Sharparam.SharpBlade depends on the SwitchBlade UI SDK (RzSwitchbladeSDK2.dll).
 
 SwitchBlade UI SDK is provided by Razer and [can be obtained from their website][rzdev].
 
+Sharparam.SharpBlade depends on the [log4net][l4n] library (provided).
+
 Projects
 --------
 
@@ -60,4 +62,5 @@ Current projects utilizing this or modified versions of this library:
 [contrib]: ../../wiki/Contributing
 [bs]: https://github.com/brandonscott
 [rzdev]: http://www.razerzone.com/switchblade-ui/developers
+[l4n]: http://logging.apache.org/log4net/
 [sbs]: https://github.com/Sharparam/SwitchBladeSteam
