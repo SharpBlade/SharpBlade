@@ -55,9 +55,9 @@ Current projects utilizing this or modified versions of this library:
  * Razer Default Audio
  * Razer Spotify
 
-[newpull]: https://github.com/Sharparam/SharpBlade/pull/new/master
+[newpull]: ../../pull/new/master
 [sharp]: https://github.com/Sharparam
-[contrib]: https://github.com/Sharparam/SharpBlade/wiki/Contributing
+[contrib]: ../../wiki/Contributing
 [bs]: https://github.com/brandonscott
 [rzdev]: http://www.razerzone.com/switchblade-ui/developers
 [sbs]: https://github.com/Sharparam/SwitchBladeSteam
