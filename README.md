@@ -2,7 +2,7 @@ Sharparam.SharpBlade
 ====================
 
 [![Jenkins Status](http://ci.sharpblade.net/buildStatus/icon?job=SharpBlade)](http://ci.sharpblade.net/job/SharpBlade/)
-[![TC Status](http://tc.sharpblade.net/app/rest/builds/buildType:%28id:sharpblade_MainBuild%29/statusIcon)](http://tc.sharpblade.net/viewType.html?buildTypeId=sharpblade_MainBuild&guest=1)
+[![TC Status](http://tc.sharpblade.net/app/rest/builds/buildType:%28id:sharpblade_mainbuild%29/statusIcon)](http://tc.sharpblade.net/viewType.html?buildTypeId=sharpblade_mainbuild&guest=1)
 
 A C# wrapper/implementation for the SwitchBlade UI API
 ------------------------------------------------------
