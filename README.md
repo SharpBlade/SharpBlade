@@ -47,6 +47,41 @@ SwitchBlade UI SDK is provided by Razer and [can be obtained from their website]
 
 Sharparam.SharpBlade depends on the [log4net][l4n] library (provided).
 
+Debugging / Logging
+-------------------
+
+You may have to enable **Native Code Debugging** in the project settings to properly debug projects using SharpBlade.
+
+SharpBlade outputs log information to the standard output stream by default, if it fails to detect any log4net config information in the default location (App.config).
+
+If you want log4net to output to a file, you can put the following in your App.config file:
+
+```xml
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <configSections>
+    <section name="log4net" type="log4net.Config.Log4NetConfigurationSectionHandler, log4net" />
+  </configSections>
+  <log4net>
+    <appender name="FileAppender" type="log4net.Appender.FileAppender">
+      <file value="app.log" /> <!-- Change filename if desired -->
+      <appendToFile value="false" />
+      <layout type="log4net.Layout.PatternLayout">
+        <conversionPattern value="%date [%thread] %-5level %logger [%property{NDC}] - %message%newline" />
+      </layout>
+    </appender>
+    <root>
+      <level value="INFO" /> <!-- Change "INFO" to "DEBUG" to make logging more verbose -->
+      <appender-ref ref="FileAppender" />
+    </root>
+  </log4net>
+</configuration>
+```
+
+(Note that if you already have stuff in your App.config, just add the `<log4net>` section and add the `<section />` tag to `<configSections>`)
+
+This will cause log output to be saved in a file named "app.log" in the same directory as the executable.
+
 Projects
 --------
 
