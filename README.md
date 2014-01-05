@@ -92,6 +92,8 @@ Current projects utilizing this or modified versions of this library:
  * Razer Default Audio
  * Razer Spotify
 
+(If you want your project listed, just contact [Sharparam][sharp] or [Brandon][bs])
+
 [newpull]: ../../pull/new/master
 [sharp]: https://github.com/Sharparam
 [contrib]: ../../wiki/Contributing
