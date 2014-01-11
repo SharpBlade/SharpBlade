@@ -1,6 +1,10 @@
-﻿// Code for EnumExtensions class written by Hugoware
-// http://hugoware.net/blog/enumeration-extensions-2-0
-// Modifications done by Sharparam: ReSharper cleanup
+﻿// <copyright file="EnumerationExtensions.cs" company="Hugoware">
+//     Copyright (c) 2010 by Hugo Bonacci.
+//
+//     Code for EnumExtensions class written by Hugoware
+//     http://hugoware.net/blog/enumeration-extensions-2-0
+//     Modifications done by Sharparam: ReSharper cleanup
+// </copyright>
 
 using System;
 
