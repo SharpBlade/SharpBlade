@@ -9,8 +9,6 @@ A C# wrapper/implementation for the SwitchBlade UI API
 
 Built using the SwitchBlade UI SDK from Razer.
 
-**Please note that the project is still in a very early development stage and is not considered stable enough for normal use.**
-
 Contributing
 ------------
 
@@ -25,7 +23,7 @@ Please read the wiki page about [contributing][contrib] before submitting pull r
 License
 -------
 
-Copyright &copy; 2013 by [Adam Hellberg][sharp] and [Brandon Scott][bs].
+Copyright &copy; 2013-2014 by [Adam Hellberg][sharp] and [Brandon Scott][bs].
 
 This project is licensed under the MIT license, please see the file **LICENSE** for more information.
 

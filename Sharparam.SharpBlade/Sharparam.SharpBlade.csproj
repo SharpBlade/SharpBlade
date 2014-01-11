@@ -22,7 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
-    <DocumentationFile>bin\Debug\Sharparam.SharpBlade.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Sharparam.SharpBlade.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -92,17 +92,34 @@
     <Compile Include="Razer\Touchpad.cs" />
     <Compile Include="Razer\ZoomDirection.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Default\Images\dk_disabled.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Default\Images\tp_blank.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UseGlobalSettings="False" BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_UpdateFileVersion="False" />
+      <UserProperties BuildVersion_UpdateFileVersion="False" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" BuildVersion_UseGlobalSettings="False" />
     </VisualStudio>
   </ProjectExtensions>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" Condition="'$(BUILD_NUMBER)' != ''" />
+  <Target Name="BeforeBuild" Condition="'$(BUILD_NUMBER)' != ''">
+    <Message Text="Updating AssemblyFileVersion" />
+    <FileUpdate Files="Properties\AssemblyInfo.cs"
+                Regex="AssemblyFileVersion\(&quot;(\d+)\.(\d+)\.(\d+)\.\d+&quot;\)"
+                ReplacementText="AssemblyFileVersion(&quot;$1.$2.$3.$(BUILD_NUMBER)&quot;)" />
+    <PropertyGroup>
+      <AssemblyFileVersionChanged>True</AssemblyFileVersionChanged>
+    </PropertyGroup>
   </Target>
-  <Target Name="AfterBuild">
+  <Target Name="AfterBuild" Condition="'$(AssemblyFileVersionChanged)' == 'True'">
+    <Message Text="Restoring AssemblyFileVersion" />
+    <FileUpdate Files="Properties\AssemblyInfo.cs"
+                Regex="AssemblyFileVersion\(&quot;(\d+)\.(\d+)\.(\d+)\.\d+&quot;\)"
+                ReplacementText="AssemblyFileVersion(&quot;$1.$2.$3.0&quot;)" />
   </Target>
-  -->
 </Project>
