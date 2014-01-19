@@ -1,7 +1,5 @@
-Sharparam.SharpBlade
-====================
-
-[![TC Status](http://tc.sharpblade.net/app/rest/builds/buildType:%28id:sharpblade_mainbuild%29/statusIcon)](http://tc.sharpblade.net/viewType.html?buildTypeId=sharpblade_mainbuild&guest=1)
+Sharparam.SharpBlade [![TC Status][tcimage]][tcproject] [![Huboard Status][huboardimage]][huboardlink]
+======================================================================================================
 
 A C# wrapper/implementation for the SwitchBlade UI API
 ------------------------------------------------------
@@ -91,6 +89,10 @@ Current projects utilizing this or modified versions of this library:
 
 (If you want your project listed, just contact [Sharparam][sharp] or [Brandon][bs])
 
+[tcimage]: http://tc.sharpblade.net/app/rest/builds/buildType:%28id:sharpblade_mainbuild%29/statusIcon
+[tcproject]: http://tc.sharpblade.net/viewType.html?buildTypeId=sharpblade_mainbuild&guest=1
+[huboardimage]: http://githubkanban.herokuapp.com/huboard/SharpBlade/SharpBlade.png
+[huboardlink]: http://huboard.com/SharpBlade/SharpBlade/board
 [newpull]: ../../pull/new/master
 [sharp]: https://github.com/Sharparam
 [contrib]: ../../wiki/Contributing
