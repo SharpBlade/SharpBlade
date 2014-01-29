@@ -53,6 +53,11 @@ namespace Sharparam.SharpBlade.Razer
     public class Touchpad : IDisposable
     {
         /// <summary>
+        /// Instance of Touchpad for the singleton.
+        /// </summary>
+        private static Touchpad _instance;
+
+        /// <summary>
         /// Gesture callback that is used as parameter in <see cref="RazerAPI.RzSBGestureSetCallback" />.
         /// </summary>
         private static RazerAPI.TouchpadGestureCallbackFunctionDelegate _gestureCallback;
@@ -88,9 +93,9 @@ namespace Sharparam.SharpBlade.Razer
         private Renderer _renderer;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Touchpad" /> class.
+        /// Prevents a default instance of the <see cref="Touchpad" /> class from being created.
         /// </summary>
-        internal Touchpad()
+        private Touchpad()
         {
             _log = LogManager.GetLogger(this);
             _log.Info("Setting disabled image");
@@ -187,6 +192,14 @@ namespace Sharparam.SharpBlade.Razer
         /// or null if no image is showing.
         /// </summary>
         public string CurrentImage { get; private set; }
+
+        /// <summary>
+        /// Gets singleton instance of Touchpad.
+        /// </summary>
+        internal static Touchpad Instance
+        {
+            get { return _instance ?? (_instance = new Touchpad()); }
+        }
 
         /// <summary>
         /// Disposes of this touchpad.

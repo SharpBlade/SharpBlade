@@ -29,7 +29,7 @@
 //---------------------------------------------------------------------------------------
 
 using System;
-using System.IO;
+
 using Sharparam.SharpBlade.Integration;
 using Sharparam.SharpBlade.Logging;
 using Sharparam.SharpBlade.Native;
@@ -46,14 +46,9 @@ namespace Sharparam.SharpBlade.Razer
     public class RazerManager : IDisposable
     {
         /// <summary>
-        /// The file name to use when creating the control file.
+        /// RazerManager instance for singleton.
         /// </summary>
-        private const string RazerControlFile = "DO_NOT_TOUCH__RAZER_CONTROL_FILE";
-
-        /// <summary>
-        /// Static log object for logging inside static methods.
-        /// </summary>
-        private static readonly log4net.ILog StaticLog = LogManager.GetLogger(typeof(RazerManager));
+        private static RazerManager _instance;
 
         /// <summary>
         /// App event callback that is used as parameter in <see cref="RazerAPI.RzSBAppEventSetCallback" />.
@@ -91,32 +86,17 @@ namespace Sharparam.SharpBlade.Razer
         private KeyboardControl _keyboardControl;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RazerManager" /> class.
+        /// Prevents a default instance of the <see cref="RazerManager" /> class from being created.
         /// </summary>
-        /// <param name="disableOSGestures">
-        /// If true, all OS gestures will by default be disabled on the touchpad,
-        /// making it do nothing until gestures are enabled manually.
-        /// </param>
-        /// <param name="useControlFile">
-        /// If true, creates a control file that is checked on subsequent creations
-        /// of <see cref="RazerManager" />, initialization will fail if a control file
-        /// is found and useControlFile is true.
-        /// </param>
-        /// <remarks>Only one Razer manager should be active at any one time.</remarks>
-        public RazerManager(bool disableOSGestures = true, bool useControlFile = false)
+        /// <remarks>
+        /// The constructor will disable all OS gestures, to enable them, use the Touchpad property
+        /// and call the EnableOSGesture() method to enable gestures wanted.
+        /// </remarks>
+        private RazerManager()
         {
             _log = LogManager.GetLogger(this);
 
             _log.Info("RazerManager is initializing");
-
-            if (useControlFile && File.Exists(RazerControlFile))
-            {
-                _log.Error("Detected control file presence, throwing exception.");
-                throw new RazerUnstableShutdownException();
-            }
-
-            if (useControlFile)
-                CreateControlFile();
 
             _log.Debug("Calling RzSBStart()");
 
@@ -139,10 +119,9 @@ namespace Sharparam.SharpBlade.Razer
                 throw new RazerNativeException("RzSBAppEventSetCallback", result);
 
             _log.Info("Setting up touchpad");
-            Touchpad = new Touchpad();
+            Touchpad = Touchpad.Instance;
 
-            if (disableOSGestures)
-                Touchpad.DisableOSGesture(RazerAPI.GestureType.All);
+            Touchpad.DisableOSGesture(RazerAPI.GestureType.All);
 
             _log.Debug("Creating dynamic key callback");
             _dynamicKeyCallback = HandleDynamicKeyEvent;
@@ -209,6 +188,14 @@ namespace Sharparam.SharpBlade.Razer
         public event EventHandler<KeyboardKeyEventArgs> KeyboardKeyUp;
 
         /// <summary>
+        /// Gets singleton instance of RazerManager.
+        /// </summary>
+        public static RazerManager Instance
+        {
+            get { return _instance ?? (_instance = new RazerManager()); }
+        }
+
+        /// <summary>
         /// Gets the touchpad on the keyboard.
         /// </summary>
         public Touchpad Touchpad { get; private set; }
@@ -217,48 +204,6 @@ namespace Sharparam.SharpBlade.Razer
         /// Gets a value indicating whether keyboard capture is enabled or not.
         /// </summary>
         public bool KeyboardCapture { get; private set; }
-
-        /// <summary>
-        /// Creates the Razer control file.
-        /// </summary>
-        public static void CreateControlFile()
-        {
-            try
-            {
-                if (File.Exists(RazerControlFile))
-                    StaticLog.Warn("CreateControlFile: File already exists");
-                else
-                {
-                    File.Create(RazerControlFile).Close();
-                    StaticLog.Info("CreateControlFile: Success!");
-                }
-            }
-            catch (IOException ex)
-            {
-                StaticLog.ErrorFormat("CreateControlFile: [IOException] Failed to create control file: {0}", ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Deletes the Razer control file.
-        /// </summary>
-        public static void DeleteControlFile()
-        {
-            try
-            {
-                if (File.Exists(RazerControlFile))
-                {
-                    File.Delete(RazerControlFile);
-                    StaticLog.Info("DeleteControlFile: Success!");
-                }
-                else
-                    StaticLog.Warn("DeleteControlFile: File does not exist");
-            }
-            catch (IOException ex)
-            {
-                StaticLog.ErrorFormat("DeleteControlFile: [IOException] Failed to delete control file: {0}", ex.Message);
-            }
-        }
 
         /// <summary>
         /// Disposes of this <see cref="RazerManager" />.
@@ -272,13 +217,10 @@ namespace Sharparam.SharpBlade.Razer
         /// <summary>
         /// Stops all Razer interaction.
         /// </summary>
-        /// <param name="cleanup">True to delete the control file and clean up, false otherwise.</param>
-        public void Stop(bool cleanup = true)
+        public void Stop()
         {
             _log.Info("RazerManager is stopping! Calling RzSBStop...");
             RazerAPI.RzSBStop();
-            if (cleanup)
-                DeleteControlFile();
             _log.Info("RazerManager has stopped.");
         }
 
