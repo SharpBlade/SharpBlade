@@ -576,15 +576,6 @@ namespace Sharparam.SharpBlade.Razer
             ClearImage();
         }
 
-        /// <summary>
-        /// Stops rendering of forms and images.
-        /// </summary>
-        [Obsolete("Renamed to ClearAll")]
-        public void StopAll()
-        {
-            ClearAll();
-        }
-
         #endregion Drawing Methods
 
         #region Event Dispatchers

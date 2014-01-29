@@ -89,7 +89,6 @@
     <Compile Include="Razer\Exceptions\RazerUnstableShutdownException.cs" />
     <Compile Include="Razer\RazerManager.cs" />
     <Compile Include="Razer\RotateDirection.cs" />
-    <Compile Include="Razer\Structs\RenderStats.cs" />
     <Compile Include="Razer\Touchpad.cs" />
     <Compile Include="Razer\ZoomDirection.cs" />
   </ItemGroup>
@@ -104,23 +103,19 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateFileVersion="False" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" BuildVersion_UseGlobalSettings="False" />
+      <UserProperties BuildVersion_UseGlobalSettings="False" BuildVersion_BuildVersioningStyle="None.None.Increment.TimeStamp" BuildVersion_UpdateAssemblyVersion="False" BuildVersion_UpdateFileVersion="False" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" Condition="'$(BUILD_NUMBER)' != ''" />
   <Target Name="BeforeBuild" Condition="'$(BUILD_NUMBER)' != ''">
     <Message Text="Updating AssemblyFileVersion" />
-    <FileUpdate Files="Properties\AssemblyInfo.cs"
-                Regex="AssemblyFileVersion\(&quot;(\d+)\.(\d+)\.(\d+)\.\d+&quot;\)"
-                ReplacementText="AssemblyFileVersion(&quot;$1.$2.$3.$(BUILD_NUMBER)&quot;)" />
+    <FileUpdate Files="Properties\AssemblyInfo.cs" Regex="AssemblyFileVersion\(&quot;(\d+)\.(\d+)\.(\d+)\.\d+&quot;\)" ReplacementText="AssemblyFileVersion(&quot;$1.$2.$3.$(BUILD_NUMBER)&quot;)" />
     <PropertyGroup>
       <AssemblyFileVersionChanged>True</AssemblyFileVersionChanged>
     </PropertyGroup>
   </Target>
   <Target Name="AfterBuild" Condition="'$(AssemblyFileVersionChanged)' == 'True'">
     <Message Text="Restoring AssemblyFileVersion" />
-    <FileUpdate Files="Properties\AssemblyInfo.cs"
-                Regex="AssemblyFileVersion\(&quot;(\d+)\.(\d+)\.(\d+)\.\d+&quot;\)"
-                ReplacementText="AssemblyFileVersion(&quot;$1.$2.$3.0&quot;)" />
+    <FileUpdate Files="Properties\AssemblyInfo.cs" Regex="AssemblyFileVersion\(&quot;(\d+)\.(\d+)\.(\d+)\.\d+&quot;\)" ReplacementText="AssemblyFileVersion(&quot;$1.$2.$3.0&quot;)" />
   </Target>
 </Project>
