@@ -6,12 +6,16 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Sharparam.SwitchBladeSteam")]
-[assembly: AssemblyDescription("Library providing native and logging functions to other SBS components.")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("F16Gaming")]
-[assembly: AssemblyProduct("Sharparam.SwitchBladeSteam")]
-[assembly: AssemblyCopyright("Copyright © 2013 by Adam Hellberg and Brandon Scott.")]
+[assembly: AssemblyTitle("SharpBlade")]
+[assembly: AssemblyDescription("C# wrapper/implementation of the SwitchBlade UI API from Razer")]
+#if RELEASE
+[assembly: AssemblyConfiguration("Release")]
+#else
+[assembly: AssemblyConfiguration("Debug")]
+#endif
+[assembly: AssemblyCompany("SharpBlade")]
+[assembly: AssemblyProduct("SharpBlade")]
+[assembly: AssemblyCopyright("Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
