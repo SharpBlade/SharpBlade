@@ -38,6 +38,8 @@ using Sharparam.SharpBlade.Razer.Exceptions;
 
 namespace Sharparam.SharpBlade.Razer
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Windows.Forms;
 
     /// <summary>
@@ -45,6 +47,18 @@ namespace Sharparam.SharpBlade.Razer
     /// </summary>
     public class RazerManager : IDisposable
     {
+        /// <summary>
+        /// Array of 3-tuples to pair Virtual Keys (1st element) with their ModifierKeys counterpart (3rd element),
+        /// the second element is used when checking for VK status (pressed or toggled, VK specific).
+        /// </summary>
+        private static readonly Tuple<WinAPI.VirtualKey, int, ModifierKeys>[] KeyMapping =
+        {
+            Tuple.Create(WinAPI.VirtualKey.SHIFT, WinAPI.KEY_PRESSED, ModifierKeys.Shift),
+            Tuple.Create(WinAPI.VirtualKey.CONTROL, WinAPI.KEY_PRESSED, ModifierKeys.Control),
+            Tuple.Create(WinAPI.VirtualKey.MENU, WinAPI.KEY_PRESSED, ModifierKeys.Alt),
+            Tuple.Create(WinAPI.VirtualKey.CAPITAL, WinAPI.KEY_TOGGLED, ModifierKeys.CapsLock)
+        };
+
         /// <summary>
         /// RazerManager instance for singleton.
         /// </summary>
@@ -498,8 +512,6 @@ namespace Sharparam.SharpBlade.Razer
         /// <returns>An instance of <see cref="HRESULT" /> indicating success or failure.</returns>
         private HRESULT HandleKeyboardEvent(uint type, UIntPtr data, IntPtr modifiers)
         {
-            var result = HRESULT.RZSB_OK;
-
             var msgType = (WinAPI.MessageType)type;
             var asChar = (char)data;
 
@@ -518,20 +530,10 @@ namespace Sharparam.SharpBlade.Razer
                 var key = (WinAPI.VirtualKey)(uint)data;
 
                 // Workaround to get the modifier keys
-                var modifierKeys = ModifierKeys.None;
-
-                if ((WinAPI.GetKeyState((int)WinAPI.VirtualKey.SHIFT) & WinAPI.KEY_PRESSED) != 0)
-                    modifierKeys |= ModifierKeys.Shift;
-
-                if ((WinAPI.GetKeyState((int)WinAPI.VirtualKey.CONTROL) & WinAPI.KEY_PRESSED) != 0)
-                    modifierKeys |= ModifierKeys.Control;
-
-                // MENU == ALT
-                if ((WinAPI.GetKeyState((int)WinAPI.VirtualKey.MENU) & WinAPI.KEY_PRESSED) != 0)
-                    modifierKeys |= ModifierKeys.Alt;
-
-                if ((WinAPI.GetKeyState((int)WinAPI.VirtualKey.CAPITAL) & WinAPI.KEY_TOGGLED) != 0)
-                    modifierKeys |= ModifierKeys.CapsLock;
+                // Item1 = VK, Item2 = mask, Item3 = ModifierKey
+                var modifierKeys =
+                    KeyMapping.Where(mapping => (WinAPI.GetKeyState((int)mapping.Item1) & mapping.Item2) != 0)
+                              .Aggregate(ModifierKeys.None, (current, mapping) => current | mapping.Item3);
 
                 if (msgType == WinAPI.MessageType.KEYDOWN)
                 {
@@ -551,7 +553,7 @@ namespace Sharparam.SharpBlade.Razer
                 }
             }
 
-            return result;
+            return HRESULT.RZSB_OK;
         }
     }
 }
