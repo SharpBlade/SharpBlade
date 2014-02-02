@@ -97,6 +97,7 @@ namespace Sharparam.SharpBlade.Razer
         /// </summary>
         private Touchpad()
         {
+            CurrentNativeWindow = IntPtr.Zero;
             _log = LogManager.GetLogger(this);
             _log.Info("Setting disabled image");
             _log.Debug("Setting gesture callback");
@@ -181,6 +182,11 @@ namespace Sharparam.SharpBlade.Razer
         /// Gets the currently active form, null if no form is set.
         /// </summary>
         public Form CurrentForm { get; private set; }
+
+        /// <summary>
+        /// The currently rendering Native window, IntPtr.Zero if no window set
+        /// </summary>
+        public IntPtr CurrentNativeWindow { get; private set; }
 
         /// <summary>
         /// Gets the currently rendering WPF window, null if no window is set.
@@ -419,6 +425,20 @@ namespace Sharparam.SharpBlade.Razer
         }
 
         /// <summary>
+        /// Draws the specified native window to the touchpad
+        /// </summary>
+        /// <param name="windowHandle">the window handle of the window to draw</param>
+        public void DrawNativeWindow(IntPtr windowHandle)
+        {
+            ScreenCapture sc = new ScreenCapture();
+            var img = sc.CaptureWindow(windowHandle);
+            var bitmapToRender = new Bitmap(img, RazerAPI.TouchpadWidth, RazerAPI.TouchpadHeight);
+            DrawBitmap(bitmapToRender);
+            bitmapToRender.Dispose();
+            img.Dispose();
+        }
+
+        /// <summary>
         /// Draws a WPF window to the touchpad.
         /// </summary>
         /// <param name="window">Window object to draw.</param>
@@ -489,6 +509,35 @@ namespace Sharparam.SharpBlade.Razer
             }
 
             CurrentForm = null;
+        }
+
+        /// <summary>
+        /// Sets the native window to be rendered to this touchpad
+        /// Initializes the polling interval to 42ms (circa 24 FPS)
+        /// </summary>
+        /// <param name="windowHandle">the handle for the window to render</param>
+        public void SetNativeWindow(IntPtr windowHandle)
+        {
+            ClearNativeWindow();
+
+            CurrentNativeWindow = windowHandle;
+
+            _renderer = new Renderer(this, windowHandle, new TimeSpan(0, 0, 0, 0, 42));
+        }
+
+        /// <summary>
+        /// Clears the current native window from 
+        /// the touchpad and stops rendering of it
+        /// </summary>
+        public void ClearNativeWindow()
+        {
+            CurrentNativeWindow = IntPtr.Zero;
+
+            if (_renderer != null)
+            {
+                _renderer.Dispose();
+                _renderer = null;
+            }
         }
 
         /// <summary>
