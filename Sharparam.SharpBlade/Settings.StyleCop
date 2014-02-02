@@ -5,6 +5,7 @@
       <Value>Razer</Value>
       <Value>Razer's</Value>
     </CollectionProperty>
+    <IntegerProperty Name="MaxViolationCount">-1</IntegerProperty>
   </GlobalSettings>
   <Analyzers>
     <Analyzer AnalyzerId="StyleCop.CSharp.OrderingRules">
