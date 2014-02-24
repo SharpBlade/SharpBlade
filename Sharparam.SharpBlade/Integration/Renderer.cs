@@ -53,6 +53,12 @@ namespace Sharparam.SharpBlade.Integration
         private readonly Form _form;
 
         /// <summary>
+        /// Native window handle
+        /// IntPtr.Zero if no native window assigned
+        /// </summary>
+        private readonly IntPtr _nativeWindow = IntPtr.Zero;
+
+        /// <summary>
         /// WPF Window to render.
         /// Null if no WPF Window assigned.
         /// </summary>
@@ -69,6 +75,12 @@ namespace Sharparam.SharpBlade.Integration
         /// poll mode is in use.
         /// </summary>
         private readonly DispatcherTimer _wpfTimer;
+
+        /// <summary>
+        /// Timer to control rendering of window when
+        /// poll mode is in use
+        /// </summary>
+        private readonly System.Timers.Timer _nativeTimer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Renderer" /> class.
@@ -91,6 +103,23 @@ namespace Sharparam.SharpBlade.Integration
             _winformTimer.Tick += WinformTimerOnTick;
 
             _winformTimer.Start();
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Renderer" /> instance for rendering
+        /// a native window at the specified interval.
+        /// </summary>
+        /// <param name="touchpad">Touchpad reference.</param>
+        /// <param name="windowHandle">Native window handle to render.</param>
+        /// <param name="interval">The interval to render the window at.</param>
+        internal Renderer(Touchpad touchpad, IntPtr windowHandle, TimeSpan interval)
+        {
+            _touchpad = touchpad;
+            _nativeWindow = windowHandle;
+
+            _nativeTimer = new System.Timers.Timer(interval.TotalMilliseconds);
+            _nativeTimer.Elapsed += NativeTimerTick;
+            _nativeTimer.Start();
         }
 
         /// <summary>
@@ -118,7 +147,13 @@ namespace Sharparam.SharpBlade.Integration
                 _winformTimer.Dispose();
 
             if (_wpfTimer != null)
-                _wpfTimer.Stop();
+                _wpfTimer.Stop(); 
+            
+            if (_nativeTimer != null)
+            {
+                _nativeTimer.Stop();
+                _nativeTimer.Dispose();
+            }
         }
 
         /// <summary>
@@ -139,6 +174,11 @@ namespace Sharparam.SharpBlade.Integration
         private void WpfTimerTick(object sender, EventArgs e)
         {
             _touchpad.DrawWindow(_window);
+        }
+
+        private void NativeTimerTick(object sender, EventArgs e)
+        {
+            _touchpad.DrawNativeWindow(_nativeWindow);
         }
     }
 }
