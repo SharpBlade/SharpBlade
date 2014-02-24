@@ -53,8 +53,8 @@ namespace Sharparam.SharpBlade.Integration
         private readonly Form _form;
 
         /// <summary>
-        /// Native window handle
-        /// IntPtr.Zero if no native window assigned
+        /// Native window handle.
+        /// <c>IntPtr.Zero</c> if no native window assigned.
         /// </summary>
         private readonly IntPtr _nativeWindow = IntPtr.Zero;
 
@@ -106,8 +106,8 @@ namespace Sharparam.SharpBlade.Integration
         }
 
         /// <summary>
-        /// Creates a new <see cref="Renderer" /> instance for rendering
-        /// a native window at the specified interval.
+        /// Initializes a new instance of the <see cref="Renderer" /> class.
+        /// Used for rendering a native window at the specified interval.
         /// </summary>
         /// <param name="touchpad">Touchpad reference.</param>
         /// <param name="windowHandle">Native window handle to render.</param>
@@ -176,6 +176,11 @@ namespace Sharparam.SharpBlade.Integration
             _touchpad.DrawWindow(_window);
         }
 
+        /// <summary>
+        /// Callback for the native tick event.
+        /// </summary>
+        /// <param name="sender">The object that raised the event.</param>
+        /// <param name="e">Event arguments.</param>
         private void NativeTimerTick(object sender, EventArgs e)
         {
             _touchpad.DrawNativeWindow(_nativeWindow);

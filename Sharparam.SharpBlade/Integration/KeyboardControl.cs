@@ -32,7 +32,8 @@ using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Input;
-using Sharparam.SharpBlade.Native;
+
+using Sharparam.SharpBlade.Native.WinAPI;
 
 namespace Sharparam.SharpBlade.Integration
 {
@@ -88,7 +89,7 @@ namespace Sharparam.SharpBlade.Integration
         /// Sends a KeyDown event to the active control.
         /// </summary>
         /// <param name="key">The key that was pressed.</param>
-        internal void SendKeyDown(WinAPI.VirtualKey key)
+        internal void SendKeyDown(User32.VirtualKey key)
         {
             if (_winFormControl != null && !_winFormControl.IsDisposed)
                 SendWinFormKeyDown(key);
@@ -100,7 +101,7 @@ namespace Sharparam.SharpBlade.Integration
         /// Sends a KeyUp event to the active control.
         /// </summary>
         /// <param name="key">The key that was released.</param>
-        internal void SendKeyUp(WinAPI.VirtualKey key)
+        internal void SendKeyUp(User32.VirtualKey key)
         {
             if (_winFormControl != null && !_winFormControl.IsDisposed)
                 SendWinFormKeyUp(key);
@@ -124,18 +125,18 @@ namespace Sharparam.SharpBlade.Integration
         /// Sends WM_KEYDOWN to WinForms control.
         /// </summary>
         /// <param name="key">Key that was pressed.</param>
-        private void SendWinFormKeyDown(WinAPI.VirtualKey key)
+        private void SendWinFormKeyDown(User32.VirtualKey key)
         {
-            WinAPI.PostMessage(_winFormControl.Handle, (uint)WinAPI.MessageType.KEYDOWN, (IntPtr)key, IntPtr.Zero);
+            User32.PostMessage(_winFormControl.Handle, (uint)User32.MessageType.KEYDOWN, (IntPtr)key, IntPtr.Zero);
         }
 
         /// <summary>
         /// Sends WM_KEYUP to WinForms control.
         /// </summary>
         /// <param name="key">Key that was released.</param>
-        private void SendWinFormKeyUp(WinAPI.VirtualKey key)
+        private void SendWinFormKeyUp(User32.VirtualKey key)
         {
-            WinAPI.PostMessage(_winFormControl.Handle, (uint)WinAPI.MessageType.KEYUP, (IntPtr)key, IntPtr.Zero);
+            User32.PostMessage(_winFormControl.Handle, (uint)User32.MessageType.KEYUP, (IntPtr)key, IntPtr.Zero);
         }
 
         /// <summary>
@@ -144,14 +145,14 @@ namespace Sharparam.SharpBlade.Integration
         /// <param name="character">Character that was typed.</param>
         private void SendWinFormChar(char character)
         {
-            WinAPI.PostMessage(_winFormControl.Handle, (uint)WinAPI.MessageType.CHAR, (IntPtr)character, IntPtr.Zero);
+            User32.PostMessage(_winFormControl.Handle, (uint)User32.MessageType.CHAR, (IntPtr)character, IntPtr.Zero);
         }
 
         /// <summary>
         /// Sends a WPF KeyDown event to the WPF control.
         /// </summary>
         /// <param name="key">Key that was pressed.</param>
-        private void SendWPFKeyDown(WinAPI.VirtualKey key)
+        private void SendWPFKeyDown(User32.VirtualKey key)
         {
             // Conversion magic, don't blink!
             var wpfKey = KeyInterop.KeyFromVirtualKey((int)key);
@@ -173,7 +174,7 @@ namespace Sharparam.SharpBlade.Integration
         /// Sends a WPF KeyUp event to the WPF control.
         /// </summary>
         /// <param name="key">Key that was released.</param>
-        private void SendWPFKeyUp(WinAPI.VirtualKey key)
+        private void SendWPFKeyUp(User32.VirtualKey key)
         {
             // Conversion magic, don't blink!
             var wpfKey = KeyInterop.KeyFromVirtualKey((int)key);

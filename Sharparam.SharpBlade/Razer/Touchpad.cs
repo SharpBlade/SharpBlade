@@ -184,7 +184,7 @@ namespace Sharparam.SharpBlade.Razer
         public Form CurrentForm { get; private set; }
 
         /// <summary>
-        /// The currently rendering Native window, IntPtr.Zero if no window set
+        /// Gets the currently rendering Native window, <c>IntPtr.Zero</c> if no window set
         /// </summary>
         public IntPtr CurrentNativeWindow { get; private set; }
 

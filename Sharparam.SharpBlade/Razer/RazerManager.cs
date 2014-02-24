@@ -29,19 +29,18 @@
 //---------------------------------------------------------------------------------------
 
 using System;
+using System.Linq;
+using System.Windows.Forms;
 
 using Sharparam.SharpBlade.Integration;
 using Sharparam.SharpBlade.Logging;
 using Sharparam.SharpBlade.Native;
+using Sharparam.SharpBlade.Native.WinAPI;
 using Sharparam.SharpBlade.Razer.Events;
 using Sharparam.SharpBlade.Razer.Exceptions;
 
 namespace Sharparam.SharpBlade.Razer
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Windows.Forms;
-
     /// <summary>
     /// Manages everything related to Razer and its devices.
     /// </summary>
@@ -51,12 +50,12 @@ namespace Sharparam.SharpBlade.Razer
         /// Array of 3-tuples to pair Virtual Keys (1st element) with their ModifierKeys counterpart (3rd element),
         /// the second element is used when checking for VK status (pressed or toggled, VK specific).
         /// </summary>
-        private static readonly Tuple<WinAPI.VirtualKey, int, ModifierKeys>[] KeyMapping =
+        private static readonly Tuple<User32.VirtualKey, int, ModifierKeys>[] KeyMapping =
         {
-            Tuple.Create(WinAPI.VirtualKey.SHIFT, WinAPI.KEY_PRESSED, ModifierKeys.Shift),
-            Tuple.Create(WinAPI.VirtualKey.CONTROL, WinAPI.KEY_PRESSED, ModifierKeys.Control),
-            Tuple.Create(WinAPI.VirtualKey.MENU, WinAPI.KEY_PRESSED, ModifierKeys.Alt),
-            Tuple.Create(WinAPI.VirtualKey.CAPITAL, WinAPI.KEY_TOGGLED, ModifierKeys.CapsLock)
+            Tuple.Create(User32.VirtualKey.SHIFT, User32.KEY_PRESSED, ModifierKeys.Shift),
+            Tuple.Create(User32.VirtualKey.CONTROL, User32.KEY_PRESSED, ModifierKeys.Control),
+            Tuple.Create(User32.VirtualKey.MENU, User32.KEY_PRESSED, ModifierKeys.Alt),
+            Tuple.Create(User32.VirtualKey.CAPITAL, User32.KEY_TOGGLED, ModifierKeys.CapsLock)
         };
 
         /// <summary>
@@ -434,7 +433,7 @@ namespace Sharparam.SharpBlade.Razer
         /// </summary>
         /// <param name="key">Key that was pressed.</param>
         /// <param name="modifiers">Active modifier keys.</param>
-        private void OnKeyboardKeyDown(WinAPI.VirtualKey key, ModifierKeys modifiers)
+        private void OnKeyboardKeyDown(User32.VirtualKey key, ModifierKeys modifiers)
         {
             var func = KeyboardKeyDown;
             if (func != null)
@@ -446,7 +445,7 @@ namespace Sharparam.SharpBlade.Razer
         /// </summary>
         /// <param name="key">Key that was released.</param>
         /// <param name="modifiers">Active modifier keys.</param>
-        private void OnKeyboardKeyUp(WinAPI.VirtualKey key, ModifierKeys modifiers)
+        private void OnKeyboardKeyUp(User32.VirtualKey key, ModifierKeys modifiers)
         {
             var func = KeyboardKeyUp;
             if (func != null)
@@ -512,42 +511,42 @@ namespace Sharparam.SharpBlade.Razer
         /// <returns>An instance of <see cref="HRESULT" /> indicating success or failure.</returns>
         private HRESULT HandleKeyboardEvent(uint type, UIntPtr data, IntPtr modifiers)
         {
-            var msgType = (WinAPI.MessageType)type;
+            var msgType = (User32.MessageType)type;
             var asChar = (char)data;
 
             OnKeyboardRawEvent(type, data, modifiers);
 
             // We only want to send the char event if it's a char that can actually be typed
             // So it doesn't handle SHIFT and CONTROL as "characters"
-            if (msgType == WinAPI.MessageType.CHAR && !char.IsControl(asChar))
+            if (msgType == User32.MessageType.CHAR && !char.IsControl(asChar))
             {
                 OnKeyboardCharTyped(asChar);
                 if (_keyboardControl != null)
                     _keyboardControl.SendChar(asChar);
             }
-            else if (msgType == WinAPI.MessageType.KEYDOWN || msgType == WinAPI.MessageType.KEYUP)
+            else if (msgType == User32.MessageType.KEYDOWN || msgType == User32.MessageType.KEYUP)
             {
-                var key = (WinAPI.VirtualKey)(uint)data;
+                var key = (User32.VirtualKey)(uint)data;
 
                 // Workaround to get the modifier keys
                 // Item1 = VK, Item2 = mask, Item3 = ModifierKey
                 var modifierKeys =
-                    KeyMapping.Where(mapping => (WinAPI.GetKeyState((int)mapping.Item1) & mapping.Item2) != 0)
+                    KeyMapping.Where(mapping => (User32.GetKeyState((int)mapping.Item1) & mapping.Item2) != 0)
                               .Aggregate(ModifierKeys.None, (current, mapping) => current | mapping.Item3);
 
-                if (msgType == WinAPI.MessageType.KEYDOWN)
+                if (msgType == User32.MessageType.KEYDOWN)
                 {
                     OnKeyboardKeyDown(key, modifierKeys);
                     if (_keyboardControl != null)
                         _keyboardControl.SendKeyDown(key);
                 }
-                else if (msgType == WinAPI.MessageType.KEYUP)
+                else if (msgType == User32.MessageType.KEYUP)
                 {
                     OnKeyboardKeyUp(key, modifierKeys);
                     if (_keyboardControl != null)
                     {
                         _keyboardControl.SendKeyUp(key);
-                        if (key == WinAPI.VirtualKey.RETURN && _keyboardControl.ReleaseOnEnter)
+                        if (key == User32.VirtualKey.RETURN && _keyboardControl.ReleaseOnEnter)
                             SetKeyboardCapture(false);
                     }
                 }

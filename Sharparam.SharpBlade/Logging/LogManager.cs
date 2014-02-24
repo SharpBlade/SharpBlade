@@ -41,7 +41,7 @@ using log4net.Config;
 
 #if DEBUG
 using Microsoft.Win32.SafeHandles;
-using Sharparam.SharpBlade.Native;
+using Sharparam.SharpBlade.Native.WinAPI;
 #endif
 
 namespace Sharparam.SharpBlade.Logging
@@ -133,11 +133,11 @@ namespace Sharparam.SharpBlade.Logging
             if (System.Diagnostics.Debugger.IsAttached)
                 return;
 
-            WinAPI.AllocConsole();
-            var stdHandle = WinAPI.GetStdHandle(WinAPI.STD_OUTPUT_HANDLE);
+            Kernel32.AllocConsole();
+            var stdHandle = Kernel32.GetStdHandle(Kernel32.STD_OUTPUT_HANDLE);
             var safeFileHandle = new SafeFileHandle(stdHandle, true);
             var fileStream = new FileStream(safeFileHandle, FileAccess.Write);
-            var encoding = Encoding.GetEncoding(WinAPI.CODE_PAGE);
+            var encoding = Encoding.GetEncoding(Kernel32.CODE_PAGE);
             var stdOut = new StreamWriter(fileStream, encoding) { AutoFlush = true };
             Console.SetOut(stdOut);
             _consoleLoaded = true;
@@ -154,7 +154,7 @@ namespace Sharparam.SharpBlade.Logging
         {
 #if DEBUG
             if (_consoleLoaded)
-                WinAPI.FreeConsole();
+                Kernel32.FreeConsole();
 #endif
         }
 

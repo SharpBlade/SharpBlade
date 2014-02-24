@@ -30,7 +30,7 @@
 
 using System;
 using Sharparam.SharpBlade.Extensions;
-using Sharparam.SharpBlade.Native;
+using Sharparam.SharpBlade.Native.WinAPI;
 
 namespace Sharparam.SharpBlade.Razer.Events
 {
@@ -42,7 +42,7 @@ namespace Sharparam.SharpBlade.Razer.Events
         /// <summary>
         /// Key that had its state changed.
         /// </summary>
-        public readonly WinAPI.VirtualKey Key;
+        public readonly User32.VirtualKey Key;
 
         /// <summary>
         /// Modifiers pressed.
@@ -74,7 +74,7 @@ namespace Sharparam.SharpBlade.Razer.Events
         /// </summary>
         /// <param name="key">Key that was pressed.</param>
         /// <param name="modifiers">Modifiers active during key press.</param>
-        internal KeyboardKeyEventArgs(WinAPI.VirtualKey key, ModifierKeys modifiers)
+        internal KeyboardKeyEventArgs(User32.VirtualKey key, ModifierKeys modifiers)
         {
             Key = key;
             Modifiers = modifiers;
