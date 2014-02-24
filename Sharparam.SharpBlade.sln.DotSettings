@@ -28,4 +28,5 @@
 &#xD;
      "Razer" is a trademark of Razer USA Ltd.&#xD;
  &lt;/copyright&gt;&#xD;
----------------------------------------------------------------------------------------</s:String></wpf:ResourceDictionary>
+---------------------------------------------------------------------------------------</s:String>
+	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=GDI/@EntryIndexedValue">GDI</s:String></wpf:ResourceDictionary>

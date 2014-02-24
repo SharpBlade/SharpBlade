@@ -5,7 +5,7 @@
 // </auto-generated>
 
 //---------------------------------------------------------------------------------------
-// <copyright file="Gdi32.cs" company="SharpBlade">
+// <copyright file="GDI32.cs" company="SharpBlade">
 //     Copyright (c) 2014 by Adam Hellberg and Brandon Scott.
 //     Partial copyright (c) 2014 by meekaah.
 //
@@ -44,7 +44,7 @@ namespace Sharparam.SharpBlade.Native.WinAPI
     /// Static class containing all functions
     /// provided by the Windows GDI32 library.
     /// </summary>
-    public static class Gdi32
+    public static class GDI32
     {
         /// <summary>
         /// Copies the source rectangle directly to the destination rectangle.
