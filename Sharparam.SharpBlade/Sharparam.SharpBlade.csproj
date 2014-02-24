@@ -67,7 +67,7 @@
     <Compile Include="ModifierKeys.cs" />
     <Compile Include="Native\Helpers.cs" />
     <Compile Include="Native\HRESULT.cs" />
-    <Compile Include="Native\WinAPI\Gdi32.cs" />
+    <Compile Include="Native\WinAPI\GDI32.cs" />
     <Compile Include="Native\WinAPI\Kernel32.cs" />
     <Compile Include="Native\WinAPI\User32.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
