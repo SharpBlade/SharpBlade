@@ -71,30 +71,30 @@ namespace Sharparam.SharpBlade.Helpers
             int height = windowRect.bottom - windowRect.top;
 
             // create a device context we can copy to
-            IntPtr hdcDest = Gdi32.CreateCompatibleDC(hdcSrc);
+            IntPtr hdcDest = GDI32.CreateCompatibleDC(hdcSrc);
 
             // create a bitmap we can copy it to,
             // using GetDeviceCaps to get the width/height
-            IntPtr bitmapHandle = Gdi32.CreateCompatibleBitmap(hdcSrc, width, height);
+            IntPtr bitmapHandle = GDI32.CreateCompatibleBitmap(hdcSrc, width, height);
 
             // select the bitmap object
-            IntPtr oldHandle = Gdi32.SelectObject(hdcDest, bitmapHandle);
+            IntPtr oldHandle = GDI32.SelectObject(hdcDest, bitmapHandle);
 
             // bitblt over
-            Gdi32.BitBlt(hdcDest, 0, 0, width, height, hdcSrc, 0, 0, Gdi32.SRCCOPY);
+            GDI32.BitBlt(hdcDest, 0, 0, width, height, hdcSrc, 0, 0, GDI32.SRCCOPY);
 
             // restore selection
-            Gdi32.SelectObject(hdcDest, oldHandle);
+            GDI32.SelectObject(hdcDest, oldHandle);
 
             // clean up
-            Gdi32.DeleteDC(hdcDest);
+            GDI32.DeleteDC(hdcDest);
             User32.ReleaseDC(handle, hdcSrc);
 
             // get a .NET image object for it
             Image img = Image.FromHbitmap(bitmapHandle);
 
             // free up the Bitmap object
-            Gdi32.DeleteObject(bitmapHandle);
+            GDI32.DeleteObject(bitmapHandle);
             return img;
         }
 
