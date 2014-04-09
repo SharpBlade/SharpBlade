@@ -120,9 +120,11 @@
       <AssemblyFileVersionChanged>True</AssemblyFileVersionChanged>
     </PropertyGroup>
   </Target>
+  <!--
   <Target Name="AfterBuild" Condition="'$(AssemblyFileVersionChanged)' == 'True'">
     <Message Text="Restoring AssemblyFileVersion" />
     <FileUpdate Files="Properties\AssemblyInfo.cs" Regex="AssemblyFileVersion\(&quot;(\d+)\.(\d+)\.(\d+)\.\d+&quot;\)" ReplacementText="AssemblyFileVersion(&quot;$1.$2.$3.0&quot;)" />
   </Target>
+  -->
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
 </Project>
