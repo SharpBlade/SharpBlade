@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <version>$version$</version>
+    <authors>$author$</authors>
+    <owners>Adam Hellberg, Brandon Scott</owners>
+    <id>$id$</id>
+    <title>SharpBlade</title>
+    <licenseUrl>https://github.com/SharpBlade/SharpBlade/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/SharpBlade/SharpBlade</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <tags>Razer SwitchBlade UI Blade SBUI</tags>
+    <dependencies>
+      <dependency id="log4net" version="2.0.3" />
+    </dependencies>
+  </metadata>
+  <files />
+</package>
