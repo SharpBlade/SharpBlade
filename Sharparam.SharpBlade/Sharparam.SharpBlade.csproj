@@ -111,8 +111,6 @@
     <None Include="packages.config" />
     <None Include="Sharparam.SharpBlade.nuspec" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" Condition="'$(BUILD_NUMBER)' != '' OR '$(NUGET_BUILD_NUMBER)' != ''" />
   <PropertyGroup Condition="'$(BUILD_NUMBER)' != '' OR '$(NUGET_BUILD_NUMBER)' != ''">
     <AssemblyFilePerformUpdate>True</AssemblyFilePerformUpdate>
   </PropertyGroup>
@@ -122,12 +120,16 @@
     <AssemblyFileRestoreRegex>AssemblyFileVersion\(&quot;(\d+)\.(\d+)\.(\d+)\.\d+&quot;\)</AssemblyFileRestoreRegex>
     <AssemblyFileRestoreReplace>AssemblyFileVersion(&quot;$1.$2.$3.0&quot;)</AssemblyFileRestoreReplace>
   </PropertyGroup>
+  <!--
   <PropertyGroup Condition="'$(NUGET_BUILD_NUMBER)' != ''">
     <AssemblyFileBeforeRegex>AssemblyInformationalVersion\(&quot;(\d+)\.(\d+)\.(\d+)(.*)&quot;\)]</AssemblyFileBeforeRegex>
     <AssemblyFileBeforeReplace>AssemblyInformationalVersion(&quot;$1.$2.$3.$(NUGET_BUILD_NUMBER)&quot;)] //$4</AssemblyFileBeforeReplace>
     <AssemblyFileRestoreRegex>AssemblyInformationalVersion\(&quot;(\d+)\.(\d+)\.(\d+)\.\d+&quot;\)] //(.*?)([\r\n]+)</AssemblyFileRestoreRegex>
     <AssemblyFileRestoreReplace>AssemblyInformationalVersion(&quot;$1.$2.$3$4&quot;)]$5</AssemblyFileRestoreReplace>
   </PropertyGroup>
+  -->
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets" Condition="'$(AssemblyFileUpdate)' == 'True'" />
   <Target Name="BeforeBuild" Condition="'$(AssemblyFilePerformUpdate)' == 'True'">
     <Message Text="Updating AssemblyInfo.cs" />
     <FileUpdate Files="Properties\AssemblyInfo.cs" Regex="$(AssemblyFileBeforeRegex)" ReplacementText="$(AssemblyFileBeforeReplace)" />
