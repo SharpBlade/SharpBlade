@@ -32,7 +32,6 @@ using System;
 using Sharparam.SharpBlade.Helpers;
 using Sharparam.SharpBlade.Logging;
 using Sharparam.SharpBlade.Native;
-using Sharparam.SharpBlade.Razer.Events;
 using Sharparam.SharpBlade.Razer.Exceptions;
 
 namespace Sharparam.SharpBlade.Razer
