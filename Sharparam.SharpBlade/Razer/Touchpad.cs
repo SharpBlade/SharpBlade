@@ -430,7 +430,7 @@ namespace Sharparam.SharpBlade.Razer
         /// <param name="windowHandle">the window handle of the window to draw</param>
         public void DrawNativeWindow(IntPtr windowHandle)
         {
-            ScreenCapture sc = new ScreenCapture();
+            var sc = new ScreenCapture();
             var img = sc.CaptureWindow(windowHandle);
             var bitmapToRender = new Bitmap(img, RazerAPI.TouchpadWidth, RazerAPI.TouchpadHeight);
             DrawBitmap(bitmapToRender);
@@ -622,6 +622,8 @@ namespace Sharparam.SharpBlade.Razer
         public void ClearAll()
         {
             ClearForm();
+            ClearWindow();
+            ClearNativeWindow();
             ClearImage();
         }
 

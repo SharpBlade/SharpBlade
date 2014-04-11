@@ -62,9 +62,9 @@ namespace Sharparam.SharpBlade.Razer.Events
         /// <param name="modifiers">Active modifiers.</param>
         internal KeyboardRawEventArgs(uint type, UIntPtr data, IntPtr modifiers)
         {
-            this.Type = type;
-            this.Data = data;
-            this.Modifiers = modifiers;
+            Type = type;
+            Data = data;
+            Modifiers = modifiers;
         }
     }
 }

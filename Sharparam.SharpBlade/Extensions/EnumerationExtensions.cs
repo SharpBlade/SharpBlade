@@ -31,7 +31,7 @@ namespace Sharparam.SharpBlade.Extensions
 
             // determine the values
             object result = value;
-            var parsed = new _Value(append, type);
+            var parsed = new Value(append, type);
             if (parsed.Signed.HasValue)
             {
                 result = Convert.ToInt64(value) | (long)parsed.Signed;
@@ -59,7 +59,7 @@ namespace Sharparam.SharpBlade.Extensions
 
             // determine the values
             object result = value;
-            var parsed = new _Value(remove, type);
+            var parsed = new Value(remove, type);
             if (parsed.Signed.HasValue)
             {
                 result = Convert.ToInt64(value) & ~(long)parsed.Signed;
@@ -86,7 +86,7 @@ namespace Sharparam.SharpBlade.Extensions
             var type = value.GetType();
 
             // determine the values
-            var parsed = new _Value(check, type);
+            var parsed = new Value(check, type);
 
             if (parsed.Signed.HasValue)
                 return (Convert.ToInt64(value) & (long)parsed.Signed) == (long)parsed.Signed;
@@ -119,7 +119,7 @@ namespace Sharparam.SharpBlade.Extensions
         /// a unsigned long and long since either value should
         /// cover any lesser value.
         /// </summary>
-        private class _Value
+        private class Value
         {
             /// <summary>
             /// Signed value (or null).
@@ -144,11 +144,11 @@ namespace Sharparam.SharpBlade.Extensions
             private static readonly Type CachedUint32 = typeof(long);
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="_Value" /> class.
+            /// Initializes a new instance of the <see cref="Value" /> class.
             /// </summary>
             /// <param name="value">The value.</param>
             /// <param name="type">The type of <c>value</c>.</param>
-            public _Value(object value, Type type)
+            public Value(object value, Type type)
             {
                 // make sure it is even an enum to work with
                 if (!type.IsEnum)

@@ -461,16 +461,16 @@ namespace Sharparam.SharpBlade.Razer
         /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
         private HRESULT HandleAppEvent(RazerAPI.AppEventType type, uint appMode, uint processId)
         {
-            var result = HRESULT.RZSB_OK;
+            const int Result = HRESULT.RZSB_OK;
             if (type == RazerAPI.AppEventType.Invalid || type == RazerAPI.AppEventType.None)
             {
                 _log.DebugFormat("Unsupported AppEventType: {0}", type);
-                return result;
+                return Result;
             }
 
             OnAppEvent(type, (RazerAPI.AppEventMode)appMode, processId);
 
-            return result;
+            return Result;
         }
 
         /// <summary>
@@ -481,7 +481,7 @@ namespace Sharparam.SharpBlade.Razer
         /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
         private HRESULT HandleDynamicKeyEvent(RazerAPI.DynamicKeyType keyType, RazerAPI.DynamicKeyState state)
         {
-            var result = HRESULT.RZSB_OK;
+            const int Result = HRESULT.RZSB_OK;
 
             _log.Debug("Raising DynamicKeyEvent event");
             OnDynamicKeyEvent(keyType, state);
@@ -491,7 +491,7 @@ namespace Sharparam.SharpBlade.Razer
             if (dk == null)
             {
                 _log.Debug("Key has not been registered by app");
-                return result;
+                return Result;
             }
 
             _log.Debug("Updating key state");
@@ -499,7 +499,7 @@ namespace Sharparam.SharpBlade.Razer
             // UpdateState will check if it's a valid press and call any event subscribers
             dk.UpdateState(state);
 
-            return result;
+            return Result;
         }
 
         /// <summary>

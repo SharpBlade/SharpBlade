@@ -28,7 +28,6 @@
 // </copyright>
 //---------------------------------------------------------------------------------------
 
-using System;
 using Sharparam.SharpBlade.Native;
 
 namespace Sharparam.SharpBlade.Razer.Exceptions
