@@ -609,7 +609,7 @@ namespace Sharparam.SharpBlade.Razer
         /// </summary>
         public void ClearImage()
         {
-            var result = RazerAPI.RzSBSetImageTouchpad(IO.GetAbsolutePath(Constants.BlankTouchpadImage));
+            var result = RazerAPI.RzSBSetImageTouchpad(IO.GetAbsolutePath(RazerManager.Instance.BlankTouchpadImagePath));
             if (HRESULT.RZSB_FAILED(result))
                 throw new RazerNativeException("RzSBSetImageTouchpad", result);
 
