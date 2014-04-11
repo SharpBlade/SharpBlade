@@ -45,7 +45,7 @@ namespace Sharparam.SharpBlade.Helpers
         /// Creates an Image object containing a screen shot of the entire desktop.
         /// </summary>
         /// <returns>Image object of desktop screenshot.</returns>
-        public Image CaptureScreen()
+        public static Image CaptureScreen()
         {
             return CaptureWindow(User32.GetDesktopWindow());
         }
@@ -59,7 +59,7 @@ namespace Sharparam.SharpBlade.Helpers
         /// <returns>
         /// Image object of a specific window.
         /// </returns>
-        public Image CaptureWindow(IntPtr handle)
+        public static Image CaptureWindow(IntPtr handle)
         {
             // get te hDC of the target window
             IntPtr hdcSrc = User32.GetWindowDC(handle);
@@ -67,18 +67,18 @@ namespace Sharparam.SharpBlade.Helpers
             // get the size
             var windowRect = new User32.RECT();
             User32.GetWindowRect(handle, ref windowRect);
-            int width = windowRect.right - windowRect.left;
-            int height = windowRect.bottom - windowRect.top;
+            var width = windowRect.right - windowRect.left;
+            var height = windowRect.bottom - windowRect.top;
 
             // create a device context we can copy to
-            IntPtr hdcDest = GDI32.CreateCompatibleDC(hdcSrc);
+            var hdcDest = GDI32.CreateCompatibleDC(hdcSrc);
 
             // create a bitmap we can copy it to,
             // using GetDeviceCaps to get the width/height
-            IntPtr bitmapHandle = GDI32.CreateCompatibleBitmap(hdcSrc, width, height);
+            var bitmapHandle = GDI32.CreateCompatibleBitmap(hdcSrc, width, height);
 
             // select the bitmap object
-            IntPtr oldHandle = GDI32.SelectObject(hdcDest, bitmapHandle);
+            var oldHandle = GDI32.SelectObject(hdcDest, bitmapHandle);
 
             // bitblt over
             GDI32.BitBlt(hdcDest, 0, 0, width, height, hdcSrc, 0, 0, GDI32.SRCCOPY);
@@ -110,9 +110,9 @@ namespace Sharparam.SharpBlade.Helpers
         /// <param name="format">
         /// Image format to save image in.
         /// </param>
-        public void CaptureWindowToFile(IntPtr handle, string filename, ImageFormat format)
+        public static void CaptureWindowToFile(IntPtr handle, string filename, ImageFormat format)
         {
-            Image img = CaptureWindow(handle);
+            var img = CaptureWindow(handle);
             img.Save(filename, format);
         }
 
@@ -125,9 +125,9 @@ namespace Sharparam.SharpBlade.Helpers
         /// <param name="format">
         /// Image format to save in.
         /// </param>
-        public void CaptureScreenToFile(string filename, ImageFormat format)
+        public static void CaptureScreenToFile(string filename, ImageFormat format)
         {
-            Image img = CaptureScreen();
+            var img = CaptureScreen();
             img.Save(filename, format);
         }
     }
