@@ -111,6 +111,10 @@ namespace Sharparam.SharpBlade.Razer
 
             _log.Info("RazerManager is initializing");
 
+            _log.Debug("Setting default values for touchpad/dynamickey blank/disabled images");
+            BlankTouchpadImagePath = Constants.BlankTouchpadImage;
+            DisabledDynamicKeyImagePath = Constants.DisabledDynamicKeyImage;
+
             _log.Debug("Calling RzSBStart()");
 
             var result = RazerAPI.RzSBStart();
@@ -207,6 +211,20 @@ namespace Sharparam.SharpBlade.Razer
         {
             get { return _instance ?? (_instance = new RazerManager()); }
         }
+
+        /// <summary>
+        /// Gets or sets the image shown on Touchpad when it's blank or
+        /// after <see cref="Razer.Touchpad.ClearImage" /> or <see cref="Razer.Touchpad.ClearAll" />
+        /// have been called.
+        /// </summary>
+        /// <remarks>Defaults to <see cref="Constants.BlankTouchpadImage" /></remarks>
+        public string BlankTouchpadImagePath { get; set; }
+
+        /// <summary>
+        /// Gets or sets the image shown on dynamic keys when disabled.
+        /// </summary>
+        /// <remarks>Defaults to <see cref="Constants.DisabledDynamicKeyImage" /></remarks>
+        public string DisabledDynamicKeyImagePath { get; set; }
 
         /// <summary>
         /// Gets the touchpad on the keyboard.
