@@ -199,7 +199,7 @@ namespace Sharparam.SharpBlade.Razer
         /// </summary>
         public void Disable()
         {
-            SetImage(Constants.DisabledDynamicKeyImage);
+            SetImage(RazerManager.Instance.DisabledDynamicKeyImagePath);
         }
 
         /// <summary>

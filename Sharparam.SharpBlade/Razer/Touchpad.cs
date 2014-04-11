@@ -430,8 +430,7 @@ namespace Sharparam.SharpBlade.Razer
         /// <param name="windowHandle">the window handle of the window to draw</param>
         public void DrawNativeWindow(IntPtr windowHandle)
         {
-            var sc = new ScreenCapture();
-            var img = sc.CaptureWindow(windowHandle);
+            var img = ScreenCapture.CaptureWindow(windowHandle);
             var bitmapToRender = new Bitmap(img, RazerAPI.TouchpadWidth, RazerAPI.TouchpadHeight);
             DrawBitmap(bitmapToRender);
             bitmapToRender.Dispose();
@@ -609,7 +608,7 @@ namespace Sharparam.SharpBlade.Razer
         /// </summary>
         public void ClearImage()
         {
-            var result = RazerAPI.RzSBSetImageTouchpad(IO.GetAbsolutePath(Constants.BlankTouchpadImage));
+            var result = RazerAPI.RzSBSetImageTouchpad(IO.GetAbsolutePath(RazerManager.Instance.BlankTouchpadImagePath));
             if (HRESULT.RZSB_FAILED(result))
                 throw new RazerNativeException("RzSBSetImageTouchpad", result);
 
