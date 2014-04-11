@@ -622,6 +622,8 @@ namespace Sharparam.SharpBlade.Razer
         public void ClearAll()
         {
             ClearForm();
+            ClearWindow();
+            ClearNativeWindow();
             ClearImage();
         }
 
