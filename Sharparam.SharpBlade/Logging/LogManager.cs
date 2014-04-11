@@ -82,7 +82,8 @@ namespace Sharparam.SharpBlade.Logging
                 if (File.Exists(appConfigFile))
                 {
                     var doc = XDocument.Load(appConfigFile);
-                    if (doc.Element("configuration") != null && doc.Element("configuration").Element("log4net") != null)
+                    var configElement = doc.Element("configuration");
+                    if (configElement != null && configElement.Element("log4net") != null)
                     {
                         XmlConfigurator.Configure();
                         appConfigLoaded = true;

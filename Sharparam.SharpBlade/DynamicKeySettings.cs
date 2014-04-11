@@ -30,7 +30,6 @@
 
 using System;
 using Sharparam.SharpBlade.Native;
-using Sharparam.SharpBlade.Razer.Events;
 
 namespace Sharparam.SharpBlade
 {
