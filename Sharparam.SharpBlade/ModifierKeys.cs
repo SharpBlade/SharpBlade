@@ -36,7 +36,8 @@ namespace Sharparam.SharpBlade
     /// Modifier keys.
     /// </summary>
     [Flags]
-    public enum ModifierKeys {
+    public enum ModifierKeys
+    {
         /// <summary>
         /// No modifier key.
         /// </summary>
