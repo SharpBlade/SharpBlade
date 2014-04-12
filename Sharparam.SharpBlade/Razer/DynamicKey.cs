@@ -157,7 +157,7 @@ namespace Sharparam.SharpBlade.Razer
 
             _log.DebugFormat("Setting {0} on {1} to {2}", state, KeyType, image);
 
-            var result = RazerAPI.RzSBSetImageDynamicKey(KeyType, state, IO.GetAbsolutePath(image));
+            var result = RazerAPI.NativeMethods.RzSBSetImageDynamicKey(KeyType, state, IO.GetAbsolutePath(image));
             if (!HRESULT.RZSB_SUCCESS(result))
                 throw new RazerNativeException("RzSBSetImageDynamicKey", result);
 

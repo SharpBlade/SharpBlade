@@ -62,16 +62,6 @@ namespace Sharparam.SharpBlade.Native
     /// </remarks>
     public static class RazerAPI
     {
-        #region File Constants
-
-        /// <summary>
-        /// The DLL file containing the SDK functions.
-        /// </summary>
-        /// <remarks>Must be located in the system PATH.</remarks>
-        public const string DllName = "RzSwitchbladeSDK2.dll";
-
-        #endregion File Constants
-
         #region Constants
 
         /*
@@ -536,7 +526,7 @@ namespace Sharparam.SharpBlade.Native
         }
 
         /// <summary>
-        /// Different hardware types returned by <see cref="RzSBQueryCapabilities" />.
+        /// Different hardware types returned by <see cref="NativeMethods.RzSBQueryCapabilities" />.
         /// </summary>
         public enum HardwareType
         {
@@ -557,203 +547,6 @@ namespace Sharparam.SharpBlade.Native
         }
 
         #endregion Enumerations
-
-        #region Functions
-
-        /// <summary>
-        /// Grants access to the Switchblade device, establishing application connections.
-        /// </summary>
-        /// <remarks>
-        /// <see cref="RzSBStart" /> sets up the connections that allow an application to access the Switchblade hardware device.
-        /// This routine returns <see cref="HRESULT.RZSB_OK" /> on success, granting the calling application control of the device.
-        /// Subsequent calls to this routine prior to a matching <see cref="RzSBStop" /> call are ignored.
-        /// <see cref="RzSBStart" /> must be called before other Switchblade SDK routines will succeed.
-        /// <see cref="RzSBStart" /> must always be accompanied by an <see cref="RzSBStop" />.
-        /// COM initialization should be called prior to calling <see cref="RzSBStart" />.
-        /// If the application developer intends to use Single-Threaded Apartment model (STA) and call the SDK
-        /// functions within the same thread where the COM was initialized, then <c>CoInitialize()</c> should be called
-        /// before <see cref="RzSBStart" />. Note that some MFC controls automatically initializes to STA.
-        /// If the application developer intends to call the SDK functions on different threads,
-        /// then the <c>CoInitializeEx()</c> should be called before <see cref="RzSBStart" />.
-        /// Note: When the <see cref="RzSBStart()" /> is called without the COM being initialized
-        /// (e.g. thru calling <c>CoInitializeEx</c>)
-        /// the SDK initializes the COM to Multi-Threaded Apartment (MTA) model.
-        /// As such, callers must invoke SDK functions from an MTA thread.
-        /// Future SDK versions will move these calls into an isolated STA, giving application developers additional
-        /// freedom to use COM in any fashion.
-        /// However, application developers may already implement their own processing to isolate the SDK
-        /// initialization and calls to avoid the issues for COM in different threading models.
-        /// </remarks>
-        /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-        public static extern HRESULT RzSBStart();
-
-        /// <summary>
-        /// Cleans up the Switchblade device connections and releases it for other applications.
-        /// </summary>
-        /// <remarks>
-        /// <see cref="RzSBStop" /> cleans up the connections made by <see cref="RzSBStart" />.
-        /// This routine releases an application’s control of the Switchblade hardware device,
-        /// allowing other applications to take control.
-        /// Subsequent calls to this routine prior to a matching <see cref="RzSBStart" /> are ignored.
-        /// If an application terminates after calling <see cref="RzSBStart" />
-        /// without a matching call to <see cref="RzSBStop" />,
-        /// other applications may fail to acquire control of the Switchblade device.
-        /// In this case, manually kill the framework processes.
-        /// </remarks>
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-        public static extern void RzSBStop();
-        
-        /// <summary>
-        /// Collects information about the SDK and the hardware supported.
-        /// </summary>
-        /// <param name="capabilities">
-        /// A pointer to a previously allocated structure of type <see cref="Capabilities"/>.
-        /// On successful execution, this routine fills the parameters in capabilities with the
-        /// proper information about the SDK and supported hardware.
-        /// </param>
-        /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-        public static extern HRESULT RzSBQueryCapabilities(out Capabilities capabilities);
-
-        /// <summary>
-        /// Controls output to the Switchblade display.
-        /// The application can send bitmap data buffer directly to the Switchblade track pad
-        /// display thru this function providing are more direct and faster way of updating the display.
-        /// </summary>
-        /// <param name="target">
-        /// Specifies the target location on the Switchblade display – the main display or one of the dynamic key areas.
-        /// Please refer to the definition for <see cref="TargetDisplay" /> for accepted values.
-        /// </param>
-        /// <param name="bufferParams">
-        /// A pointer to a buffer parameter structure of type <see cref="BufferParams" /> that
-        /// must be filled with the appropriate information for the image being sent to the render buffer.
-        /// This input parameter is an RGB565 bitmap image buffer with a bottom-up orientation.
-        /// Please refer to the definition for <see cref="BufferParams" /> for further detail.
-        /// </param>
-        /// <remarks>
-        /// Since the function accepts the buffer for bottom-up bitmap,
-        /// the application should invert the original image along its vertical axis prior to calling the function.
-        /// This can be done easily with <c>BitBlit</c> and <c>StretchBlt</c> APIs.
-        /// </remarks>
-        /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-        public static extern HRESULT RzSBRenderBuffer([In] TargetDisplay target, [In] /*ref BufferParams*/ IntPtr bufferParams);
-
-        /// <summary>
-        /// Set images on the Switchblade UI’s Dynamic Keys.
-        /// </summary>
-        /// <param name="dk"><see cref="DynamicKeyType" /> indicating which key to set the image on.</param>
-        /// <param name="state">
-        /// The desired dynamic key state (up, down) for the specified image. See <see cref="DynamicKeyState" /> for accepted values.
-        /// </param>
-        /// <param name="filename">
-        /// The image file path for the given state. This image should be 115 x 115 pixels in dimension.
-        /// Accepted file formats are BMP, GIF, JPG, and PNG.
-        /// </param>
-        /// <remarks>Animation in GIF files are not supported.</remarks>
-        /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-        public static extern HRESULT RzSBSetImageDynamicKey(
-            [In] DynamicKeyType dk,
-            [In] DynamicKeyState state,
-            [In] [MarshalAs(UnmanagedType.LPWStr)] string filename);
-
-        /// <summary>
-        /// Places an image on the main Switchblade display.
-        /// </summary>
-        /// <param name="filename">
-        /// File path to the image to be placed on the main Switchblade display.
-        /// This image should be 800 x 480 pixels in dimension. Accepted file formats are BMP, GIF, JPG, and PNG.
-        /// </param>
-        /// <remarks>Animation in GIF files are not supported.</remarks>
-        /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-        public static extern HRESULT RzSBSetImageTouchpad([In] [MarshalAs(UnmanagedType.LPWStr)] string filename);
-
-        /// <summary>
-        /// Sets the callback function for application event callbacks.
-        /// </summary>
-        /// <param name="callback">
-        /// Pointer to a callback function. If this argument is set to NULL, the routine clears the previously set callback function.
-        /// </param>
-        /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-        public static extern HRESULT RzSBAppEventSetCallback([In] AppEventCallbackDelegate callback);
-
-        /// <summary>
-        /// Sets the callback function for dynamic key events.
-        /// </summary>
-        /// <param name="callback">
-        /// Pointer to a callback function. If this argument is set to NULL, the routine clears the previously set callback function.
-        /// </param>
-        /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-        public static extern HRESULT RzSBDynamicKeySetCallback([In] DynamicKeyCallbackFunctionDelegate callback);
-
-        /// <summary>
-        /// Enables or disables the keyboard capture functionality.
-        /// </summary>
-        /// <param name="enable">The enable state. true enables the capture while false disables it.</param>
-        /// <remarks>
-        /// When the capture is enabled, the SDK application can receive keyboard
-        /// input events through the callback assigned using <see cref="RzSBKeyboardCaptureSetCallback" />.
-        /// The OS will not receive any keyboard input from the Switchblade device as long as the capture is active.
-        /// Hence, applications must release the capture when no longer in use (call <see cref="RzSBEnableGesture" /> with false as parameter).
-        /// The function only affects the keyboard device where the application is running. Other keyboard devices will work normally.
-        /// </remarks>
-        /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-        public static extern HRESULT RzSBCaptureKeyboard(bool enable);
-
-        /// <summary>
-        /// Sets the callback function for dynamic key events. [sic]
-        /// </summary>
-        /// <param name="callback">
-        /// Pointer to a callback function. If this argument is set to NULL, the routine clears the previously set callback function.
-        /// </param>
-        /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-        public static extern HRESULT RzSBKeyboardCaptureSetCallback([In] KeyboardCallbackFunctionDelegate callback);
-
-        /// <summary>
-        /// Sets the callback function for gesture events.
-        /// </summary>
-        /// <param name="callback">
-        /// Pointer to a callback function. If this argument is set to NULL, the routine clears the previously set callback function.
-        /// </param>
-        /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-        public static extern HRESULT RzSBGestureSetCallback([In] TouchpadGestureCallbackFunctionDelegate callback);
-
-        /// <summary>
-        /// Enables or disables gesture events.
-        /// </summary>
-        /// <param name="gestureType"><see cref="GestureType" /> to be enabled or disabled.</param>
-        /// <param name="enable">The enable state. true enables the gesture while false disables it.</param>
-        /// <remarks>
-        /// In nearly all cases, gestural events are preceded by a <see cref="GestureType.Press" /> event.
-        /// With multiple finger gestures, the first finger contact registers as a press,
-        /// and the touchpad reports subsequent contacts as the appropriate compound gesture (tap, flick, zoom or rotate).
-        /// </remarks>
-        /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-        public static extern HRESULT RzSBEnableGesture([In] GestureType gestureType, [In] bool enable);
-
-        /// <summary>
-        /// Enables or disables gesture event forwarding to the OS.
-        /// </summary>
-        /// <param name="gestureType"><see cref="GestureType" /> to be enabled or disabled.</param>
-        /// <param name="enable">The enable state. true enables the gesture while false disables it.</param>
-        /// <remarks>
-        /// Setting the <see cref="GestureType.Press"/> for OS gesture is equivalent to
-        /// <see cref="GestureType.Press"/>, <see cref="GestureType.Move" /> and <see cref="GestureType.Release" />.
-        /// </remarks>
-        /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-        public static extern HRESULT RzSBEnableOSGesture([In] GestureType gestureType, [In] bool enable);
-
-        #endregion Functions
 
         #region Macros
 
@@ -858,24 +651,235 @@ namespace Sharparam.SharpBlade.Native
         /// Buffer data sent to display when rendering image data.
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        public struct BufferParams
+        internal struct BufferParams
         {
             /// <summary>
             /// Pixel format of the image data.
             /// </summary>
-            public PixelType PixelType;
+            internal PixelType PixelType;
 
             /// <summary>
             /// Total size of the data.
             /// </summary>
-            public uint DataSize;
+            internal uint DataSize;
 
             /// <summary>
             /// Pointer to image data.
             /// </summary>
-            public IntPtr PtrData;
+            internal IntPtr PtrData;
         }
 
         #endregion Structs
+
+        #region Functions
+
+        /// <summary>
+        /// Class containing native RazerAPI methods.
+        /// </summary>
+        internal static class NativeMethods
+        {
+            /// <summary>
+            /// The DLL file containing the SDK functions.
+            /// </summary>
+            /// <remarks>Must be located in the system PATH.</remarks>
+            private const string DllName = "RzSwitchbladeSDK2.dll";
+
+            /// <summary>
+            /// Grants access to the Switchblade device, establishing application connections.
+            /// </summary>
+            /// <remarks>
+            /// <see cref="RzSBStart" /> sets up the connections that allow an application to access the Switchblade hardware device.
+            /// This routine returns <see cref="HRESULT.RZSB_OK" /> on success, granting the calling application control of the device.
+            /// Subsequent calls to this routine prior to a matching <see cref="RzSBStop" /> call are ignored.
+            /// <see cref="RzSBStart" /> must be called before other Switchblade SDK routines will succeed.
+            /// <see cref="RzSBStart" /> must always be accompanied by an <see cref="RzSBStop" />.
+            /// COM initialization should be called prior to calling <see cref="RzSBStart" />.
+            /// If the application developer intends to use Single-Threaded Apartment model (STA) and call the SDK
+            /// functions within the same thread where the COM was initialized, then <c>CoInitialize()</c> should be called
+            /// before <see cref="RzSBStart" />. Note that some MFC controls automatically initializes to STA.
+            /// If the application developer intends to call the SDK functions on different threads,
+            /// then the <c>CoInitializeEx()</c> should be called before <see cref="RzSBStart" />.
+            /// Note: When the <see cref="RzSBStart()" /> is called without the COM being initialized
+            /// (e.g. thru calling <c>CoInitializeEx</c>)
+            /// the SDK initializes the COM to Multi-Threaded Apartment (MTA) model.
+            /// As such, callers must invoke SDK functions from an MTA thread.
+            /// Future SDK versions will move these calls into an isolated STA, giving application developers additional
+            /// freedom to use COM in any fashion.
+            /// However, application developers may already implement their own processing to isolate the SDK
+            /// initialization and calls to avoid the issues for COM in different threading models.
+            /// </remarks>
+            /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
+            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
+            internal static extern HRESULT RzSBStart();
+
+            /// <summary>
+            /// Cleans up the Switchblade device connections and releases it for other applications.
+            /// </summary>
+            /// <remarks>
+            /// <see cref="RzSBStop" /> cleans up the connections made by <see cref="RzSBStart" />.
+            /// This routine releases an application’s control of the Switchblade hardware device,
+            /// allowing other applications to take control.
+            /// Subsequent calls to this routine prior to a matching <see cref="RzSBStart" /> are ignored.
+            /// If an application terminates after calling <see cref="RzSBStart" />
+            /// without a matching call to <see cref="RzSBStop" />,
+            /// other applications may fail to acquire control of the Switchblade device.
+            /// In this case, manually kill the framework processes.
+            /// </remarks>
+            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
+            internal static extern void RzSBStop();
+
+            /// <summary>
+            /// Collects information about the SDK and the hardware supported.
+            /// </summary>
+            /// <param name="capabilities">
+            /// A pointer to a previously allocated structure of type <see cref="Capabilities"/>.
+            /// On successful execution, this routine fills the parameters in capabilities with the
+            /// proper information about the SDK and supported hardware.
+            /// </param>
+            /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
+            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
+            internal static extern HRESULT RzSBQueryCapabilities(out Capabilities capabilities);
+
+            /// <summary>
+            /// Controls output to the Switchblade display.
+            /// The application can send bitmap data buffer directly to the Switchblade track pad
+            /// display thru this function providing are more direct and faster way of updating the display.
+            /// </summary>
+            /// <param name="target">
+            /// Specifies the target location on the Switchblade display – the main display or one of the dynamic key areas.
+            /// Please refer to the definition for <see cref="TargetDisplay" /> for accepted values.
+            /// </param>
+            /// <param name="bufferParams">
+            /// A pointer to a buffer parameter structure of type <see cref="BufferParams" /> that
+            /// must be filled with the appropriate information for the image being sent to the render buffer.
+            /// This input parameter is an RGB565 bitmap image buffer with a bottom-up orientation.
+            /// Please refer to the definition for <see cref="BufferParams" /> for further detail.
+            /// </param>
+            /// <remarks>
+            /// Since the function accepts the buffer for bottom-up bitmap,
+            /// the application should invert the original image along its vertical axis prior to calling the function.
+            /// This can be done easily with <c>BitBlit</c> and <c>StretchBlt</c> APIs.
+            /// </remarks>
+            /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
+            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
+            internal static extern HRESULT RzSBRenderBuffer(
+                [In] TargetDisplay target,
+                [In] /*ref BufferParams*/ IntPtr bufferParams);
+
+            /// <summary>
+            /// Set images on the Switchblade UI’s Dynamic Keys.
+            /// </summary>
+            /// <param name="dk"><see cref="DynamicKeyType" /> indicating which key to set the image on.</param>
+            /// <param name="state">
+            /// The desired dynamic key state (up, down) for the specified image. See <see cref="DynamicKeyState" /> for accepted values.
+            /// </param>
+            /// <param name="filename">
+            /// The image file path for the given state. This image should be 115 x 115 pixels in dimension.
+            /// Accepted file formats are BMP, GIF, JPG, and PNG.
+            /// </param>
+            /// <remarks>Animation in GIF files are not supported.</remarks>
+            /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
+            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
+            internal static extern HRESULT RzSBSetImageDynamicKey(
+                [In] DynamicKeyType dk,
+                [In] DynamicKeyState state,
+                [In] [MarshalAs(UnmanagedType.LPWStr)] string filename);
+
+            /// <summary>
+            /// Places an image on the main Switchblade display.
+            /// </summary>
+            /// <param name="filename">
+            /// File path to the image to be placed on the main Switchblade display.
+            /// This image should be 800 x 480 pixels in dimension. Accepted file formats are BMP, GIF, JPG, and PNG.
+            /// </param>
+            /// <remarks>Animation in GIF files are not supported.</remarks>
+            /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
+            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
+            internal static extern HRESULT RzSBSetImageTouchpad([In] [MarshalAs(UnmanagedType.LPWStr)] string filename);
+
+            /// <summary>
+            /// Sets the callback function for application event callbacks.
+            /// </summary>
+            /// <param name="callback">
+            /// Pointer to a callback function. If this argument is set to NULL, the routine clears the previously set callback function.
+            /// </param>
+            /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
+            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
+            internal static extern HRESULT RzSBAppEventSetCallback([In] AppEventCallbackDelegate callback);
+
+            /// <summary>
+            /// Sets the callback function for dynamic key events.
+            /// </summary>
+            /// <param name="callback">
+            /// Pointer to a callback function. If this argument is set to NULL, the routine clears the previously set callback function.
+            /// </param>
+            /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
+            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
+            internal static extern HRESULT RzSBDynamicKeySetCallback([In] DynamicKeyCallbackFunctionDelegate callback);
+
+            /// <summary>
+            /// Enables or disables the keyboard capture functionality.
+            /// </summary>
+            /// <param name="enable">The enable state. true enables the capture while false disables it.</param>
+            /// <remarks>
+            /// When the capture is enabled, the SDK application can receive keyboard
+            /// input events through the callback assigned using <see cref="RzSBKeyboardCaptureSetCallback" />.
+            /// The OS will not receive any keyboard input from the Switchblade device as long as the capture is active.
+            /// Hence, applications must release the capture when no longer in use (call <see cref="RzSBEnableGesture" /> with false as parameter).
+            /// The function only affects the keyboard device where the application is running. Other keyboard devices will work normally.
+            /// </remarks>
+            /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
+            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
+            internal static extern HRESULT RzSBCaptureKeyboard(bool enable);
+
+            /// <summary>
+            /// Sets the callback function for dynamic key events. [sic]
+            /// </summary>
+            /// <param name="callback">
+            /// Pointer to a callback function. If this argument is set to NULL, the routine clears the previously set callback function.
+            /// </param>
+            /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
+            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
+            internal static extern HRESULT RzSBKeyboardCaptureSetCallback([In] KeyboardCallbackFunctionDelegate callback);
+
+            /// <summary>
+            /// Sets the callback function for gesture events.
+            /// </summary>
+            /// <param name="callback">
+            /// Pointer to a callback function. If this argument is set to NULL, the routine clears the previously set callback function.
+            /// </param>
+            /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
+            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
+            internal static extern HRESULT RzSBGestureSetCallback([In] TouchpadGestureCallbackFunctionDelegate callback);
+
+            /// <summary>
+            /// Enables or disables gesture events.
+            /// </summary>
+            /// <param name="gestureType"><see cref="GestureType" /> to be enabled or disabled.</param>
+            /// <param name="enable">The enable state. true enables the gesture while false disables it.</param>
+            /// <remarks>
+            /// In nearly all cases, gestural events are preceded by a <see cref="GestureType.Press" /> event.
+            /// With multiple finger gestures, the first finger contact registers as a press,
+            /// and the touchpad reports subsequent contacts as the appropriate compound gesture (tap, flick, zoom or rotate).
+            /// </remarks>
+            /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
+            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
+            internal static extern HRESULT RzSBEnableGesture([In] GestureType gestureType, [In] bool enable);
+
+            /// <summary>
+            /// Enables or disables gesture event forwarding to the OS.
+            /// </summary>
+            /// <param name="gestureType"><see cref="GestureType" /> to be enabled or disabled.</param>
+            /// <param name="enable">The enable state. true enables the gesture while false disables it.</param>
+            /// <remarks>
+            /// Setting the <see cref="GestureType.Press"/> for OS gesture is equivalent to
+            /// <see cref="GestureType.Press"/>, <see cref="GestureType.Move" /> and <see cref="GestureType.Release" />.
+            /// </remarks>
+            /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
+            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
+            internal static extern HRESULT RzSBEnableOSGesture([In] GestureType gestureType, [In] bool enable);
+        }
+
+        #endregion Functions
     }
 }

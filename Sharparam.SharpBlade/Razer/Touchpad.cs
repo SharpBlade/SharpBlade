@@ -58,7 +58,7 @@ namespace Sharparam.SharpBlade.Razer
         private static Touchpad _instance;
 
         /// <summary>
-        /// Gesture callback that is used as parameter in <see cref="RazerAPI.RzSBGestureSetCallback" />.
+        /// Gesture callback that is used as parameter in <see cref="RazerAPI.NativeMethods.RzSBGestureSetCallback" />.
         /// </summary>
         private static RazerAPI.TouchpadGestureCallbackFunctionDelegate _gestureCallback;
 
@@ -66,6 +66,11 @@ namespace Sharparam.SharpBlade.Razer
         /// Log object for the <see cref="Touchpad" />.
         /// </summary>
         private readonly log4net.ILog _log;
+
+        /// <summary>
+        /// Indicates whether the <see cref="Touchpad" /> has been disposed.
+        /// </summary>
+        private bool _disposed;
 
         /// <summary>
         /// Currently active gestures.
@@ -102,9 +107,19 @@ namespace Sharparam.SharpBlade.Razer
             _log.Info("Setting disabled image");
             _log.Debug("Setting gesture callback");
             _gestureCallback = HandleTouchpadGesture;
-            var result = RazerAPI.RzSBGestureSetCallback(_gestureCallback);
+            var result = RazerAPI.NativeMethods.RzSBGestureSetCallback(_gestureCallback);
             if (HRESULT.RZSB_FAILED(result))
                 throw new RazerNativeException("RzSBGestureSetCallback", result);
+        }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="Touchpad" /> class.
+        /// Allows an object to try to free resources and perform other
+        /// cleanup operations before it is reclaimed by garbage collection.
+        /// </summary>
+        ~Touchpad()
+        {
+            Dispose(false);
         }
 
         /// <summary>
@@ -212,6 +227,8 @@ namespace Sharparam.SharpBlade.Razer
         /// </summary>
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         #region Gesture Methods
@@ -270,11 +287,11 @@ namespace Sharparam.SharpBlade.Razer
                 newGesturesType = _activeGesturesType.Remove(gestureType);
             }
 
-            var result = RazerAPI.RzSBEnableGesture(newGesturesType, enabled);
+            var result = RazerAPI.NativeMethods.RzSBEnableGesture(newGesturesType, enabled);
             if (HRESULT.RZSB_FAILED(result))
                 throw new RazerNativeException("RzSBGestureEnable", result);
 
-            result = RazerAPI.RzSBGestureSetCallback(_gestureCallback);
+            result = RazerAPI.NativeMethods.RzSBGestureSetCallback(_gestureCallback);
             if (HRESULT.RZSB_FAILED(result))
                 throw new RazerNativeException("RzSBGestureSetCallback", result);
 
@@ -345,11 +362,11 @@ namespace Sharparam.SharpBlade.Razer
                 newGesturesType = _activeOSGesturesType.Remove(gestureType);
             }
 
-            var result = RazerAPI.RzSBEnableGesture(newGesturesType, enabled);
+            var result = RazerAPI.NativeMethods.RzSBEnableGesture(newGesturesType, enabled);
             if (HRESULT.RZSB_FAILED(result))
                 throw new RazerNativeException("RzSBGestureEnable", result);
 
-            result = RazerAPI.RzSBEnableOSGesture(newGesturesType, enabled);
+            result = RazerAPI.NativeMethods.RzSBEnableOSGesture(newGesturesType, enabled);
             if (HRESULT.RZSB_FAILED(result))
                 throw new RazerNativeException("RzSBGestureSetOSNotification", result);
 
@@ -400,7 +417,7 @@ namespace Sharparam.SharpBlade.Razer
             var ptrToImageStruct = Marshal.AllocHGlobal(Marshal.SizeOf(buffer));
             Marshal.StructureToPtr(buffer, ptrToImageStruct, true);
 
-            var result = RazerAPI.RzSBRenderBuffer(RazerAPI.TargetDisplay.Widget, ptrToImageStruct);
+            var result = RazerAPI.NativeMethods.RzSBRenderBuffer(RazerAPI.TargetDisplay.Widget, ptrToImageStruct);
 
             // Free resources before handling return
             Marshal.FreeHGlobal(ptrToImageStruct);
@@ -443,6 +460,8 @@ namespace Sharparam.SharpBlade.Razer
         /// <param name="window">Window object to draw.</param>
         /// <param name="winFormsComponents">Array of KeyValuePairs containing a WindowsFormsHost as the key and a WinForms control as the value.
         /// These pairs will be overlaid on the bitmap that is passed to the SwitchBlade device.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times",
+            Justification = "SO said it's safe to dispose MemoryStream multiple times")]
         public void DrawWindow(Window window, IEnumerable<EmbeddedWinFormsControl> winFormsComponents = null)
         {
             var rtb = new RenderTargetBitmap(
@@ -467,7 +486,7 @@ namespace Sharparam.SharpBlade.Razer
                 }
                 
                 encoder.Frames.Clear();
-            }
+            } // CA2202 warning marked here, for reference, complains about possible multiple dispose of MemoryStream stream
 
             rtb.Clear();
         }
@@ -596,7 +615,7 @@ namespace Sharparam.SharpBlade.Razer
         {
             image = IO.GetAbsolutePath(image);
 
-            var result = RazerAPI.RzSBSetImageTouchpad(image);
+            var result = RazerAPI.NativeMethods.RzSBSetImageTouchpad(image);
             if (HRESULT.RZSB_FAILED(result))
                 throw new RazerNativeException("RzSBSetImageTouchpad", result);
 
@@ -608,7 +627,7 @@ namespace Sharparam.SharpBlade.Razer
         /// </summary>
         public void ClearImage()
         {
-            var result = RazerAPI.RzSBSetImageTouchpad(IO.GetAbsolutePath(RazerManager.Instance.BlankTouchpadImagePath));
+            var result = RazerAPI.NativeMethods.RzSBSetImageTouchpad(IO.GetAbsolutePath(RazerManager.Instance.BlankTouchpadImagePath));
             if (HRESULT.RZSB_FAILED(result))
                 throw new RazerNativeException("RzSBSetImageTouchpad", result);
 
@@ -627,6 +646,21 @@ namespace Sharparam.SharpBlade.Razer
         }
 
         #endregion Drawing Methods
+
+        /// <summary>
+        /// Disposes of this <see cref="Touchpad" />.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> if called from parameter-less <see cref="Dispose()" />, false otherwise.</param>
+        private void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+                _renderer.Dispose();
+
+            _disposed = true;
+        }
 
         #region Event Dispatchers
 

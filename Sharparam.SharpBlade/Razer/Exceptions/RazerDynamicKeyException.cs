@@ -35,6 +35,7 @@ namespace Sharparam.SharpBlade.Razer.Exceptions
     /// <summary>
     /// Exception thrown when there is a problem with the dynamic keys.
     /// </summary>
+    [Serializable]
     public class RazerDynamicKeyException : RazerException
     {
         /// <summary>

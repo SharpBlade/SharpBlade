@@ -127,7 +127,7 @@ namespace Sharparam.SharpBlade.Integration
         /// <param name="key">Key that was pressed.</param>
         private void SendWinFormKeyDown(User32.VirtualKey key)
         {
-            User32.PostMessage(_winFormControl.Handle, (uint)User32.MessageType.KEYDOWN, (IntPtr)key, IntPtr.Zero);
+            User32.NativeMethods.PostMessage(_winFormControl.Handle, (uint)User32.MessageType.KEYDOWN, (IntPtr)key, IntPtr.Zero);
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace Sharparam.SharpBlade.Integration
         /// <param name="key">Key that was released.</param>
         private void SendWinFormKeyUp(User32.VirtualKey key)
         {
-            User32.PostMessage(_winFormControl.Handle, (uint)User32.MessageType.KEYUP, (IntPtr)key, IntPtr.Zero);
+            User32.NativeMethods.PostMessage(_winFormControl.Handle, (uint)User32.MessageType.KEYUP, (IntPtr)key, IntPtr.Zero);
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace Sharparam.SharpBlade.Integration
         /// <param name="character">Character that was typed.</param>
         private void SendWinFormChar(char character)
         {
-            User32.PostMessage(_winFormControl.Handle, (uint)User32.MessageType.CHAR, (IntPtr)character, IntPtr.Zero);
+            User32.NativeMethods.PostMessage(_winFormControl.Handle, (uint)User32.MessageType.CHAR, (IntPtr)character, IntPtr.Zero);
         }
 
         /// <summary>

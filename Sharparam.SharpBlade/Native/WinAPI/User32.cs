@@ -108,20 +108,15 @@ namespace Sharparam.SharpBlade.Native.WinAPI
 
         /// <summary>
         /// Toggled key (e.g. caps lock).
-        /// Used with <see cref="GetKeyState" />.
+        /// Used with <see cref="NativeMethods.GetKeyState" />.
         /// </summary>
         public const int KEY_TOGGLED = 0x1;
 
         /// <summary>
         /// Pressed key.
-        /// Used with <see cref="GetKeyState" />.
+        /// Used with <see cref="NativeMethods.GetKeyState" />.
         /// </summary>
         public const int KEY_PRESSED = 0x8000;
-
-        /// <summary>
-        /// DLL file to import functions from.
-        /// </summary>
-        private const string DllName = "user32.dll";
 
         /// <summary>
         /// Native windows message types.
@@ -1454,231 +1449,239 @@ namespace Sharparam.SharpBlade.Native.WinAPI
             OEM_CLEAR = 0xFE,
         }
 
-        /// <summary>
-        /// Retrieves a handle to the desktop window. The desktop window covers the entire screen.
-        /// The desktop window is the area on top of which other windows are painted.
-        /// </summary>
-        /// <returns>
-        /// The return value is a handle to the desktop window.
-        /// </returns>
-        [DllImport(DllName)]
-        public static extern IntPtr GetDesktopWindow();
+        internal static class NativeMethods
+        {
+            /// <summary>
+            /// DLL file to import functions from.
+            /// </summary>
+            private const string DllName = "user32.dll";
 
-        /// <summary>
-        /// The GetWindowDC function retrieves the device context (DC) for the entire window, including title bar, menus, and scroll bars.
-        /// A window device context permits painting anywhere in a window, because the origin of the device context is the upper-left corner
-        /// of the window instead of the client area.
-        /// GetWindowDC assigns default attributes to the window device context each time it retrieves the device context. Previous attributes are lost.
-        /// </summary>
-        /// <param name="hWnd">
-        /// A handle to the window with a device context that is to be retrieved. If this value is NULL,
-        /// GetWindowDC retrieves the device context for the entire screen.
-        /// If this parameter is NULL, GetWindowDC retrieves the device context for the primary display monitor.
-        /// To get the device context for other display monitors, use the EnumDisplayMonitors and CreateDC functions.
-        /// </param>
-        /// <returns>
-        /// If the function succeeds, the return value is a handle to a device context for the specified window.
-        /// If the function fails, the return value is NULL, indicating an error or an invalid hWnd parameter.
-        /// </returns>
-        /// <remarks>
-        /// GetWindowDC is intended for special painting effects within a window's nonclient area.
-        /// Painting in nonclient areas of any window is not recommended.
-        /// The GetSystemMetrics function can be used to retrieve the dimensions of various parts of
-        /// the nonclient area, such as the title bar, menu, and scroll bars.
-        /// The GetDC function can be used to retrieve a device context for the entire screen.
-        /// After painting is complete, the ReleaseDC function must be called to release the device context.
-        /// Not releasing the window device context has serious effects on painting requested by applications.
-        /// </remarks>
-        [DllImport(DllName)]
-        public static extern IntPtr GetWindowDC(IntPtr hWnd);
+            /// <summary>
+            /// Retrieves a handle to the desktop window. The desktop window covers the entire screen.
+            /// The desktop window is the area on top of which other windows are painted.
+            /// </summary>
+            /// <returns>
+            /// The return value is a handle to the desktop window.
+            /// </returns>
+            [DllImport(DllName)]
+            internal static extern IntPtr GetDesktopWindow();
 
-        /// <summary>
-        /// The ReleaseDC function releases a device context (DC), freeing it for use by other applications.
-        /// The effect of the ReleaseDC function depends on the type of DC. It frees only common and window DCs.
-        /// It has no effect on class or private DCs.
-        /// </summary>
-        /// <param name="hWnd">A handle to the window whose DC is to be released.</param>
-        /// <param name="hDC">A handle to the DC to be released.</param>
-        /// <returns>
-        /// The return value indicates whether the DC was released. If the DC was released, the return value is 1.
-        /// If the DC was not released, the return value is zero.
-        /// </returns>
-        /// <remarks>
-        /// The application must call the ReleaseDC function for each call to the GetWindowDC function
-        /// and for each call to the GetDC function that retrieves a common DC.
-        /// An application cannot use the ReleaseDC function to release a DC that was created by
-        /// calling the CreateDC function; instead, it must use the DeleteDC function.
-        /// ReleaseDC must be called from the same thread that called GetDC.
-        /// </remarks>
-        [DllImport(DllName)]
-        public static extern int ReleaseDC(IntPtr hWnd, IntPtr hDC);
+            /// <summary>
+            /// The GetWindowDC function retrieves the device context (DC) for the entire window, including title bar, menus, and scroll bars.
+            /// A window device context permits painting anywhere in a window, because the origin of the device context is the upper-left corner
+            /// of the window instead of the client area.
+            /// GetWindowDC assigns default attributes to the window device context each time it retrieves the device context. Previous attributes are lost.
+            /// </summary>
+            /// <param name="hWnd">
+            /// A handle to the window with a device context that is to be retrieved. If this value is NULL,
+            /// GetWindowDC retrieves the device context for the entire screen.
+            /// If this parameter is NULL, GetWindowDC retrieves the device context for the primary display monitor.
+            /// To get the device context for other display monitors, use the EnumDisplayMonitors and CreateDC functions.
+            /// </param>
+            /// <returns>
+            /// If the function succeeds, the return value is a handle to a device context for the specified window.
+            /// If the function fails, the return value is NULL, indicating an error or an invalid hWnd parameter.
+            /// </returns>
+            /// <remarks>
+            /// GetWindowDC is intended for special painting effects within a window's nonclient area.
+            /// Painting in nonclient areas of any window is not recommended.
+            /// The GetSystemMetrics function can be used to retrieve the dimensions of various parts of
+            /// the nonclient area, such as the title bar, menu, and scroll bars.
+            /// The GetDC function can be used to retrieve a device context for the entire screen.
+            /// After painting is complete, the ReleaseDC function must be called to release the device context.
+            /// Not releasing the window device context has serious effects on painting requested by applications.
+            /// </remarks>
+            [DllImport(DllName)]
+            internal static extern IntPtr GetWindowDC(IntPtr hWnd);
 
-        /// <summary>
-        /// Retrieves the dimensions of the bounding rectangle of the specified window.
-        /// The dimensions are given in screen coordinates that are relative to the upper-left corner of the screen.
-        /// </summary>
-        /// <param name="hWnd">A handle to the window. </param>
-        /// <param name="rect">
-        /// A pointer to a RECT structure that receives the screen coordinates
-        /// of the upper-left and lower-right corners of the window.
-        /// </param>
-        /// <returns>
-        /// If the function succeeds, the return value is nonzero (true).
-        /// If the function fails, the return value is zero (false).
-        /// To get extended error information, call GetLastError. 
-        /// </returns>
-        /// <remarks>
-        /// In conformance with conventions for the RECT structure,
-        /// the bottom-right coordinates of the returned rectangle are exclusive.
-        /// In other words, the pixel at (right, bottom) lies immediately outside the rectangle.
-        /// </remarks>
-        [DllImport(DllName)]
-        public static extern bool GetWindowRect(IntPtr hWnd, ref RECT rect);
+            /// <summary>
+            /// The ReleaseDC function releases a device context (DC), freeing it for use by other applications.
+            /// The effect of the ReleaseDC function depends on the type of DC. It frees only common and window DCs.
+            /// It has no effect on class or private DCs.
+            /// </summary>
+            /// <param name="hWnd">A handle to the window whose DC is to be released.</param>
+            /// <param name="hDC">A handle to the DC to be released.</param>
+            /// <returns>
+            /// The return value indicates whether the DC was released. If the DC was released, the return value is 1.
+            /// If the DC was not released, the return value is zero.
+            /// </returns>
+            /// <remarks>
+            /// The application must call the ReleaseDC function for each call to the GetWindowDC function
+            /// and for each call to the GetDC function that retrieves a common DC.
+            /// An application cannot use the ReleaseDC function to release a DC that was created by
+            /// calling the CreateDC function; instead, it must use the DeleteDC function.
+            /// ReleaseDC must be called from the same thread that called GetDC.
+            /// </remarks>
+            [DllImport(DllName)]
+            internal static extern int ReleaseDC(IntPtr hWnd, IntPtr hDC);
 
-        /// <summary>
-        /// The ShowScrollBar function shows or hides the specified scroll bar.
-        /// </summary>
-        /// <param name="hWnd">Handle to a scroll bar control or a window with a standard scroll bar, depending on the value of the wBar parameter.</param>
-        /// <param name="wBar">Specifies the scroll bar(s) to be shown or hidden.</param>
-        /// <param name="bShow">Specifies whether the scroll bar is shown or hidden. If this parameter is TRUE, the scroll bar is shown; otherwise, it is hidden.</param>
-        /// <returns>
-        /// If the function succeeds, the return value is nonzero (true).
-        /// If the function fails, the return value is zero (false). To get extended error information, call GetLastError. 
-        /// </returns>
-        /// <remarks>You should not call this function to hide a scroll bar while processing a scroll bar message. </remarks>
-        [return: MarshalAs(UnmanagedType.Bool)]
-        [DllImport(DllName)]
-        public static extern bool ShowScrollBar(IntPtr hWnd, int wBar, [MarshalAs(UnmanagedType.Bool)] bool bShow);
+            /// <summary>
+            /// Retrieves the dimensions of the bounding rectangle of the specified window.
+            /// The dimensions are given in screen coordinates that are relative to the upper-left corner of the screen.
+            /// </summary>
+            /// <param name="hWnd">A handle to the window. </param>
+            /// <param name="rect">
+            /// A pointer to a RECT structure that receives the screen coordinates
+            /// of the upper-left and lower-right corners of the window.
+            /// </param>
+            /// <returns>
+            /// If the function succeeds, the return value is nonzero (true).
+            /// If the function fails, the return value is zero (false).
+            /// To get extended error information, call GetLastError. 
+            /// </returns>
+            /// <remarks>
+            /// In conformance with conventions for the RECT structure,
+            /// the bottom-right coordinates of the returned rectangle are exclusive.
+            /// In other words, the pixel at (right, bottom) lies immediately outside the rectangle.
+            /// </remarks>
+            [DllImport(DllName)]
+            internal static extern bool GetWindowRect(IntPtr hWnd, ref RECT rect);
 
-        /// <summary>
-        /// The EnableScrollBar function enables or disables one or both scroll bar arrows.
-        /// </summary>
-        /// <param name="hWnd">Handle to a window or a scroll bar control, depending on the value of the wSBflags parameter.</param>
-        /// <param name="wSBflags">Specifies the scroll bar type.</param>
-        /// <param name="wArrows">Specifies whether the scroll bar arrows are enabled or disabled and indicates which arrows are enabled or disabled.</param>
-        /// <returns>
-        /// If the arrows are enabled or disabled as specified, the return value is nonzero (true).
-        /// If the arrows are already in the requested state or an error occurs, the return value is zero (false).
-        /// To get extended error information, call GetLastError.
-        /// </returns>
-        [DllImport(DllName)]
-        public static extern bool EnableScrollBar(IntPtr hWnd, uint wSBflags, uint wArrows);
+            /// <summary>
+            /// The ShowScrollBar function shows or hides the specified scroll bar.
+            /// </summary>
+            /// <param name="hWnd">Handle to a scroll bar control or a window with a standard scroll bar, depending on the value of the wBar parameter.</param>
+            /// <param name="wBar">Specifies the scroll bar(s) to be shown or hidden.</param>
+            /// <param name="bShow">Specifies whether the scroll bar is shown or hidden. If this parameter is TRUE, the scroll bar is shown; otherwise, it is hidden.</param>
+            /// <returns>
+            /// If the function succeeds, the return value is nonzero (true).
+            /// If the function fails, the return value is zero (false). To get extended error information, call GetLastError. 
+            /// </returns>
+            /// <remarks>You should not call this function to hide a scroll bar while processing a scroll bar message. </remarks>
+            [return: MarshalAs(UnmanagedType.Bool)]
+            [DllImport(DllName)]
+            internal static extern bool ShowScrollBar(IntPtr hWnd, int wBar, [MarshalAs(UnmanagedType.Bool)] bool bShow);
 
-        /// <summary>
-        /// Places (posts) a message in the message queue associated with the thread that created
-        /// the specified window and returns without waiting for the thread to process the message.
-        /// </summary>
-        /// <param name="hWnd">A handle to the window whose window procedure is to receive the message.</param>
-        /// <param name="Msg">The message to be posted.</param>
-        /// <param name="wParam">Additional message-specific information.</param>
-        /// <param name="lParam">Additional message-specific information.</param>
-        /// <returns>
-        /// If the function succeeds, the return value is nonzero (true).
-        /// If the function fails, the return value is zero (false).
-        /// To get extended error information, call GetLastError.
-        /// GetLastError returns ERROR_NOT_ENOUGH_QUOTA when the limit is hit. 
-        /// </returns>
-        /// <remarks>
-        /// When a message is blocked by UIPI the last error, retrieved with GetLastError, is set to 5 (access denied).
-        /// Messages in a message queue are retrieved by calls to the GetMessage or PeekMessage function.
-        /// Applications that need to communicate using HWND_BROADCAST should use the RegisterWindowMessage
-        /// function to obtain a unique message for inter-application communication.
-        /// The system only does marshalling for system messages (those in the range 0 to (WM_USER-1)).
-        /// To send other messages (those >= WM_USER) to another process, you must do custom marshalling.
-        /// If you send a message in the range below WM_USER to the asynchronous message functions
-        /// (PostMessage, SendNotifyMessage, and SendMessageCallback), its message parameters cannot
-        /// include pointers. Otherwise, the operation will fail. The functions will return before the
-        /// receiving thread has had a chance to process the message and the sender will free the memory
-        /// before it is used.
-        /// Do not post the WM_QUIT message using PostMessage; use the PostQuitMessage function.
-        /// An accessibility application can use PostMessage to post WM_APPCOMMAND messages to
-        /// the shell to launch applications. This functionality is not guaranteed to work for
-        /// other types of applications.
-        /// There is a limit of 10,000 posted messages per message queue. This limit should be
-        /// sufficiently large. If your application exceeds the limit, it should be redesigned
-        /// to avoid consuming so many system resources.
-        /// </remarks>
-        [return: MarshalAs(UnmanagedType.Bool)]
-        [DllImport(DllName, SetLastError = true)]
-        public static extern bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+            /// <summary>
+            /// The EnableScrollBar function enables or disables one or both scroll bar arrows.
+            /// </summary>
+            /// <param name="hWnd">Handle to a window or a scroll bar control, depending on the value of the wSBflags parameter.</param>
+            /// <param name="wSBflags">Specifies the scroll bar type.</param>
+            /// <param name="wArrows">Specifies whether the scroll bar arrows are enabled or disabled and indicates which arrows are enabled or disabled.</param>
+            /// <returns>
+            /// If the arrows are enabled or disabled as specified, the return value is nonzero (true).
+            /// If the arrows are already in the requested state or an error occurs, the return value is zero (false).
+            /// To get extended error information, call GetLastError.
+            /// </returns>
+            [DllImport(DllName)]
+            internal static extern bool EnableScrollBar(IntPtr hWnd, uint wSBflags, uint wArrows);
 
-        /// <summary>
-        /// Sends the specified message to a window or windows.
-        /// The SendMessage function calls the window procedure
-        /// for the specified window and does not return until
-        /// the window procedure has processed the message.
-        /// </summary>
-        /// <param name="hWnd">
-        /// A handle to the window whose window procedure will receive the message.
-        /// If this parameter is HWND_BROADCAST ((HWND)0xffff),
-        /// the message is sent to all top-level windows in the system,
-        /// including disabled or invisible unowned windows, overlapped windows,
-        /// and pop-up windows; but the message is not sent to child windows.
-        /// Message sending is subject to UIPI.
-        /// The thread of a process can send messages only to message queues of
-        /// threads in processes of lesser or equal integrity level.
-        /// </param>
-        /// <param name="Msg">The message to be sent.</param>
-        /// <param name="wParam">Additional message-specific information.</param>
-        /// <param name="lParam">Additional message-specific information.</param>
-        /// <returns>The return value specifies the result of the message processing; it depends on the message sent.</returns>
-        /// <remarks>
-        /// When a message is blocked by UIPI the last error, retrieved with GetLastError, is set to 5 (access denied).
-        /// Applications that need to communicate using HWND_BROADCAST should use the RegisterWindowMessage function to
-        /// obtain a unique message for inter-application communication.
-        /// The system only does marshalling for system messages (those in the range 0 to (WM_USER-1)).
-        /// To send other messages (those >= WM_USER) to another process, you must do custom marshalling.
-        /// If the specified window was created by the calling thread, the window procedure is called immediately
-        /// as a subroutine. If the specified window was created by a different thread, the system switches to that
-        /// thread and calls the appropriate window procedure. Messages sent between threads are processed only when
-        /// the receiving thread executes message retrieval code. The sending thread is blocked until the receiving
-        /// thread processes the message. However, the sending thread will process incoming nonqueued messages while
-        /// waiting for its message to be processed. To prevent this, use SendMessageTimeout with SMTO_BLOCK set.
-        /// For more information on nonqueued messages, see Nonqueued Messages.
-        /// An accessibility application can use SendMessage to send WM_APPCOMMAND messages to the shell to launch
-        /// applications. This functionality is not guaranteed to work for other types of applications.
-        /// </remarks>
-        [DllImport(DllName, CharSet = CharSet.Auto)]
-        public static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
+            /// <summary>
+            /// Places (posts) a message in the message queue associated with the thread that created
+            /// the specified window and returns without waiting for the thread to process the message.
+            /// </summary>
+            /// <param name="hWnd">A handle to the window whose window procedure is to receive the message.</param>
+            /// <param name="Msg">The message to be posted.</param>
+            /// <param name="wParam">Additional message-specific information.</param>
+            /// <param name="lParam">Additional message-specific information.</param>
+            /// <returns>
+            /// If the function succeeds, the return value is nonzero (true).
+            /// If the function fails, the return value is zero (false).
+            /// To get extended error information, call GetLastError.
+            /// GetLastError returns ERROR_NOT_ENOUGH_QUOTA when the limit is hit. 
+            /// </returns>
+            /// <remarks>
+            /// When a message is blocked by UIPI the last error, retrieved with GetLastError, is set to 5 (access denied).
+            /// Messages in a message queue are retrieved by calls to the GetMessage or PeekMessage function.
+            /// Applications that need to communicate using HWND_BROADCAST should use the RegisterWindowMessage
+            /// function to obtain a unique message for inter-application communication.
+            /// The system only does marshalling for system messages (those in the range 0 to (WM_USER-1)).
+            /// To send other messages (those >= WM_USER) to another process, you must do custom marshalling.
+            /// If you send a message in the range below WM_USER to the asynchronous message functions
+            /// (PostMessage, SendNotifyMessage, and SendMessageCallback), its message parameters cannot
+            /// include pointers. Otherwise, the operation will fail. The functions will return before the
+            /// receiving thread has had a chance to process the message and the sender will free the memory
+            /// before it is used.
+            /// Do not post the WM_QUIT message using PostMessage; use the PostQuitMessage function.
+            /// An accessibility application can use PostMessage to post WM_APPCOMMAND messages to
+            /// the shell to launch applications. This functionality is not guaranteed to work for
+            /// other types of applications.
+            /// There is a limit of 10,000 posted messages per message queue. This limit should be
+            /// sufficiently large. If your application exceeds the limit, it should be redesigned
+            /// to avoid consuming so many system resources.
+            /// </remarks>
+            [return: MarshalAs(UnmanagedType.Bool)]
+            [DllImport(DllName, SetLastError = true)]
+            internal static extern bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
-        /// <summary>
-        /// Retrieves the status of the specified virtual key.
-        /// The status specifies whether the key is up, down,
-        /// or toggled (on, off—alternating each time the key is pressed). 
-        /// </summary>
-        /// <param name="keyCode">
-        /// A virtual key. If the desired virtual key is a letter or digit (A through Z, a through z, or 0 through 9),
-        /// nVirtKey must be set to the ASCII value of that character. For other keys, it must be a virtual-key code.
-        /// If a non-English keyboard layout is used, virtual keys with values in the range ASCII A through Z and 0
-        /// through 9 are used to specify most of the character keys. For example, for the German keyboard layout,
-        /// the virtual key of value ASCII O (0x4F) refers to the "o" key, whereas VK_OEM_1 refers to the "o with umlaut" key.
-        /// </param>
-        /// <returns>
-        /// The return value specifies the status of the specified virtual key, as follows:
-        /// <list type="bullet">
-        /// <item>If the high-order bit is 1, the key is down; otherwise, it is up.</item>
-        /// <item>
-        /// If the low-order bit is 1, the key is toggled. A key, such as the CAPS LOCK key,
-        /// is toggled if it is turned on. The key is off and untoggled if the low-order bit is 0.
-        /// A toggle key's indicator light (if any) on the keyboard will be on when the key is toggled,
-        /// and off when the key is untoggled.
-        /// </item>
-        /// </list>
-        /// </returns>
-        /// <remarks>
-        /// The key status returned from this function changes as a thread reads key messages from its message queue.
-        /// The status does not reflect the interrupt-level state associated with the hardware.
-        /// Use the GetAsyncKeyState function to retrieve that information.
-        /// An application calls GetKeyState in response to a keyboard-input message. This function retrieves
-        /// the state of the key when the input message was generated.
-        /// To retrieve state information for all the virtual keys, use the GetKeyboardState function.
-        /// An application can use the virtual key code constants
-        /// VK_SHIFT, VK_CONTROL, and VK_MENU as values for the nVirtKey parameter.
-        /// This gives the status of the SHIFT, CTRL, or ALT keys without distinguishing between left and right. 
-        /// </remarks>
-        [DllImport(DllName, CharSet = CharSet.Auto, ExactSpelling = true,
-            CallingConvention = CallingConvention.Winapi)]
-        public static extern short GetKeyState(int keyCode);
+            /// <summary>
+            /// Sends the specified message to a window or windows.
+            /// The SendMessage function calls the window procedure
+            /// for the specified window and does not return until
+            /// the window procedure has processed the message.
+            /// </summary>
+            /// <param name="hWnd">
+            /// A handle to the window whose window procedure will receive the message.
+            /// If this parameter is HWND_BROADCAST ((HWND)0xffff),
+            /// the message is sent to all top-level windows in the system,
+            /// including disabled or invisible unowned windows, overlapped windows,
+            /// and pop-up windows; but the message is not sent to child windows.
+            /// Message sending is subject to UIPI.
+            /// The thread of a process can send messages only to message queues of
+            /// threads in processes of lesser or equal integrity level.
+            /// </param>
+            /// <param name="Msg">The message to be sent.</param>
+            /// <param name="wParam">Additional message-specific information.</param>
+            /// <param name="lParam">Additional message-specific information.</param>
+            /// <returns>The return value specifies the result of the message processing; it depends on the message sent.</returns>
+            /// <remarks>
+            /// When a message is blocked by UIPI the last error, retrieved with GetLastError, is set to 5 (access denied).
+            /// Applications that need to communicate using HWND_BROADCAST should use the RegisterWindowMessage function to
+            /// obtain a unique message for inter-application communication.
+            /// The system only does marshalling for system messages (those in the range 0 to (WM_USER-1)).
+            /// To send other messages (those >= WM_USER) to another process, you must do custom marshalling.
+            /// If the specified window was created by the calling thread, the window procedure is called immediately
+            /// as a subroutine. If the specified window was created by a different thread, the system switches to that
+            /// thread and calls the appropriate window procedure. Messages sent between threads are processed only when
+            /// the receiving thread executes message retrieval code. The sending thread is blocked until the receiving
+            /// thread processes the message. However, the sending thread will process incoming nonqueued messages while
+            /// waiting for its message to be processed. To prevent this, use SendMessageTimeout with SMTO_BLOCK set.
+            /// For more information on nonqueued messages, see Nonqueued Messages.
+            /// An accessibility application can use SendMessage to send WM_APPCOMMAND messages to the shell to launch
+            /// applications. This functionality is not guaranteed to work for other types of applications.
+            /// </remarks>
+            [DllImport(DllName, CharSet = CharSet.Auto)]
+            internal static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
+
+            /// <summary>
+            /// Retrieves the status of the specified virtual key.
+            /// The status specifies whether the key is up, down,
+            /// or toggled (on, off—alternating each time the key is pressed). 
+            /// </summary>
+            /// <param name="keyCode">
+            /// A virtual key. If the desired virtual key is a letter or digit (A through Z, a through z, or 0 through 9),
+            /// nVirtKey must be set to the ASCII value of that character. For other keys, it must be a virtual-key code.
+            /// If a non-English keyboard layout is used, virtual keys with values in the range ASCII A through Z and 0
+            /// through 9 are used to specify most of the character keys. For example, for the German keyboard layout,
+            /// the virtual key of value ASCII O (0x4F) refers to the "o" key, whereas VK_OEM_1 refers to the "o with umlaut" key.
+            /// </param>
+            /// <returns>
+            /// The return value specifies the status of the specified virtual key, as follows:
+            /// <list type="bullet">
+            /// <item>If the high-order bit is 1, the key is down; otherwise, it is up.</item>
+            /// <item>
+            /// If the low-order bit is 1, the key is toggled. A key, such as the CAPS LOCK key,
+            /// is toggled if it is turned on. The key is off and untoggled if the low-order bit is 0.
+            /// A toggle key's indicator light (if any) on the keyboard will be on when the key is toggled,
+            /// and off when the key is untoggled.
+            /// </item>
+            /// </list>
+            /// </returns>
+            /// <remarks>
+            /// The key status returned from this function changes as a thread reads key messages from its message queue.
+            /// The status does not reflect the interrupt-level state associated with the hardware.
+            /// Use the GetAsyncKeyState function to retrieve that information.
+            /// An application calls GetKeyState in response to a keyboard-input message. This function retrieves
+            /// the state of the key when the input message was generated.
+            /// To retrieve state information for all the virtual keys, use the GetKeyboardState function.
+            /// An application can use the virtual key code constants
+            /// VK_SHIFT, VK_CONTROL, and VK_MENU as values for the nVirtKey parameter.
+            /// This gives the status of the SHIFT, CTRL, or ALT keys without distinguishing between left and right. 
+            /// </remarks>
+            [DllImport(DllName, CharSet = CharSet.Auto, ExactSpelling = true,
+                CallingConvention = CallingConvention.Winapi)]
+            internal static extern short GetKeyState(int keyCode);
+        }
 
         /// <summary>
         /// The RECT structure defines the coordinates of the upper-left and lower-right corners of a rectangle.

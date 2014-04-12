@@ -134,8 +134,8 @@ namespace Sharparam.SharpBlade.Logging
             if (System.Diagnostics.Debugger.IsAttached)
                 return;
 
-            Kernel32.AllocConsole();
-            var stdHandle = Kernel32.GetStdHandle(Kernel32.STD_OUTPUT_HANDLE);
+            Kernel32.NativeMethods.AllocConsole();
+            var stdHandle = Kernel32.NativeMethods.GetStdHandle(Kernel32.STD_OUTPUT_HANDLE);
             var safeFileHandle = new SafeFileHandle(stdHandle, true);
             var fileStream = new FileStream(safeFileHandle, FileAccess.Write);
             var encoding = Encoding.GetEncoding(Kernel32.CODE_PAGE);
@@ -155,7 +155,7 @@ namespace Sharparam.SharpBlade.Logging
         {
 #if DEBUG
             if (_consoleLoaded)
-                Kernel32.FreeConsole();
+                Kernel32.NativeMethods.FreeConsole();
 #endif
         }
 

@@ -29,12 +29,14 @@
 //---------------------------------------------------------------------------------------
 
 using System;
+using System.Runtime.Serialization;
 
 namespace Sharparam.SharpBlade.Razer.Exceptions
 {
     /// <summary>
     /// Exception for Razer related issues.
     /// </summary>
+    [Serializable]
     public class RazerException : Exception
     {
         /// <summary>
@@ -43,6 +45,16 @@ namespace Sharparam.SharpBlade.Razer.Exceptions
         /// <param name="message">Message associated with the exception.</param>
         /// <param name="innerException">Inner exception object.</param>
         internal RazerException(string message = null, Exception innerException = null) : base(message, innerException)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RazerException" /> class
+        /// from serialization data.
+        /// </summary>
+        /// <param name="info">Serialization info object.</param>
+        /// <param name="context">Streaming context.</param>
+        protected RazerException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
     }

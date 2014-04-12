@@ -28,11 +28,14 @@
 // </copyright>
 //---------------------------------------------------------------------------------------
 
+using System;
+
 namespace Sharparam.SharpBlade.Razer.Exceptions
 {
     /// <summary>
     /// Thrown when the application was not properly shut down on last session.
     /// </summary>
+    [Serializable]
     public class RazerUnstableShutdownException : RazerException
     {
         /// <summary>

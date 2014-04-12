@@ -64,17 +64,17 @@ namespace Sharparam.SharpBlade.Razer
         private static RazerManager _instance;
 
         /// <summary>
-        /// App event callback that is used as parameter in <see cref="RazerAPI.RzSBAppEventSetCallback" />.
+        /// App event callback that is used as parameter in <see cref="RazerAPI.NativeMethods.RzSBAppEventSetCallback" />.
         /// </summary>
         private static RazerAPI.AppEventCallbackDelegate _appEventCallback;
 
         /// <summary>
-        /// Dynamic key callback that is used as parameter in <see cref="RazerAPI.RzSBDynamicKeySetCallback" />.
+        /// Dynamic key callback that is used as parameter in <see cref="RazerAPI.NativeMethods.RzSBDynamicKeySetCallback" />.
         /// </summary>
         private static RazerAPI.DynamicKeyCallbackFunctionDelegate _dynamicKeyCallback;
 
         /// <summary>
-        /// Keyboard callback that is used as parameter in <see cref="RazerAPI.RzSBKeyboardCaptureSetCallback" />.
+        /// Keyboard callback that is used as parameter in <see cref="RazerAPI.NativeMethods.RzSBKeyboardCaptureSetCallback" />.
         /// </summary>
         private static RazerAPI.KeyboardCallbackFunctionDelegate _keyboardCallback;
 
@@ -117,11 +117,11 @@ namespace Sharparam.SharpBlade.Razer
 
             _log.Debug("Calling RzSBStart()");
 
-            var result = RazerAPI.RzSBStart();
+            var result = RazerAPI.NativeMethods.RzSBStart();
             if (HRESULT.RZSB_FAILED(result))
             {
                 // Try one more time
-                result = RazerAPI.RzSBStart();
+                result = RazerAPI.NativeMethods.RzSBStart();
                 if (HRESULT.RZSB_FAILED(result))
                     throw new RazerNativeException("RzSBStart", result);
             }
@@ -131,7 +131,7 @@ namespace Sharparam.SharpBlade.Razer
             _log.Debug("Creating new app event callback");
             _appEventCallback = HandleAppEvent;
             _log.Debug("Calling RzSBAppEventSetCallback");
-            result = RazerAPI.RzSBAppEventSetCallback(_appEventCallback);
+            result = RazerAPI.NativeMethods.RzSBAppEventSetCallback(_appEventCallback);
             if (HRESULT.RZSB_FAILED(result))
                 throw new RazerNativeException("RzSBAppEventSetCallback", result);
 
@@ -143,7 +143,7 @@ namespace Sharparam.SharpBlade.Razer
             _log.Debug("Creating dynamic key callback");
             _dynamicKeyCallback = HandleDynamicKeyEvent;
             _log.Debug("Calling RzSBDynamicKeySetCallback");
-            result = RazerAPI.RzSBDynamicKeySetCallback(_dynamicKeyCallback);
+            result = RazerAPI.NativeMethods.RzSBDynamicKeySetCallback(_dynamicKeyCallback);
             if (HRESULT.RZSB_FAILED(result))
                 throw new RazerNativeException("RzSBDynamicKeySetCallback", result);
 
@@ -153,7 +153,7 @@ namespace Sharparam.SharpBlade.Razer
             _log.Debug("Creating keyboard callback");
             _keyboardCallback = HandleKeyboardEvent;
             _log.Debug("Calling RzSBDynamicKeySetCallback");
-            result = RazerAPI.RzSBKeyboardCaptureSetCallback(_keyboardCallback);
+            result = RazerAPI.NativeMethods.RzSBKeyboardCaptureSetCallback(_keyboardCallback);
             if (HRESULT.RZSB_FAILED(result))
                 throw new RazerNativeException("RzSBKeyboardCaptureSetCallback", result);
 
@@ -166,7 +166,7 @@ namespace Sharparam.SharpBlade.Razer
         /// Finalizes an instance of the <see cref="RazerManager" /> class.
         /// Allows an object to try to free resources and perform other
         /// cleanup operations before it is reclaimed by garbage collection.
-        /// <see cref="RazerManager" /> will call <see cref="RazerAPI.RzSBStop" />
+        /// <see cref="RazerManager" /> will call <see cref="RazerAPI.NativeMethods.RzSBStop" />
         /// if not disposed at the point of finalization.
         /// </summary>
         ~RazerManager()
@@ -251,7 +251,7 @@ namespace Sharparam.SharpBlade.Razer
         public void Stop()
         {
             _log.Info("RazerManager is stopping! Calling RzSBStop...");
-            RazerAPI.RzSBStop();
+            RazerAPI.NativeMethods.RzSBStop();
             _log.Info("RazerManager has stopped.");
         }
 
@@ -337,7 +337,7 @@ namespace Sharparam.SharpBlade.Razer
             if (enabled == KeyboardCapture)
                 return;
 
-            var hresult = RazerAPI.RzSBCaptureKeyboard(enabled);
+            var hresult = RazerAPI.NativeMethods.RzSBCaptureKeyboard(enabled);
             if (HRESULT.RZSB_FAILED(hresult))
                 throw new RazerNativeException("RzSBCaptureKeyboard", hresult);
 
@@ -549,7 +549,7 @@ namespace Sharparam.SharpBlade.Razer
                 // Workaround to get the modifier keys
                 // Item1 = VK, Item2 = mask, Item3 = ModifierKey
                 var modifierKeys =
-                    KeyMapping.Where(mapping => (User32.GetKeyState((int)mapping.Item1) & mapping.Item2) != 0)
+                    KeyMapping.Where(mapping => (User32.NativeMethods.GetKeyState((int)mapping.Item1) & mapping.Item2) != 0)
                               .Aggregate(ModifierKeys.None, (current, mapping) => current | mapping.Item3);
 
                 if (msgType == User32.MessageType.KEYDOWN)

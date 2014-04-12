@@ -12,7 +12,7 @@
 
 // Disable "missing documentation" warning (CS1591: Missing XML comment for publicly visible type or member)
 #pragma warning disable 1591
-
+using System;
 using System.Globalization;
 
 namespace Sharparam.SharpBlade.Native
@@ -24,6 +24,7 @@ namespace Sharparam.SharpBlade.Native
     {
         private readonly int m_value;
 
+        [Serializable]
         public class HResultException : System.SystemException
         {
             new public HRESULT HResult
@@ -105,6 +106,16 @@ namespace Sharparam.SharpBlade.Native
                 return Equals((int)obj);
 
             return false;
+        }
+
+        public static bool operator ==(HRESULT left, object right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(HRESULT left, object right)
+        {
+            return !left.Equals(right);
         }
 
         public override int GetHashCode()
@@ -7367,21 +7378,22 @@ namespace Sharparam.SharpBlade.Native
 // ReSharper restore UnusedMember.Local
         }
 
-        static readonly DirCodes dirCodes;
+        private static readonly DirCodes dirCodes = GetDirCodes();
 
-        static HRESULT()
+        private static DirCodes GetDirCodes()
         {
-            dirCodes = new DirCodes(1324);
+            var codes = new DirCodes(1324);
             System.Reflection.FieldInfo[] fieldsInfo = typeof(HRESULT).GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
             foreach (System.Reflection.FieldInfo fi in fieldsInfo)
             {
                 if (fi.GetValue(null) is int)
                 {
                     var hr = (int)fi.GetValue(null);
-                    if (!dirCodes.ContainsKey(hr))
-                        dirCodes[hr] = fi;
+                    if (!codes.ContainsKey(hr))
+                        codes[hr] = fi;
                 }
             }
+            return codes;
         }
     }
 // ReSharper restore InconsistentNaming
