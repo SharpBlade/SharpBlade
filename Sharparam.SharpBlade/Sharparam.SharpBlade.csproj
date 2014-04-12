@@ -140,12 +140,14 @@
     <Message Text="Reporting StyleCop stats to TeamCity" />
     <PropertyGroup Condition="'$(StyleCopViolations)' != '' AND $(StyleCopViolations) &gt; 0">
       <TCStatus>ERROR</TCStatus>
+      <TCStyleCopViolations>$(StyleCopViolations)</TCStyleCopViolations>
     </PropertyGroup>
     <PropertyGroup Condition="'$(StyleCopViolations)' == '' OR $(StyleCopViolations) == 0">
       <TCStatus>{build.status.text}</TCStatus>
+      <TCStyleCopViolations>0</TCStyleCopViolations>
     </PropertyGroup>
     <Message Text="TCStatus is $(TCStatus) and #StyleCopViolations is $(StyleCopViolations)" />
-    <TeamCitySetStatus Status="$(TCStatus)" Text="Violations: $(StyleCopViolations)" Condition="'$(StyleCopViolations)' != '' AND '$(TCStatus)' != ''" />
-    <TeamCityReportStatsValue Key="StyleCopViolations" Value="$(StyleCopViolations)" Condition="'$(StyleCopViolations)' != '' AND '$(TCStatus)' != ''" />
+    <TeamCitySetStatus Status="$(TCStatus)" Text="Violations: $(TCStyleCopViolations)" Condition="'$(TCStyleCopViolations)' != '' AND '$(TCStatus)' != ''" />
+    <TeamCityReportStatsValue Key="StyleCopViolations" Value="$(TCStyleCopViolations)" Condition="'$(TCStyleCopViolations)' != '' AND '$(TCStatus)' != ''" />
   </Target>
 </Project>
