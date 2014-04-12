@@ -133,15 +133,19 @@
   <Target Name="AfterBuild">
     <Message Text="Restoring AssemblyInfo.cs" Condition="'$(AssemblyFileChanged)' == 'True'" />
     <FileUpdate Files="Properties\AssemblyInfo.cs" Regex="$(AssemblyFileRestoreRegex)" ReplacementText="$(AssemblyFileRestoreReplace)" Condition="'$(AssemblyFileChanged)' == 'True'" />
-    <PropertyGroup Condition="'$(Configuration)' == 'Release' AND '$(TEAMCITY_VERSION)' != '' AND '$(StyleCopViolations)' != '' AND $(StyleCopViolations) &gt; 0">
-      <TCStatus>ERROR</TCStatus>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)' == 'Release' AND '$(TEAMCITY_VERSION)' != '' AND ('$(StyleCopViolations)' == '' OR $(StyleCopViolations) == 0)">
-      <TCStatus>{build.status.text}</TCStatus>
-    </PropertyGroup>
-    <TeamCitySetStatus Status="$(TCStatus)" Text="Violations: $(StyleCopViolations)" Condition="'$(Configuration)' == 'Release' AND '$(StyleCopViolations)' != '' AND '$(TEAMCITY_VERSION)' != ''" />
-    <TeamCityReportStatsValue Key="StyleCopViolations" Value="$(StyleCopViolations)" Condition="'$(Configuration)' == 'Release' AND '$(StyleCopViolations)' != '' AND '$(TEAMCITY_VERSION)' != ''" />
   </Target>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Import Project="..\packages\StyleCop.MSBuild.4.7.49.0\build\StyleCop.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.MSBuild.4.7.49.0\build\StyleCop.MSBuild.Targets')" />
+  <Target Name="ReportStyleCopStatsToTC" AfterTargets="StyleCop" Condition="'$(Configuration)' == 'Release' AND '$(TEAMCITY_VERSION)' != '' AND '$(StyleCopEnabled)' != 'false'">
+    <Message Text="Reporting StyleCop stats to TeamCity" />
+    <PropertyGroup Condition="'$(StyleCopViolations)' != '' AND $(StyleCopViolations) &gt; 0">
+      <TCStatus>ERROR</TCStatus>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(StyleCopViolations)' == '' OR $(StyleCopViolations) == 0">
+      <TCStatus>{build.status.text}</TCStatus>
+    </PropertyGroup>
+    <Message Text="TCStatus is $(TCStatus) and #StyleCopViolations is $(StyleCopViolations)" />
+    <TeamCitySetStatus Status="$(TCStatus)" Text="Violations: $(StyleCopViolations)" Condition="'$(StyleCopViolations)' != '' AND '$(TCStatus)' != ''" />
+    <TeamCityReportStatsValue Key="StyleCopViolations" Value="$(StyleCopViolations)" Condition="'$(StyleCopViolations)' != '' AND '$(TCStatus)' != ''" />
+  </Target>
 </Project>
