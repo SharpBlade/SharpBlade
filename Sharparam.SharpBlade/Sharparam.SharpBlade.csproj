@@ -136,6 +136,9 @@
   </Target>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Import Project="..\packages\StyleCop.MSBuild.4.7.49.0\build\StyleCop.MSBuild.Targets" Condition="Exists('..\packages\StyleCop.MSBuild.4.7.49.0\build\StyleCop.MSBuild.Targets')" />
+  <!-- JetBrains.BuildServer.MSBuildLoggers. -->
+  <UsingTask TaskName="TeamCitySetStatus" AssemblyFile="C:\TeamCity\buildAgent\plugins\dotnetPlugin\bin\JetBrains.BuildServer.MSBuildLoggers.dll" />
+  <UsingTask TaskName="TeamCityReportStatsValue" AssemblyFile="C:\TeamCity\buildAgent\plugins\dotnetPlugin\bin\JetBrains.BuildServer.MSBuildLoggers.dll" />
   <Target Name="ReportStyleCopStatsToTC" AfterTargets="StyleCop" Condition="'$(Configuration)' == 'Release' AND '$(TEAMCITY_VERSION)' != '' AND '$(StyleCopEnabled)' != 'false'">
     <Message Text="Reporting StyleCop stats to TeamCity" />
     <PropertyGroup Condition="'$(StyleCopViolations)' != '' AND $(StyleCopViolations) &gt; 0">
@@ -147,9 +150,6 @@
       <TCStyleCopViolations>0</TCStyleCopViolations>
     </PropertyGroup>
     <Message Text="TCStatus is $(TCStatus) and #TCStyleCopViolations is $(TCStyleCopViolations)" />
-    <!-- JetBrains.BuildServer.MSBuildLoggers. -->
-    <UsingTask TaskName="TeamCitySetStatus" AssemblyFile="C:\TeamCity\buildAgent\plugins\dotnetPlugin\bin\JetBrains.BuildServer.MSBuildLoggers.dll" />
-    <UsingTask TaskName="TeamCityReportStatsValue" AssemblyFile="C:\TeamCity\buildAgent\plugins\dotnetPlugin\bin\JetBrains.BuildServer.MSBuildLoggers.dll" />
     <TeamCitySetStatus Status="$(TCStatus)" Text="Violations: $(TCStyleCopViolations)" Condition="'$(TCStyleCopViolations)' != '' AND '$(TCStatus)' != ''" />
     <TeamCityReportStatsValue Key="StyleCopViolations" Value="$(TCStyleCopViolations)" Condition="'$(TCStyleCopViolations)' != '' AND '$(TCStatus)' != ''" />
   </Target>
