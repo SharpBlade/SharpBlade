@@ -60,7 +60,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
-    <Compile Include="DynamicKeySettings.cs" />
     <Compile Include="Extensions\EnumerationExtensions.cs" />
     <Compile Include="Helpers\IO.cs" />
     <Compile Include="Helpers\ScreenCapture.cs" />
@@ -99,7 +98,6 @@
     <Compile Include="Razer\Exceptions\RazerDynamicKeyException.cs" />
     <Compile Include="Razer\Exceptions\RazerException.cs" />
     <Compile Include="Razer\Exceptions\RazerNativeException.cs" />
-    <Compile Include="Razer\Exceptions\RazerUnstableShutdownException.cs" />
     <Compile Include="Razer\RazerManager.cs" />
     <Compile Include="Razer\RotateDirection.cs" />
     <Compile Include="Razer\Touchpad.cs" />
