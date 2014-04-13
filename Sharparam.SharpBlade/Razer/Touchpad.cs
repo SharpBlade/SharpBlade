@@ -501,32 +501,14 @@ namespace Sharparam.SharpBlade.Razer
         /// Default value 55ms (circa 18 FPS).</param>
         public void SetForm(Form form, RenderMethod method = RenderMethod.Event, int interval = 55)
         {
-            ClearForm();
+            Clear();
 
             CurrentForm = form;
 
             if (method == RenderMethod.Event)
                 CurrentForm.Paint += FormPaintHandler;
             else
-                _renderer = new Renderer(this, CurrentForm, interval);
-        }
-
-        /// <summary>
-        /// Clears the current form from touchpad
-        /// and stops rendering of it.
-        /// </summary>
-        public void ClearForm()
-        {
-            if (CurrentForm != null && _renderer == null)
-                CurrentForm.Paint -= FormPaintHandler;
-
-            if (_renderer != null)
-            {
-                _renderer.Dispose();
-                _renderer = null;
-            }
-
-            CurrentForm = null;
+                _renderer = new WinFormsRenderer(this, CurrentForm, interval);
         }
 
         /// <summary>
@@ -536,26 +518,11 @@ namespace Sharparam.SharpBlade.Razer
         /// <param name="windowHandle">the handle for the window to render</param>
         public void SetNativeWindow(IntPtr windowHandle)
         {
-            ClearNativeWindow();
+            Clear();
 
             CurrentNativeWindow = windowHandle;
 
-            _renderer = new Renderer(this, windowHandle, new TimeSpan(0, 0, 0, 0, 42));
-        }
-
-        /// <summary>
-        /// Clears the current native window from 
-        /// the touchpad and stops rendering of it
-        /// </summary>
-        public void ClearNativeWindow()
-        {
-            CurrentNativeWindow = IntPtr.Zero;
-
-            if (_renderer != null)
-            {
-                _renderer.Dispose();
-                _renderer = null;
-            }
+            _renderer = new NativeRenderer(this, windowHandle, new TimeSpan(0, 0, 0, 0, 42));
         }
 
         /// <summary>
@@ -579,32 +546,37 @@ namespace Sharparam.SharpBlade.Razer
         /// only used if RenderMethod is Polling.</param>
         public void SetWindow(Window window, RenderMethod method, TimeSpan interval)
         {
-            ClearWindow();
+            Clear();
 
             CurrentWindow = window;
 
             if (method == RenderMethod.Event)
                 CurrentWindow.ContentRendered += WindowContentRenderedHandler;
             else
-                _renderer = new Renderer(this, CurrentWindow, interval);
+                _renderer = new WpfRenderer(this, CurrentWindow, interval);
         }
 
         /// <summary>
-        /// Clears the current WPF window from
-        /// touchpad and stops rendering of it.
+        /// Sets an <see cref="IBitmapProvider" /> to provide the Touchpad with
+        /// a <see cref="Bitmap" /> object to draw.
+        /// Initializes the polling interval to 42ms (circa 24 FPS).
         /// </summary>
-        public void ClearWindow()
+        /// <param name="provider">An object implementing the <see cref="IBitmapProvider" /> interface.</param>
+        public void SetBitmapProvider(IBitmapProvider provider)
         {
-            if (CurrentWindow != null && _renderer == null)
-                CurrentWindow.ContentRendered -= WindowContentRenderedHandler;
+            SetBitmapProvider(provider, new TimeSpan(0, 0, 0, 0, 42));
+        }
 
-            if (_renderer != null)
-            {
-                _renderer.Dispose();
-                _renderer = null;
-            }
-
-            CurrentWindow = null;
+        /// <summary>
+        /// Sets an <see cref="IBitmapProvider" /> to provide the Touchpad with
+        /// a <see cref="Bitmap" /> object to draw.
+        /// </summary>
+        /// <param name="provider">An object implementing the <see cref="IBitmapProvider" /> interface.</param>
+        /// <param name="interval">How often to query the object for a bitmap and draw it.</param>
+        public void SetBitmapProvider(IBitmapProvider provider, TimeSpan interval)
+        {
+            Clear();
+            _renderer = new BitmapRenderer(this, provider, interval);
         }
 
         /// <summary>
@@ -613,6 +585,8 @@ namespace Sharparam.SharpBlade.Razer
         /// <param name="image">Path to image.</param>
         public void SetImage(string image)
         {
+            Clear();
+
             image = IO.GetAbsolutePath(image);
 
             var result = RazerAPI.NativeMethods.RzSBSetImageTouchpad(image);
@@ -623,9 +597,49 @@ namespace Sharparam.SharpBlade.Razer
         }
 
         /// <summary>
+        /// Clears anything drawing to the touchpad.
+        /// Also clears the current image if one is set.
+        /// </summary>
+        /// <remarks>
+        /// Will not attempt to clear the image if the object is disposing,
+        /// in order to avoid sending commands to the hardware.
+        /// </remarks>
+        public void Clear()
+        {
+            Clear(false);
+        }
+
+        /// <summary>
+        /// Clears anything drawing to the touchpad.
+        /// Also clears the current image if one is set.
+        /// </summary>
+        /// <remarks>
+        /// Will not attempt to clear the image if the object is disposing,
+        /// in order to avoid sending commands to the hardware.
+        /// </remarks>
+        /// <param name="disposing">True if this is called from <see cref="Dispose()" />.</param>
+        private void Clear(bool disposing)
+        {
+            // We don't want to risk sending commands to the hardware
+            // when we are disposing Touchpad.
+            if (!disposing)
+                ClearImage();
+
+            ClearNativeWindow();
+            ClearForm();
+            ClearWindow();
+
+            if (_renderer == null)
+                return;
+
+            _renderer.Dispose();
+            _renderer = null;
+        }
+
+        /// <summary>
         /// Clears the image currently on the touchpad.
         /// </summary>
-        public void ClearImage()
+        private void ClearImage()
         {
             var result = RazerAPI.NativeMethods.RzSBSetImageTouchpad(IO.GetAbsolutePath(RazerManager.Instance.BlankTouchpadImagePath));
             if (HRESULT.RZSB_FAILED(result))
@@ -635,14 +649,36 @@ namespace Sharparam.SharpBlade.Razer
         }
 
         /// <summary>
-        /// Clears current form and image on the touchpad (if any).
+        /// Clears the current native window from 
+        /// the touchpad and stops rendering of it
         /// </summary>
-        public void ClearAll()
+        private void ClearNativeWindow()
         {
-            ClearForm();
-            ClearWindow();
-            ClearNativeWindow();
-            ClearImage();
+            CurrentNativeWindow = IntPtr.Zero;
+        }
+
+        /// <summary>
+        /// Clears the current WPF window from
+        /// touchpad and stops rendering of it.
+        /// </summary>
+        private void ClearWindow()
+        {
+            if (CurrentWindow != null && _renderer == null)
+                CurrentWindow.ContentRendered -= WindowContentRenderedHandler;
+
+            CurrentWindow = null;
+        }
+
+        /// <summary>
+        /// Clears the current form from touchpad
+        /// and stops rendering of it.
+        /// </summary>
+        private void ClearForm()
+        {
+            if (CurrentForm != null && _renderer == null)
+                CurrentForm.Paint -= FormPaintHandler;
+
+            CurrentForm = null;
         }
 
         #endregion Drawing Methods
@@ -657,7 +693,7 @@ namespace Sharparam.SharpBlade.Razer
                 return;
 
             if (disposing)
-                _renderer.Dispose();
+                Clear(true);
 
             _disposed = true;
         }

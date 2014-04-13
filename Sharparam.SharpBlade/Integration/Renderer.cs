@@ -29,9 +29,7 @@
 //---------------------------------------------------------------------------------------
 
 using System;
-using System.Windows;
-using System.Windows.Forms;
-using System.Windows.Threading;
+
 using Sharparam.SharpBlade.Razer;
 
 namespace Sharparam.SharpBlade.Integration
@@ -39,151 +37,25 @@ namespace Sharparam.SharpBlade.Integration
     /// <summary>
     /// Helper class to manage rendering a WinForms form or WPF window.
     /// </summary>
-    internal class Renderer : IDisposable
+    internal abstract class Renderer : IDisposable
     {
         /// <summary>
         /// Local instance of the SwitchBlade touchpad.
         /// </summary>
-        private readonly Touchpad _touchpad;
-
-        /// <summary>
-        /// WinForms Form to render.
-        /// Null if no WinForms Form assigned.
-        /// </summary>
-        private readonly Form _form;
-
-        /// <summary>
-        /// Native window handle.
-        /// <c>IntPtr.Zero</c> if no native window assigned.
-        /// </summary>
-        private readonly IntPtr _nativeWindow = IntPtr.Zero;
-
-        /// <summary>
-        /// WPF Window to render.
-        /// Null if no WPF Window assigned.
-        /// </summary>
-        private readonly Window _window;
-
-        /// <summary>
-        /// Timer used to control rendering of form when
-        /// poll mode is in use.
-        /// </summary>
-        private readonly Timer _winformTimer;
-
-        /// <summary>
-        /// Timer to control rendering of window when
-        /// poll mode is in use.
-        /// </summary>
-        private readonly DispatcherTimer _wpfTimer;
-
-        /// <summary>
-        /// Timer to control rendering of window when
-        /// poll mode is in use
-        /// </summary>
-        private readonly System.Timers.Timer _nativeTimer;
+        protected readonly Touchpad Touchpad;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Renderer" /> class.
-        /// For rendering a WinForms form at the specified interval.
         /// </summary>
         /// <param name="touchpad">Touchpad reference.</param>
-        /// <param name="form">WinForms form to render.</param>
-        /// <param name="interval">The interval to render the form at,
-        /// in milliseconds (MAX PRECISION = 55ms).</param>
-        internal Renderer(Touchpad touchpad, Form form, int interval = 55)
+        protected Renderer(Touchpad touchpad)
         {
-            _touchpad = touchpad;
-            _form = form;
-
-            _winformTimer = new Timer
-            {
-                Interval = interval
-            };
-
-            _winformTimer.Tick += WinformTimerOnTick;
-
-            _winformTimer.Start();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Renderer" /> class.
-        /// Used for rendering a native window at the specified interval.
-        /// </summary>
-        /// <param name="touchpad">Touchpad reference.</param>
-        /// <param name="windowHandle">Native window handle to render.</param>
-        /// <param name="interval">The interval to render the window at.</param>
-        internal Renderer(Touchpad touchpad, IntPtr windowHandle, TimeSpan interval)
-        {
-            _touchpad = touchpad;
-            _nativeWindow = windowHandle;
-
-            _nativeTimer = new System.Timers.Timer(interval.TotalMilliseconds);
-            _nativeTimer.Elapsed += NativeTimerTick;
-            _nativeTimer.Start();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Renderer" /> class.
-        /// For rendering a WPF window at the specified interval.
-        /// </summary>
-        /// <param name="touchpad">Touchpad reference.</param>
-        /// <param name="window">WPF window to render.</param>
-        /// <param name="interval">The interval to render the window at.</param>
-        internal Renderer(Touchpad touchpad, Window window, TimeSpan interval)
-        {
-            _touchpad = touchpad;
-            _window = window;
-
-            _wpfTimer = new DispatcherTimer(interval, DispatcherPriority.Render, WpfTimerTick, Dispatcher.CurrentDispatcher);
-            _wpfTimer.Start();
+            Touchpad = touchpad;
         }
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        public void Dispose()
-        {
-            if (_winformTimer != null)
-                _winformTimer.Dispose();
-
-            if (_wpfTimer != null)
-                _wpfTimer.Stop(); 
-            
-            if (_nativeTimer != null)
-            {
-                _nativeTimer.Stop();
-                _nativeTimer.Dispose();
-            }
-        }
-
-        /// <summary>
-        /// Callback for the tick event on the WinForms render timer.
-        /// </summary>
-        /// <param name="sender">The object that raised the event.</param>
-        /// <param name="e">Event arguments.</param>
-        private void WinformTimerOnTick(object sender, EventArgs e)
-        {
-            _touchpad.DrawForm(_form);
-        }
-
-        /// <summary>
-        /// Callback for the tick event on the WPF render timer.
-        /// </summary>
-        /// <param name="sender">The object that raised the event.</param>
-        /// <param name="e">Event arguments.</param>
-        private void WpfTimerTick(object sender, EventArgs e)
-        {
-            _touchpad.DrawWindow(_window);
-        }
-
-        /// <summary>
-        /// Callback for the native tick event.
-        /// </summary>
-        /// <param name="sender">The object that raised the event.</param>
-        /// <param name="e">Event arguments.</param>
-        private void NativeTimerTick(object sender, EventArgs e)
-        {
-            _touchpad.DrawNativeWindow(_nativeWindow);
-        }
+        public abstract void Dispose();
     }
 }

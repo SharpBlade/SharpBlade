@@ -65,9 +65,14 @@
     <Compile Include="Helpers\IO.cs" />
     <Compile Include="Helpers\ScreenCapture.cs" />
     <Compile Include="Helpers\Threading.cs" />
+    <Compile Include="Integration\BitmapRenderer.cs" />
     <Compile Include="Integration\EmbeddedWinFormsControl.cs" />
+    <Compile Include="Integration\IBitmapProvider.cs" />
     <Compile Include="Integration\KeyboardControl.cs" />
+    <Compile Include="Integration\NativeRenderer.cs" />
     <Compile Include="Integration\Renderer.cs" />
+    <Compile Include="Integration\WinFormsRenderer.cs" />
+    <Compile Include="Integration\WpfRenderer.cs" />
     <Compile Include="Logging\LogManager.cs" />
     <Compile Include="ModifierKeys.cs" />
     <Compile Include="Native\Helpers.cs" />

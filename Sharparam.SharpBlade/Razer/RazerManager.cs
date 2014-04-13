@@ -214,7 +214,7 @@ namespace Sharparam.SharpBlade.Razer
 
         /// <summary>
         /// Gets or sets the image shown on Touchpad when it's blank or
-        /// after <see cref="Razer.Touchpad.ClearImage" /> or <see cref="Razer.Touchpad.ClearAll" />
+        /// after <see cref="Razer.Touchpad.ClearImage" /> or <see cref="Razer.Touchpad.Clear" />.
         /// have been called.
         /// </summary>
         /// <remarks>Defaults to <see cref="Constants.BlankTouchpadImage" /></remarks>
