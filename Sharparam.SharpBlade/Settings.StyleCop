@@ -1,9 +1,20 @@
 <StyleCopSettings Version="105">
   <GlobalSettings>
     <CollectionProperty Name="RecognizedWords">
+      <Value>ca</Value>
+      <Value>Hanguel</Value>
+      <Value>Junja</Value>
+      <Value>marshalling</Value>
       <Value>ms</Value>
+      <Value>nonclient</Value>
+      <Value>nonconvert</Value>
+      <Value>nonmemory</Value>
+      <Value>nonqueued</Value>
+      <Value>Nonqueued</Value>
+      <Value>nonsystem</Value>
       <Value>Razer</Value>
       <Value>Razer's</Value>
+      <Value>untoggled</Value>
     </CollectionProperty>
     <IntegerProperty Name="MaxViolationCount">-1</IntegerProperty>
   </GlobalSettings>

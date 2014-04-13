@@ -12,13 +12,15 @@
 
 // Disable "missing documentation" warning (CS1591: Missing XML comment for publicly visible type or member)
 #pragma warning disable 1591
+
 using System;
 using System.Globalization;
 
 namespace Sharparam.SharpBlade.Native
 {
     #region HRESULT
-// ReSharper disable InconsistentNaming
+
+    // ReSharper disable InconsistentNaming
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 4)]
     public struct HRESULT : System.IComparable
     {
@@ -82,6 +84,7 @@ namespace Sharparam.SharpBlade.Native
         }
 
         #region IEquatable<> Members
+
         public bool Equals(HRESULT that)
         {
             return m_value == that.m_value;
@@ -91,9 +94,11 @@ namespace Sharparam.SharpBlade.Native
         {
             return m_value == that;
         }
-        #endregion
+
+        #endregion IEquatable<> Members
 
         #region System.Object Members
+
         public override bool Equals(object obj)
         {
             if (obj == null)
@@ -147,23 +152,33 @@ namespace Sharparam.SharpBlade.Native
 
             var o = fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
             DescriptionAttribute descr = null;
-// ReSharper disable ConditionIsAlwaysTrueOrFalse
+            // ReSharper disable ConditionIsAlwaysTrueOrFalse
             if (o != null && o.Length > 0)
                 descr = (DescriptionAttribute)o[0];
-// ReSharper restore ConditionIsAlwaysTrueOrFalse
+            // ReSharper restore ConditionIsAlwaysTrueOrFalse
 
             var s = (descr != null && !nameOnly) ? fi.Name + ": " + descr.description : fi.Name;
             return s;
         }
-        #endregion
+
+        #endregion System.Object Members
 
         public bool Failed { get { return m_value < 0; } }
+
         public bool Succeeded { get { return m_value >= 0; } }
 
-        public static bool FAILED(int hr) { return hr < 0; }
-        public static bool SUCCEEDED(int hr) { return hr >= 0; }
+        public static bool FAILED(int hr)
+        {
+            return hr < 0;
+        }
+
+        public static bool SUCCEEDED(int hr)
+        {
+            return hr >= 0;
+        }
 
         #region IComparable<> Members
+
         public int CompareTo(HRESULT that)
         {
             return m_value < that.m_value ? -1 : m_value > that.m_value ? +1 : 0;
@@ -173,9 +188,11 @@ namespace Sharparam.SharpBlade.Native
         {
             return m_value < that ? -1 : m_value > that ? +1 : 0;
         }
-        #endregion
+
+        #endregion IComparable<> Members
 
         #region IComparable Members
+
         public int CompareTo(object obj)
         {
             if (obj == null)
@@ -189,9 +206,11 @@ namespace Sharparam.SharpBlade.Native
 
             throw new System.ArgumentException("Arg_MustBeHRESULT");
         }
-        #endregion
+
+        #endregion IComparable Members
 
         #region Error Codes
+
         //  The RegExp strings (in MSVS syntax) were used to parse WINERR.H
 
         //Find what: ^{:b*}//:b*\n:b*\#define:b+{:i}:b+(_HRESULT_TYPEDEF_)\({0x:h}L\)
@@ -205,9 +224,8 @@ namespace Sharparam.SharpBlade.Native
 
         // {^{:b+}///\<summary\>\n:b+///:b*{.+}\n:b+///\</summary\>}
         // \1\n\2[Description("\3")]
-
         [System.AttributeUsage(System.AttributeTargets.All)]
-        class DescriptionAttribute : System.Attribute
+        private class DescriptionAttribute : System.Attribute
         {
             public DescriptionAttribute(string description)
             {
@@ -228,6 +246,7 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("Success code")]
         public const int NO_ERROR = unchecked(0x00000000);
+
         ///<summary>
         ///Success code
         ///</summary>
@@ -309,8 +328,11 @@ namespace Sharparam.SharpBlade.Native
         // ******************
         // FACILITY_NULL
         // ******************
+
         #region (0x000000 - 0x00FFFF) FACILITY_NULL errors
+
         #region (0x004000 - 0x0040FF) CO errors
+
         ///<summary>
         ///Thread local storage failure
         ///</summary>
@@ -564,13 +586,17 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("The server principal name (SPN) obtained during security negotiation is malformed.")]
         public const int CO_E_MALFORMED_SPN = unchecked((int)0x80004033);
-        #endregion
-        #endregion
+
+        #endregion (0x004000 - 0x0040FF) CO errors
+
+        #endregion (0x000000 - 0x00FFFF) FACILITY_NULL errors
 
         // ******************
         // FACILITY_RPC
         // ******************
+
         #region (0x010000 - 0x01FFFF) FACILITY_RPC errors
+
         //
         // Codes 0x0-0x11 are propagated from 16 bit OLE.
         //
@@ -1071,13 +1097,17 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("An internal error occurred.")]
         public const int RPC_E_UNEXPECTED = unchecked((int)0x8001FFFF);
-        #endregion
+
+        #endregion (0x010000 - 0x01FFFF) FACILITY_RPC errors
 
         // ******************
         // FACILITY_DISPATCH
         // ******************
+
         #region (0x020000 - 0x02FFFF) FACILITY_DISPATCH errors
+
         #region (0x020000 - 0x0200FF) DISP errors
+
         ///<summary>
         ///Unknown interface.
         ///</summary>
@@ -1185,9 +1215,11 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("Buffer too small")]
         public const int DISP_E_BUFFERTOOSMALL = unchecked((int)0x80020013);
-        #endregion
+
+        #endregion (0x020000 - 0x0200FF) DISP errors
 
         #region (0x028000 - 0x029FFF) TYPE errors
+
         ///<summary>
         ///Buffer too small.
         ///</summary>
@@ -1343,13 +1375,17 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("Circular dependency between types/modules.")]
         public const int TYPE_E_CIRCULARTYPE = unchecked((int)0x80029C84);
-        #endregion
-        #endregion
+
+        #endregion (0x028000 - 0x029FFF) TYPE errors
+
+        #endregion (0x020000 - 0x02FFFF) FACILITY_DISPATCH errors
 
         // ******************
         // FACILITY_STORAGE
         // ******************
+
         #region (0x030000 - 0x03FFFF) FACILITY_STORAGE errors
+
         ///<summary>
         ///Unable to perform requested operation.
         ///</summary>
@@ -1633,11 +1669,12 @@ namespace Sharparam.SharpBlade.Native
         public const int STG_S_CANNOTCONSOLIDATE = unchecked(0x00030206);
 
         /*++
-    
+
         MessageId's 0x0305 - 0x031f (inclusive) are reserved for **STORAGE**
         copy protection errors.
-    
+
         --*/
+
         ///<summary>
         ///Generic Copy Protection Error.
         ///</summary>
@@ -1681,23 +1718,28 @@ namespace Sharparam.SharpBlade.Native
         public const int STG_E_RESETS_EXHAUSTED = unchecked((int)0x8003030B);
 
         /*++
-    
+
         MessageId's 0x0305 - 0x031f (inclusive) are reserved for **STORAGE**
         copy protection errors.
-    
+
         --*/
-        #endregion
+
+        #endregion (0x030000 - 0x03FFFF) FACILITY_STORAGE errors
 
         // ******************
         // FACILITY_ITF
         // ******************
+
         #region (0x040000 - 0x04FFFF) FACILITY_ITF errors
+
         #region (0x040000 - 0x0400FF) Old OLE errors
+
         ///<summary>
         ///Generic OLE errors that may be returned by many inerfaces
         ///</summary>
         [Description("Generic OLE errors that may be returned by many inerfaces")]
         public const int OLE_E_FIRST = unchecked((int)0x80040000);
+
         public const int OLE_E_LAST = unchecked((int)0x800400FF);
         public const int OLE_S_FIRST = unchecked(0x00040000);
         public const int OLE_S_LAST = unchecked(0x000400FF);
@@ -1875,9 +1917,11 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("Object doesn't support IViewObject interface")]
         public const int DV_E_NOIVIEWOBJECT = unchecked((int)0x8004006D);
-        #endregion
+
+        #endregion (0x040000 - 0x0400FF) Old OLE errors
 
         #region (0x040100 - 0x04010F) DRAGDROP errors
+
         public const int DRAGDROP_E_FIRST = unchecked((int)0x80040100);
         public const int DRAGDROP_E_LAST = unchecked((int)0x8004010F);
         public const int DRAGDROP_S_FIRST = unchecked(0x00040100);
@@ -1900,9 +1944,11 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("Invalid window handle")]
         public const int DRAGDROP_E_INVALIDHWND = unchecked((int)0x80040102);
-        #endregion
+
+        #endregion (0x040100 - 0x04010F) DRAGDROP errors
 
         #region (0x040110 - 0x04011F) CLASS errors
+
         public const int CLASSFACTORY_E_FIRST = unchecked((int)0x80040110);
         public const int CLASSFACTORY_E_LAST = unchecked((int)0x8004011F);
         public const int CLASSFACTORY_S_FIRST = unchecked(0x00040110);
@@ -1925,23 +1971,29 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("Class is not licensed for use")]
         public const int CLASS_E_NOTLICENSED = unchecked((int)0x80040112);
-        #endregion
+
+        #endregion (0x040110 - 0x04011F) CLASS errors
 
         #region (0x040120 - 0x04012F) MARSHAL errors
+
         public const int MARSHAL_E_FIRST = unchecked((int)0x80040120);
         public const int MARSHAL_E_LAST = unchecked((int)0x8004012F);
         public const int MARSHAL_S_FIRST = unchecked(0x00040120);
         public const int MARSHAL_S_LAST = unchecked(0x0004012F);
-        #endregion
+
+        #endregion (0x040120 - 0x04012F) MARSHAL errors
 
         #region (0x040130 - 0x04013F) DATA errors
+
         public const int DATA_E_FIRST = unchecked((int)0x80040130);
         public const int DATA_E_LAST = unchecked((int)0x8004013F);
         public const int DATA_S_FIRST = unchecked(0x00040130);
         public const int DATA_S_LAST = unchecked(0x0004013F);
-        #endregion
+
+        #endregion (0x040130 - 0x04013F) DATA errors
 
         #region (0x040140 - 0x04014F) VIEW errors
+
         public const int VIEW_E_FIRST = unchecked((int)0x80040140);
         public const int VIEW_E_LAST = unchecked((int)0x8004014F);
         public const int VIEW_S_FIRST = unchecked(0x00040140);
@@ -1952,9 +2004,11 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("Error drawing view")]
         public const int VIEW_E_DRAW = unchecked((int)0x80040140);
-        #endregion
+
+        #endregion (0x040140 - 0x04014F) VIEW errors
 
         #region (0x040150 - 0x04015F) REGDB errors
+
         public const int REGDB_E_FIRST = unchecked((int)0x80040150);
         public const int REGDB_E_LAST = unchecked((int)0x8004015F);
         public const int REGDB_S_FIRST = unchecked(0x00040150);
@@ -2001,9 +2055,11 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("Threading model entry is not valid")]
         public const int REGDB_E_BADTHREADINGMODEL = unchecked((int)0x80040156);
-        #endregion
+
+        #endregion (0x040150 - 0x04015F) REGDB errors
 
         #region (0x040160 - 0x040161) CAT errors
+
         public const int CAT_E_FIRST = unchecked((int)0x80040160);
         public const int CAT_E_LAST = unchecked((int)0x80040161);
 
@@ -2018,9 +2074,11 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("Description not found")]
         public const int CAT_E_NODESCRIPTION = unchecked((int)0x80040161);
-        #endregion
+
+        #endregion (0x040160 - 0x040161) CAT errors
 
         #region (0x040164 - 0x04016F) Class Store Error Codes
+
         public const int CS_E_FIRST = unchecked((int)0x80040164);
         public const int CS_E_LAST = unchecked((int)0x8004016F);
 
@@ -2095,25 +2153,31 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("An error occurred in the software installation data in the Active Directory.")]
         public const int CS_E_INTERNAL_ERROR = unchecked((int)0x8004016F);
-        #endregion
+
+        #endregion (0x040164 - 0x04016F) Class Store Error Codes
 
         #region (0x040170 - 0x04017F) CACHE errors
+
         public const int CACHE_E_FIRST = unchecked((int)0x80040170);
         public const int CACHE_E_LAST = unchecked((int)0x8004017F);
         public const int CACHE_S_FIRST = unchecked(0x00040170);
         public const int CACHE_S_LAST = unchecked(0x0004017F);
+
         ///<summary>
         ///Cache not updated
         ///</summary>
         [Description("Cache not updated")]
         public const int CACHE_E_NOCACHE_UPDATED = unchecked((int)0x80040170);
-        #endregion
+
+        #endregion (0x040170 - 0x04017F) CACHE errors
 
         #region (0x040180 - 0x04018F) OLEOBJ errors
+
         public const int OLEOBJ_E_FIRST = unchecked((int)0x80040180);
         public const int OLEOBJ_E_LAST = unchecked((int)0x8004018F);
         public const int OLEOBJ_S_FIRST = unchecked(0x00040180);
         public const int OLEOBJ_S_LAST = unchecked(0x0004018F);
+
         ///<summary>
         ///No verbs for OLE object
         ///</summary>
@@ -2125,16 +2189,20 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("Invalid verb for OLE object")]
         public const int OLEOBJ_E_INVALIDVERB = unchecked((int)0x80040181);
-        #endregion
+
+        #endregion (0x040180 - 0x04018F) OLEOBJ errors
 
         #region (0x040190 - 0x04019F) CLIENTSITE errors
+
         public const int CLIENTSITE_E_FIRST = unchecked((int)0x80040190);
         public const int CLIENTSITE_E_LAST = unchecked((int)0x8004019F);
         public const int CLIENTSITE_S_FIRST = unchecked(0x00040190);
         public const int CLIENTSITE_S_LAST = unchecked(0x0004019F);
-        #endregion
+
+        #endregion (0x040190 - 0x04019F) CLIENTSITE errors
 
         #region (0x0401A0 - 0x0401AF) INPLACE errors
+
         public const int INPLACE_E_FIRST = unchecked((int)0x800401A0);
         public const int INPLACE_E_LAST = unchecked((int)0x800401AF);
         public const int INPLACE_S_FIRST = unchecked(0x000401A0);
@@ -2151,16 +2219,20 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("Space for tools is not available")]
         public const int INPLACE_E_NOTOOLSPACE = unchecked((int)0x800401A1);
-        #endregion
+
+        #endregion (0x0401A0 - 0x0401AF) INPLACE errors
 
         #region (0x0401B0 - 0x0401BF) ENUM errors
+
         public const int ENUM_E_FIRST = unchecked((int)0x800401B0);
         public const int ENUM_E_LAST = unchecked((int)0x800401BF);
         public const int ENUM_S_FIRST = unchecked(0x000401B0);
         public const int ENUM_S_LAST = unchecked(0x000401BF);
-        #endregion
+
+        #endregion (0x0401B0 - 0x0401BF) ENUM errors
 
         #region (0x0401C0 - 0x0401CF) CONVERT10 errors
+
         public const int CONVERT10_E_FIRST = unchecked((int)0x800401C0);
         public const int CONVERT10_E_LAST = unchecked((int)0x800401CF);
         public const int CONVERT10_S_FIRST = unchecked(0x000401C0);
@@ -2207,13 +2279,16 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("There was an error in a Windows GDI call while converting the DIB to a bitmap.")]
         public const int CONVERT10_E_STG_DIB_TO_BITMAP = unchecked((int)0x800401C6);
-        #endregion
+
+        #endregion (0x0401C0 - 0x0401CF) CONVERT10 errors
 
         #region (0x0401D0 - 0x0401DF) CLIPBRD errors
+
         public const int CLIPBRD_E_FIRST = unchecked((int)0x800401D0);
         public const int CLIPBRD_E_LAST = unchecked((int)0x800401DF);
         public const int CLIPBRD_S_FIRST = unchecked(0x000401D0);
         public const int CLIPBRD_S_LAST = unchecked(0x000401DF);
+
         ///<summary>
         ///OpenClipboard Failed
         ///</summary>
@@ -2243,9 +2318,11 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("CloseClipboard Failed")]
         public const int CLIPBRD_E_CANT_CLOSE = unchecked((int)0x800401D4);
-        #endregion
+
+        #endregion (0x0401D0 - 0x0401DF) CLIPBRD errors
 
         #region (0x0401E0 - 0x0401EF) MK (moniker) errors
+
         public const int MK_E_FIRST = unchecked((int)0x800401E0);
         public const int MK_E_LAST = unchecked((int)0x800401EF);
         public const int MK_S_FIRST = unchecked(0x000401E0);
@@ -2346,13 +2423,16 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("Moniker could not be enumerated")]
         public const int MK_E_ENUMERATION_FAILED = unchecked((int)0x800401EF);
-        #endregion
+
+        #endregion (0x0401E0 - 0x0401EF) MK (moniker) errors
 
         #region (0x0401F0 - 0x0401FF) CO errors
+
         public const int CO_E_FIRST = unchecked((int)0x800401F0);
         public const int CO_E_LAST = unchecked((int)0x800401FF);
         public const int CO_S_FIRST = unchecked(0x000401F0);
         public const int CO_S_LAST = unchecked(0x000401FF);
+
         ///<summary>
         ///CoInitialize has not been called.
         ///</summary>
@@ -2448,13 +2528,16 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("Object has been released")]
         public const int CO_E_RELEASED = unchecked((int)0x800401FF);
-        #endregion
+
+        #endregion (0x0401F0 - 0x0401FF) CO errors
 
         #region (0x040200 - 0x04020F) EVENT errors
+
         public const int EVENT_E_FIRST = unchecked((int)0x80040200);
         public const int EVENT_E_LAST = unchecked((int)0x8004021F);
         public const int EVENT_S_FIRST = unchecked(0x00040200);
         public const int EVENT_S_LAST = unchecked(0x0004021F);
+
         ///<summary>
         ///An event was able to invoke some but not all of the subscribers
         ///</summary>
@@ -2556,9 +2639,11 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("The owner of the PerUser subscription is not logged on to the system specified")]
         public const int EVENT_E_PER_USER_SID_NOT_LOGGED_ON = unchecked((int)0x80040210);
-        #endregion
+
+        #endregion (0x040200 - 0x04020F) EVENT errors
 
         #region (0x04D000 - 0x04D029) XACT errors
+
         public const int XACT_E_FIRST = unchecked((int)0x8004D000);
         public const int XACT_E_LAST = unchecked((int)0x8004D029);
         public const int XACT_S_FIRST = unchecked(0x0004D000);
@@ -2928,13 +3013,16 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("The resource manager has requested to be the coordinator (last resource manager) for the transaction.")]
         public const int XACT_S_LASTRESOURCEMANAGER = unchecked(0x0004D010);
-        #endregion
+
+        #endregion (0x04D000 - 0x04D029) XACT errors
 
         #region (0x04E000 - 0x04E02F) CONTEXT errors
+
         public const int CONTEXT_E_FIRST = unchecked((int)0x8004E000);
         public const int CONTEXT_E_LAST = unchecked((int)0x8004E02F);
         public const int CONTEXT_S_FIRST = unchecked(0x0004E000);
         public const int CONTEXT_S_LAST = unchecked(0x0004E02F);
+
         ///<summary>
         ///The root transaction wanted to commit, but transaction aborted
         ///</summary>
@@ -3072,9 +3160,11 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("The TxIsolation Level property for the COM+ component being created is stronger than the TxIsolationLevel for the \"root\" component for the transaction.  The creation failed.")]
         public const int CO_E_ISOLEVELMISMATCH = unchecked((int)0x8004E02F);
-        #endregion
+
+        #endregion (0x04E000 - 0x04E02F) CONTEXT errors
 
         #region (0x040000 - 0x040200) Old OLE Success Codes
+
         //
         // Old OLE Success Codes
         //
@@ -3203,9 +3293,11 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("Moniker is already registered in running object table")]
         public const int MK_S_MONIKERALREADYREGISTERED = unchecked(0x000401E7);
-        #endregion
+
+        #endregion (0x040000 - 0x040200) Old OLE Success Codes
 
         #region (0x041300 - 0x041315) SCHED (Task Scheduler) errors
+
         //
         // Task Scheduler errors
         //
@@ -3340,19 +3432,25 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("The Task Scheduler Service is not running.")]
         public const int SCHED_E_SERVICE_NOT_RUNNING = unchecked((int)0x80041315);
-        #endregion
-        #endregion
+
+        #endregion (0x041300 - 0x041315) SCHED (Task Scheduler) errors
+
+        #endregion (0x040000 - 0x04FFFF) FACILITY_ITF errors
 
         // ******************
         // FACILITY_WIN32
         // ******************
+
         #region (0x070000 - 0x07FFFF) FACILITY_WIN32 errors
-        #endregion
+
+        #endregion (0x070000 - 0x07FFFF) FACILITY_WIN32 errors
 
         // ******************
         // FACILITY_WINDOWS
         // ******************
+
         #region (0x080000 - 0x0801FF) FACILITY_WINDOWS errors
+
         //
         // Codes 0x0-0x01ff are reserved for the OLE group of
         // interfaces.
@@ -3434,11 +3532,13 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("The specified machine name was not found in the cache.")]
         public const int CO_S_MACHINENAMENOTFOUND = unchecked(0x00080013);
-        #endregion
+
+        #endregion (0x080000 - 0x0801FF) FACILITY_WINDOWS errors
 
         // ******************
         //  FACILITY_SSPI
         // ******************
+
         #region (0x090000 - 0x09FFFF) FACILITY_SSPI (FACILITY_SECURITY) errors
 
         public const int NTE_OP_OK = NO_ERROR;
@@ -5303,18 +5403,23 @@ namespace Sharparam.SharpBlade.Native
         //
         // Note that additional FACILITY_SSPI errors are in issperr.h
         //
-        #endregion
+
+        #endregion (0x090000 - 0x09FFFF) FACILITY_SSPI (FACILITY_SECURITY) errors
 
         // ******************
         //  FACILITY_CONTROL
         // ******************
+
         #region (0x0A0000 - 0x0AFFFF) FACILITY_CONTROL errors
-        #endregion
+
+        #endregion (0x0A0000 - 0x0AFFFF) FACILITY_CONTROL errors
 
         // ******************
         // FACILITY_CERT
         // ******************
+
         #region (0x0B0000 - 0x0BFFFF) FACILITY_CERT errors
+
         ///<summary>
         ///Unknown trust provider.
         ///</summary>
@@ -5506,30 +5611,39 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("The certificate has an invalid name. The name is not included in the permitted list or is explicitly excluded.")]
         public const int CERT_E_INVALID_NAME = unchecked((int)0x800B0114);
-        #endregion
+
+        #endregion (0x0B0000 - 0x0BFFFF) FACILITY_CERT errors
 
         // ******************
         //  FACILITY_INTERNET
         // ******************
+
         #region (0x0C0000 - 0x0CFFFF) FACILITY_INTERNET errors
-        #endregion
+
+        #endregion (0x0C0000 - 0x0CFFFF) FACILITY_INTERNET errors
 
         // ******************
         //  FACILITY_MEDIASERVER
         // ******************
+
         #region (0x0D0000 - 0x0DFFFF) FACILITY_MEDIASERVER errors
-        #endregion
+
+        #endregion (0x0D0000 - 0x0DFFFF) FACILITY_MEDIASERVER errors
 
         // ******************
         //  FACILITY_MSMQ
         // ******************
+
         #region (0x0E0000 - 0x0EFFFF) FACILITY_MSMQ errors
-        #endregion
+
+        #endregion (0x0E0000 - 0x0EFFFF) FACILITY_MSMQ errors
 
         // *****************
         // FACILITY_SETUPAPI
         // *****************
+
         #region (0x0F0000 - 0x0FFFFF) FACILITY_SETUPAPI errors
+
         ///<summary>
         ///A non-empty line was encountered in the INF before the start of a section.
         ///</summary>
@@ -5925,12 +6039,15 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("No installed components were detected.")]
         public const int SPAPI_E_ERROR_NOT_INSTALLED = unchecked((int)0x800F1000);
-        #endregion
+
+        #endregion (0x0F0000 - 0x0FFFFF) FACILITY_SETUPAPI errors
 
         // *****************
         // FACILITY_SCARD
         // *****************
+
         #region (0x100000 - 0x10FFFF) FACILITY_SCARD errors
+
         // =============================
         // Facility SCARD Error Messages
         // =============================
@@ -6299,12 +6416,15 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("No PIN was presented to the smart card.")]
         public const int SCARD_W_CARD_NOT_AUTHENTICATED = unchecked((int)0x8010006F);
-        #endregion
+
+        #endregion (0x100000 - 0x10FFFF) FACILITY_SCARD errors
 
         // *****************
         // FACILITY_COMPLUS
         // *****************
+
         #region (0x110000 - 0x11FFFF) FACILITY_COMPLUS errors
+
         // ===============================
         // Facility COMPLUS Error Messages
         // ===============================
@@ -7004,335 +7124,416 @@ namespace Sharparam.SharpBlade.Native
         ///</summary>
         [Description("COM+ partitions are currently disabled.")]
         public const int COMADMIN_E_PARTITIONS_DISABLED = unchecked((int)0x80110824);
-        #endregion
+
+        #endregion (0x110000 - 0x11FFFF) FACILITY_COMPLUS errors
 
         // ******************
         //  FACILITY_AAF
         // ******************
+
         #region (0x120000 - 0x12FFFF) FACILITY_AAF=18 errors
-        #endregion
+
+        #endregion (0x120000 - 0x12FFFF) FACILITY_AAF=18 errors
 
         // ******************
         //  FACILITY_URT
         // ******************
+
         #region (0x130000 - 0x13FFFF) FACILITY_URT=19 errors
-        #endregion
+
+        #endregion (0x130000 - 0x13FFFF) FACILITY_URT=19 errors
 
         // ******************
         //  FACILITY_ACS
         // ******************
+
         #region (0x140000 - 0x14FFFF) FACILITY_ACS=20 errors
-        #endregion
+
+        #endregion (0x140000 - 0x14FFFF) FACILITY_ACS=20 errors
 
         // ******************
         //  FACILITY_DPLAY
         // ******************
+
         #region (0x150000 - 0x15FFFF) FACILITY_DPLAY=21 errors
-        #endregion
+
+        #endregion (0x150000 - 0x15FFFF) FACILITY_DPLAY=21 errors
 
         // ******************
         //  FACILITY_UMI
         // ******************
+
         #region (0x160000 - 0x16FFFF) FACILITY_UMI=22 errors
-        #endregion
+
+        #endregion (0x160000 - 0x16FFFF) FACILITY_UMI=22 errors
 
         // ******************
         //  FACILITY_SXS
         // ******************
+
         #region (0x170000 - 0x17FFFF) FACILITY_SXS=23 errors
-        #endregion
+
+        #endregion (0x170000 - 0x17FFFF) FACILITY_SXS=23 errors
 
         // ******************
         //  FACILITY_WINDOWS_CE
         // ******************
+
         #region (0x180000 - 0x18FFFF) FACILITY_WINDOWS_CE=24 errors
-        #endregion
+
+        #endregion (0x180000 - 0x18FFFF) FACILITY_WINDOWS_CE=24 errors
 
         // ******************
         //  FACILITY_HTTP
         // ******************
+
         #region (0x190000 - 0x19FFFF) FACILITY_HTTP=25 errors
-        #endregion
+
+        #endregion (0x190000 - 0x19FFFF) FACILITY_HTTP=25 errors
 
         // ******************
         //  FACILITY_26
         // ******************
+
         #region (0x1A0000 - 0x1AFFFF) FACILITY_26=26 errors
-        #endregion
+
+        #endregion (0x1A0000 - 0x1AFFFF) FACILITY_26=26 errors
 
         // ******************
         //  FACILITY_27
         // ******************
+
         #region (0x1B0000 - 0x1BFFFF) FACILITY_27=27 errors
-        #endregion
+
+        #endregion (0x1B0000 - 0x1BFFFF) FACILITY_27=27 errors
 
         // ******************
         //  FACILITY_28
         // ******************
+
         #region (0x1C0000 - 0x1CFFFF) FACILITY_28=28 errors
-        #endregion
+
+        #endregion (0x1C0000 - 0x1CFFFF) FACILITY_28=28 errors
 
         // ******************
         //  FACILITY_29
         // ******************
+
         #region (0x1D0000 - 0x1DFFFF) FACILITY_29=29 errors
-        #endregion
+
+        #endregion (0x1D0000 - 0x1DFFFF) FACILITY_29=29 errors
 
         // ******************
         //  FACILITY_30
         // ******************
+
         #region (0x1E0000 - 0x1EFFFF) FACILITY_30=30 errors
-        #endregion
+
+        #endregion (0x1E0000 - 0x1EFFFF) FACILITY_30=30 errors
 
         // ******************
         //  FACILITY_31
         // ******************
+
         #region (0x1F0000 - 0x1FFFFF) FACILITY_31=31 errors
-        #endregion
+
+        #endregion (0x1F0000 - 0x1FFFFF) FACILITY_31=31 errors
 
         // ******************
         //  FACILITY_BACKGROUNDCOPY
         // ******************
+
         #region (0x200000 - 0x20FFFF) FACILITY_BACKGROUNDCOPY=32 errors
-        #endregion
+
+        #endregion (0x200000 - 0x20FFFF) FACILITY_BACKGROUNDCOPY=32 errors
 
         // ******************
         //  FACILITY_CONFIGURATION
         // ******************
+
         #region (0x210000 - 0x21FFFF) FACILITY_CONFIGURATION=33 errors
-        #endregion
+
+        #endregion (0x210000 - 0x21FFFF) FACILITY_CONFIGURATION=33 errors
 
         // ******************
         //  FACILITY_STATE_MANAGEMENT
         // ******************
+
         #region (0x220000 - 0x22FFFF) FACILITY_STATE_MANAGEMENT=34 errors
-        #endregion
+
+        #endregion (0x220000 - 0x22FFFF) FACILITY_STATE_MANAGEMENT=34 errors
 
         // ******************
         //  FACILITY_METADIRECTORY
         // ******************
+
         #region (0x230000 - 0x23FFFF) FACILITY_METADIRECTORY=35 errors
-        #endregion
+
+        #endregion (0x230000 - 0x23FFFF) FACILITY_METADIRECTORY=35 errors
 
         // ***********************************************
         // Razer SDK Error codes (SwitchBladeSDK_errors.h)
         // ***********************************************
+
         #region Razer SDK Error Codes
+
         /*
          * These errors are from the standard set. listed separately for clarity.
          */
+
         /// <summary>
         /// Generic success return value. Defined as S_OK.
         /// </summary>
-        public const int RZSB_OK				= S_OK;
+        public const int RZSB_OK = S_OK;
+
         /// <summary>
         /// The application failed to establish a connection with the SwitchBlade device.
         /// Call GetLastError() for additional error information. Defined as E_FAIL.
         /// </summary>
         [Description("The application failed to establish a connection with the SwitchBlade device.")]
-        public const int RZSB_UNSUCCESSFUL		= E_FAIL;
+        public const int RZSB_UNSUCCESSFUL = E_FAIL;
+
         /// <summary>
         /// One or more of the parameters is invalid.
         /// Call GetLastError() for additional error information. Defined as E_INVALIDARG.
         /// </summary>
         [Description("One or more of the parameters is invalid.")]
-        public const int RZSB_INVALID_PARAMETER	= E_INVALIDARG;
+        public const int RZSB_INVALID_PARAMETER = E_INVALIDARG;
+
         /// <summary>
         /// One or more of the pointers point to data that is either not fully readable or writable.
         /// Defined as E_POINTER.
         /// </summary>
         [Description("One or more of the pointers point to data that is either not fully readable or writable.")]
-        public const int RZSB_INVALID_POINTER	= E_POINTER;
-        public const int RZSB_ABORTED			= E_ABORT;
-        public const int RZSB_NO_INTERFACE		= E_NOINTERFACE;
-        public const int RZSB_NOT_IMPLEMENTED	= E_NOTIMPL;
+        public const int RZSB_INVALID_POINTER = E_POINTER;
+
+        public const int RZSB_ABORTED = E_ABORT;
+        public const int RZSB_NO_INTERFACE = E_NOINTERFACE;
+        public const int RZSB_NOT_IMPLEMENTED = E_NOTIMPL;
+
         /// <summary>
         /// The referenced file could not be found. Defined as ERROR_FILE_NOT_FOUND.
         /// </summary>
         [Description("The referenced file could not be found.")]
-        public const int RZSB_FILE_NOT_FOUND	= 0x2; // ERROR_FILE_NOT_FOUND
+        public const int RZSB_FILE_NOT_FOUND = 0x2; // ERROR_FILE_NOT_FOUND
 
         /* useful? status macros
          * Macros defined in SwitchBladeSDK_errors.h converted to methods
          */
-        public static bool RZSB_SUCCESS(HRESULT result)	{ return result == RZSB_OK; }
-        public static bool RZSB_FAILED(HRESULT result)	{ return result != RZSB_OK; }
 
-        public const int RZSB_GENERIC_BASE				= 0x20000000;
+        public static bool RZSB_SUCCESS(HRESULT result)
+        {
+            return result == RZSB_OK;
+        }
+
+        public static bool RZSB_FAILED(HRESULT result)
+        {
+            return result != RZSB_OK;
+        }
+
+        public const int RZSB_GENERIC_BASE = 0x20000000;
+
         /// <summary>
         /// Zero-length files are not allowed.
         /// </summary>
         [Description("Zero-length files are not allowed.")]
-        public const int RZSB_FILE_ZERO_SIZE			= RZSB_GENERIC_BASE + 0x1;
+        public const int RZSB_FILE_ZERO_SIZE = RZSB_GENERIC_BASE + 0x1;
+
         /// <summary>
         /// The filepath points to a file that does not exist.
         /// </summary>
         [Description("The filepath points to a file that does not exist.")]
-        public const int RZSB_FILE_INVALID_NAME			= RZSB_GENERIC_BASE + 0x2;
+        public const int RZSB_FILE_INVALID_NAME = RZSB_GENERIC_BASE + 0x2;
+
         /// <summary>
         /// Zero-sized images are not allowed.
         /// </summary>
         [Description("Zero-sized images are not allowed.")]
-        public const int RZSB_FILE_INVALID_TYPE			= RZSB_GENERIC_BASE + 0x3;
+        public const int RZSB_FILE_INVALID_TYPE = RZSB_GENERIC_BASE + 0x3;
+
         /// <summary>
         /// The number of bytes read was different from the number of bytes expected.
         /// </summary>
         [Description("The number of bytes read was different from the number of bytes expected.")]
-        public const int RZSB_FILE_READ_ERROR			= RZSB_GENERIC_BASE + 0x4;
+        public const int RZSB_FILE_READ_ERROR = RZSB_GENERIC_BASE + 0x4;
+
         /// <summary>
         /// The image file is not a supported file format.
         /// </summary>
         [Description("The image file is not a supported file format.")]
-        public const int RZSB_FILE_INVALID_FORMAT		= RZSB_GENERIC_BASE + 0x5;
+        public const int RZSB_FILE_INVALID_FORMAT = RZSB_GENERIC_BASE + 0x5;
+
         /// <summary>
         /// The file length does not match the expected length.
         /// </summary>
         [Description("The file length does not match the expected length.")]
-        public const int RZSB_FILE_INVALID_LENGTH		= RZSB_GENERIC_BASE + 0x6;
+        public const int RZSB_FILE_INVALID_LENGTH = RZSB_GENERIC_BASE + 0x6;
+
         /// <summary>
         /// The length of the filepath is greater than 260 characters.
         /// </summary>
         [Description("The length of the filepath is greater than 260 characters.")]
-        public const int RZSB_FILE_NAMEPATH_TOO_LONG	= RZSB_GENERIC_BASE + 0x7;
+        public const int RZSB_FILE_NAMEPATH_TOO_LONG = RZSB_GENERIC_BASE + 0x7;
+
         /// <summary>
         /// The dimensions of the image do not match the requirements for the display.
         /// </summary>
         [Description("The dimensions of the image do not match the requirements for the display.")]
-        public const int RZSB_IMAGE_INVALID_SIZE		= RZSB_GENERIC_BASE + 0x8;
+        public const int RZSB_IMAGE_INVALID_SIZE = RZSB_GENERIC_BASE + 0x8;
+
         /// <summary>
         /// The image could not be verified as valid.
         /// Call GetLastError() for additional error information.
         /// </summary>
         [Description("The image could not be verified as valid.")]
-        public const int RZSB_IMAGE_INVALID_DATA		= RZSB_GENERIC_BASE + 0x9;
+        public const int RZSB_IMAGE_INVALID_DATA = RZSB_GENERIC_BASE + 0x9;
+
         /// <summary>
         /// must be Win7 or greater workstation
         /// </summary>
         [Description("must be Win7 or greater workstation")]
-        public const int RZSB_WIN_VERSION_INVALID		= RZSB_GENERIC_BASE + 0xa;
+        public const int RZSB_WIN_VERSION_INVALID = RZSB_GENERIC_BASE + 0xa;
 
         /* generic callback errors, but specific to the SDK */
-        public const int RZSB_CALLBACK_BASE			= 0x20010000;
+        public const int RZSB_CALLBACK_BASE = 0x20010000;
+
         /// <summary>
         /// The application tried to call or clear a callback that was never set.
         /// </summary>
         [Description("The application tried to call or clear a callback that was never set.")]
-        public const int RZSB_CALLBACK_NOT_SET		= RZSB_CALLBACK_BASE + 0x1;
+        public const int RZSB_CALLBACK_NOT_SET = RZSB_CALLBACK_BASE + 0x1;
+
         /// <summary>
         /// tried to set a previously set callback without clearing it first
         /// </summary>
         [Description("tried to set a previously set callback without clearing it first")]
-        public const int RZSB_CALLBACK_ALREADY_SET	= RZSB_CALLBACK_BASE + 0x2;
+        public const int RZSB_CALLBACK_ALREADY_SET = RZSB_CALLBACK_BASE + 0x2;
+
         /// <summary>
         /// Setting the callback failed on the server.
         /// </summary>
         [Description("Setting the callback failed on the server.")]
-        public const int RZSB_CALLBACK_REMOTE_FAIL	= RZSB_CALLBACK_BASE + 0x3;
+        public const int RZSB_CALLBACK_REMOTE_FAIL = RZSB_CALLBACK_BASE + 0x3;
 
         /* control */
-        public const int RZSB_CONTROL_BASE_ERROR		= 0x20020000;
+        public const int RZSB_CONTROL_BASE_ERROR = 0x20020000;
+
         /// <summary>
         /// unlock when we didn't lock? -- careless
         /// </summary>
         [Description("unlock when we didn't lock? -- careless")]
-        public const int RZSB_CONTROL_NOT_LOCKED		= RZSB_CONTROL_BASE_ERROR + 0x1;
+        public const int RZSB_CONTROL_NOT_LOCKED = RZSB_CONTROL_BASE_ERROR + 0x1;
+
         /// <summary>
         /// someone else has the lock
         /// </summary>
         [Description("someone else has the lock")]
-        public const int RZSB_CONTROL_LOCKED			= RZSB_CONTROL_BASE_ERROR + 0x2;
+        public const int RZSB_CONTROL_LOCKED = RZSB_CONTROL_BASE_ERROR + 0x2;
+
         /// <summary>
         /// we already locked it? -- careless
         /// </summary>
         [Description("we already locked it? -- careless")]
-        public const int RZSB_CONTROL_ALREADY_LOCKED	= RZSB_CONTROL_BASE_ERROR + 0x3;
+        public const int RZSB_CONTROL_ALREADY_LOCKED = RZSB_CONTROL_BASE_ERROR + 0x3;
+
         /// <summary>
         /// preemption took place!
         /// </summary>
         [Description("preemption took place!")]
-        public const int RZSB_CONTROL_PREEMPTED			= RZSB_CONTROL_BASE_ERROR + 0x4;
+        public const int RZSB_CONTROL_PREEMPTED = RZSB_CONTROL_BASE_ERROR + 0x4;
 
         /* dynamic keys */
-        public const int RZSB_DK_BASE_ERROR			= 0x20040000;
+        public const int RZSB_DK_BASE_ERROR = 0x20040000;
+
         /// <summary>
         /// The dynamic key referenced is not a valid dynamic key value.
         /// Refer to SwitchBladeSDK_types.h for valid values.
         /// </summary>
         [Description("The dynamic key referenced is not a valid dynamic key value.")]
-        public const int RZSB_DK_INVALID_KEY		= RZSB_DK_BASE_ERROR + 0x1;
+        public const int RZSB_DK_INVALID_KEY = RZSB_DK_BASE_ERROR + 0x1;
+
         /// <summary>
         /// The dynamic key state referenced is not a valid dynamic key state.
         /// Refer to SwitchBladeSDK_types.h for valid states.
         /// </summary>
         [Description("The dynamic key state referenced is not a valid dynamic key state.")]
-        public const int RZSB_DK_INVALID_KEY_STATE	= RZSB_DK_BASE_ERROR + 0x2;
+        public const int RZSB_DK_INVALID_KEY_STATE = RZSB_DK_BASE_ERROR + 0x2;
 
         /* touchpad (buttons and gestures) */
-        public const int RZSB_TOUCHPAD_BASE_ERROR		= 0x20080000;
+        public const int RZSB_TOUCHPAD_BASE_ERROR = 0x20080000;
+
         /// <summary>
         /// Invalid gesture input detected by the SwitchBlade touchpad.
         /// </summary>
         [Description("Invalid gesture input detected by the SwitchBlade touchpad.")]
-        public const int RZSB_TOUCHPAD_INVALID_GESTURE	= RZSB_TOUCHPAD_BASE_ERROR + 0x1;
+        public const int RZSB_TOUCHPAD_INVALID_GESTURE = RZSB_TOUCHPAD_BASE_ERROR + 0x1;
 
         /* interface-specific errors */
-        public const int RZSB_INTERNAL_BASE_ERROR	= 0x20100000;
+        public const int RZSB_INTERNAL_BASE_ERROR = 0x20100000;
+
         /// <summary>
         /// callback structures already initialized
         /// </summary>
         [Description("callback structures already initialized")]
-        public const int RZSB_ALREADY_STARTED		= RZSB_INTERNAL_BASE_ERROR + 0x1;
+        public const int RZSB_ALREADY_STARTED = RZSB_INTERNAL_BASE_ERROR + 0x1;
+
         /// <summary>
         /// The internal callstack is in disorder.
         /// This is sometimes due to not having previously called RzSBStart.
         /// </summary>
         [Description("The internal callstack is in disorder.")]
-        public const int RZSB_NOT_STARTED			= RZSB_INTERNAL_BASE_ERROR + 0x2;
+        public const int RZSB_NOT_STARTED = RZSB_INTERNAL_BASE_ERROR + 0x2;
+
         /// <summary>
         /// connection to application services failed
         /// </summary>
         [Description("connection to application services failed")]
-        public const int RZSB_CONNECTION_ERROR		= RZSB_INTERNAL_BASE_ERROR + 0x3;
+        public const int RZSB_CONNECTION_ERROR = RZSB_INTERNAL_BASE_ERROR + 0x3;
+
         /// <summary>
         /// unknown error -- catch-all for now
         /// </summary>
         [Description("unknown error -- catch-all for now")]
-        public const int RZSB_INTERNAL_ERROR		= RZSB_INTERNAL_BASE_ERROR + 0x4;
+        public const int RZSB_INTERNAL_ERROR = RZSB_INTERNAL_BASE_ERROR + 0x4;
 
         /* windows rendering errors */
-        public const int RZSB_WINRENDER_BASE_ERROR			= 0x20200000;
+        public const int RZSB_WINRENDER_BASE_ERROR = 0x20200000;
+
         /// <summary>
         /// could not allocate critical resources
         /// </summary>
         [Description("could not allocate critical resources")]
-        public const int RZSB_WINRENDER_OUT_OF_RESOURCES	= RZSB_WINRENDER_BASE_ERROR + 0x01;
+        public const int RZSB_WINRENDER_OUT_OF_RESOURCES = RZSB_WINRENDER_BASE_ERROR + 0x01;
+
         /// <summary>
         /// could not start rendering thread
         /// </summary>
         [Description("could not start rendering thread")]
-        public const int RZSB_WINRENDER_THREAD_FAILED		= RZSB_WINRENDER_BASE_ERROR + 0x02;
+        public const int RZSB_WINRENDER_THREAD_FAILED = RZSB_WINRENDER_BASE_ERROR + 0x02;
+
         /// <summary>
         /// not using multithreaded apartments
         /// </summary>
         [Description("not using multithreaded apartments")]
-        public const int RZSB_WINRENDER_WRONG_MODEL			= RZSB_WINRENDER_BASE_ERROR + 0x03;
+        public const int RZSB_WINRENDER_WRONG_MODEL = RZSB_WINRENDER_BASE_ERROR + 0x03;
+
         #endregion Razer SDK Error Codes
+
         #endregion Error Codes
 
-        class DirCodes : System.Collections.DictionaryBase
+        private class DirCodes : System.Collections.DictionaryBase
         {
-// ReSharper disable UnusedMember.Local
+            // ReSharper disable UnusedMember.Local
             public DirCodes()
             {
-
             }
 
-// ReSharper disable UnusedParameter.Local
+            // ReSharper disable UnusedParameter.Local
             public DirCodes(int capacity)
             {
-
             }
-// ReSharper restore UnusedParameter.Local
+
+            // ReSharper restore UnusedParameter.Local
 
             public void Add(int key, System.Reflection.FieldInfo value)
             {
@@ -7375,7 +7576,8 @@ namespace Sharparam.SharpBlade.Native
             {
                 get { return Dictionary.Values; }
             }
-// ReSharper restore UnusedMember.Local
+
+            // ReSharper restore UnusedMember.Local
         }
 
         private static readonly DirCodes dirCodes = GetDirCodes();
@@ -7396,6 +7598,8 @@ namespace Sharparam.SharpBlade.Native
             return codes;
         }
     }
-// ReSharper restore InconsistentNaming
+
+    // ReSharper restore InconsistentNaming
+
     #endregion HRESULT
 }

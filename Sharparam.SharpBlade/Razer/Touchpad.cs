@@ -1,32 +1,32 @@
-﻿//---------------------------------------------------------------------------------------
-// <copyright file="Touchpad.cs" company="SharpBlade">
-//     Copyright (c) 2013-2014 by Adam Hellberg and Brandon Scott.
+﻿// ---------------------------------------------------------------------------------------
+//  <copyright file="Touchpad.cs" company="SharpBlade">
+//      Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
-//     Permission is hereby granted, free of charge, to any person obtaining a copy of
-//     this software and associated documentation files (the "Software"), to deal in
-//     the Software without restriction, including without limitation the rights to
-//     use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-//     of the Software, and to permit persons to whom the Software is furnished to do
-//     so, subject to the following conditions:
+//      Permission is hereby granted, free of charge, to any person obtaining a copy of
+//      this software and associated documentation files (the "Software"), to deal in
+//      the Software without restriction, including without limitation the rights to
+//      use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+//      of the Software, and to permit persons to whom the Software is furnished to do
+//      so, subject to the following conditions:
 //
-//     The above copyright notice and this permission notice shall be included in all
-//     copies or substantial portions of the Software.
+//      The above copyright notice and this permission notice shall be included in all
+//      copies or substantial portions of the Software.
 //
-//     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//     IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//     FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//     AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-//     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-//     CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//      IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//      FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//      AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+//      WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+//      CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-//     Disclaimer: SharpBlade is in no way affiliated
-//     with Razer and/or any of its employees and/or licensors.
-//     Adam Hellberg does not take responsibility for any harm caused, direct
-//     or indirect, to any Razer peripherals via the use of SharpBlade.
+//      Disclaimer: SharpBlade is in no way affiliated
+//      with Razer and/or any of its employees and/or licensors.
+//      Adam Hellberg does not take responsibility for any harm caused, direct
+//      or indirect, to any Razer peripherals via the use of SharpBlade.
 //
-//     "Razer" is a trademark of Razer USA Ltd.
-// </copyright>
-//---------------------------------------------------------------------------------------
+//      "Razer" is a trademark of Razer USA Ltd.
+//  </copyright>
+// ---------------------------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
@@ -37,6 +37,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
+
 using Sharparam.SharpBlade.Extensions;
 using Sharparam.SharpBlade.Helpers;
 using Sharparam.SharpBlade.Integration;
@@ -81,7 +82,7 @@ namespace Sharparam.SharpBlade.Razer
         /// Currently active gestures that are being forwarded to the OS.
         /// </summary>
         private RazerAPI.GestureType _activeOSGesturesType;
-        
+
         /// <summary>
         /// Whether or not all gestures are currently enabled.
         /// </summary>
@@ -219,7 +220,10 @@ namespace Sharparam.SharpBlade.Razer
         /// </summary>
         internal static Touchpad Instance
         {
-            get { return _instance ?? (_instance = new Touchpad()); }
+            get
+            {
+                return _instance ?? (_instance = new Touchpad());
+            }
         }
 
         /// <summary>
@@ -264,8 +268,8 @@ namespace Sharparam.SharpBlade.Razer
             }
             else if (enabled)
             {
-                if (_activeGesturesType.Has(gestureType) &&
-                    !(_activeGesturesType == RazerAPI.GestureType.All && !_allGestureEnabled))
+                if (_activeGesturesType.Has(gestureType)
+                    && !(_activeGesturesType == RazerAPI.GestureType.All && !_allGestureEnabled))
                 {
                     _log.Debug("Active gestures already have requested value");
                     _log.DebugFormat("_activeGestures == {0}", _activeGesturesType);
@@ -338,7 +342,7 @@ namespace Sharparam.SharpBlade.Razer
                 if (_activeOSGesturesType == RazerAPI.GestureType.None)
                     return;
 
-                if (!enabled) 
+                if (!enabled)
                 {
                     // Request to "disable no gesture"?
                     // Then just enable all, since that's the same
@@ -351,7 +355,8 @@ namespace Sharparam.SharpBlade.Razer
             }
             else if (enabled)
             {
-                if (_activeOSGesturesType.Has(gestureType) || !(_activeOSGesturesType == RazerAPI.GestureType.All && !_allOSGestureEnabled))
+                if (_activeOSGesturesType.Has(gestureType)
+                    || !(_activeOSGesturesType == RazerAPI.GestureType.All && !_allOSGestureEnabled))
                     return;
                 newGesturesType = _activeOSGesturesType.Include(gestureType);
             }
@@ -405,7 +410,9 @@ namespace Sharparam.SharpBlade.Razer
         public void DrawBitmap(Bitmap bitmap)
         {
             var data = bitmap.LockBits(
-                new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format16bppRgb565);
+                new Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                ImageLockMode.ReadOnly,
+                PixelFormat.Format16bppRgb565);
 
             var buffer = new RazerAPI.BufferParams
             {
@@ -460,12 +467,17 @@ namespace Sharparam.SharpBlade.Razer
         /// <param name="window">Window object to draw.</param>
         /// <param name="winFormsComponents">Array of KeyValuePairs containing a WindowsFormsHost as the key and a WinForms control as the value.
         /// These pairs will be overlaid on the bitmap that is passed to the SwitchBlade device.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times",
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
+            "CA2202:Do not dispose objects multiple times",
             Justification = "SO said it's safe to dispose MemoryStream multiple times")]
         public void DrawWindow(Window window, IEnumerable<EmbeddedWinFormsControl> winFormsComponents = null)
         {
             var rtb = new RenderTargetBitmap(
-                RazerAPI.TouchpadWidth, RazerAPI.TouchpadHeight, 96, 96, System.Windows.Media.PixelFormats.Pbgra32);
+                RazerAPI.TouchpadWidth,
+                RazerAPI.TouchpadHeight,
+                96,
+                96,
+                System.Windows.Media.PixelFormats.Pbgra32);
 
             rtb.Render(window);
 
@@ -479,12 +491,17 @@ namespace Sharparam.SharpBlade.Razer
                 using (var bitmap = new Bitmap(stream))
                 {
                     if (winFormsComponents != null)
+                    {
                         using (var graphics = Graphics.FromImage(bitmap))
+                        {
                             foreach (var component in winFormsComponents)
                                 graphics.DrawImage(component.Draw(), component.Bounds);
+                        }
+                    }
+
                     DrawBitmap(bitmap);
                 }
-                
+
                 encoder.Frames.Clear();
             } // CA2202 warning marked here, for reference, complains about possible multiple dispose of MemoryStream stream
 
@@ -641,7 +658,9 @@ namespace Sharparam.SharpBlade.Razer
         /// </summary>
         private void ClearImage()
         {
-            var result = RazerAPI.NativeMethods.RzSBSetImageTouchpad(IO.GetAbsolutePath(RazerManager.Instance.BlankTouchpadImagePath));
+            var result =
+                RazerAPI.NativeMethods.RzSBSetImageTouchpad(
+                    IO.GetAbsolutePath(RazerManager.Instance.BlankTouchpadImagePath));
             if (HRESULT.RZSB_FAILED(result))
                 throw new RazerNativeException("RzSBSetImageTouchpad", result);
 
@@ -649,7 +668,7 @@ namespace Sharparam.SharpBlade.Razer
         }
 
         /// <summary>
-        /// Clears the current native window from 
+        /// Clears the current native window from
         /// the touchpad and stops rendering of it
         /// </summary>
         private void ClearNativeWindow()
@@ -840,7 +859,12 @@ namespace Sharparam.SharpBlade.Razer
         /// <param name="y">Y position.</param>
         /// <param name="z">Z position.</param>
         /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
-        private HRESULT HandleTouchpadGesture(RazerAPI.GestureType gestureType, uint parameters, ushort x, ushort y, ushort z)
+        private HRESULT HandleTouchpadGesture(
+            RazerAPI.GestureType gestureType,
+            uint parameters,
+            ushort x,
+            ushort y,
+            ushort z)
         {
             OnGesture(gestureType, parameters, x, y, z);
 
@@ -849,9 +873,11 @@ namespace Sharparam.SharpBlade.Razer
                 case RazerAPI.GestureType.Press:
                     OnPress(parameters, x, y);
                     break;
+
                 case RazerAPI.GestureType.Tap:
                     OnTap(x, y);
                     break;
+
                 case RazerAPI.GestureType.Flick:
                 {
                     var direction = (RazerAPI.Direction)z;
@@ -867,9 +893,11 @@ namespace Sharparam.SharpBlade.Razer
                         case 1:
                             direction = ZoomDirection.In;
                             break;
+
                         case 2:
                             direction = ZoomDirection.Out;
                             break;
+
                         default:
                             direction = ZoomDirection.Invalid;
                             break;
@@ -887,9 +915,11 @@ namespace Sharparam.SharpBlade.Razer
                         case 1:
                             direction = RotateDirection.Clockwise;
                             break;
+
                         case 2:
                             direction = RotateDirection.CounterClockwise;
                             break;
+
                         default:
                             direction = RotateDirection.Invalid;
                             break;
@@ -902,12 +932,15 @@ namespace Sharparam.SharpBlade.Razer
                 case RazerAPI.GestureType.Move:
                     OnMove(x, y);
                     break;
+
                 case RazerAPI.GestureType.Hold:
                     OnHold(parameters, x, y, z);
                     break;
+
                 case RazerAPI.GestureType.Release:
                     OnRelease(parameters, x, y);
                     break;
+
                 case RazerAPI.GestureType.Scroll:
                     OnScroll(parameters, x, y, z);
                     break;
