@@ -6,33 +6,33 @@
 	<s:String x:Key="/Default/CodeStyle/CodeCleanup/SilentCleanupProfile/@EntryValue">Reformat + Usings + Header</s:String>
 	<s:Boolean x:Key="/Default/CodeStyle/CSharpUsing/AddImportsToDeepestScope/@EntryValue">False</s:Boolean>
 	<s:String x:Key="/Default/CodeStyle/FileHeader/FileHeaderText/@EntryValue">---------------------------------------------------------------------------------------&#xD;
- &lt;copyright file="$FILENAME$" company="SharpBlade"&gt;&#xD;
-     Copyright © 2013-$CURRENT_YEAR$ by Adam Hellberg and Brandon Scott.&#xD;
+&lt;copyright file="$FILENAME$" company="SharpBlade"&gt;&#xD;
+    Copyright © 2013-$CURRENT_YEAR$ by Adam Hellberg and Brandon Scott.&#xD;
 &#xD;
-     Permission is hereby granted, free of charge, to any person obtaining a copy of&#xD;
-     this software and associated documentation files (the "Software"), to deal in&#xD;
-     the Software without restriction, including without limitation the rights to&#xD;
-     use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies&#xD;
-     of the Software, and to permit persons to whom the Software is furnished to do&#xD;
-     so, subject to the following conditions:&#xD;
+    Permission is hereby granted, free of charge, to any person obtaining a copy of&#xD;
+    this software and associated documentation files (the "Software"), to deal in&#xD;
+    the Software without restriction, including without limitation the rights to&#xD;
+    use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies&#xD;
+    of the Software, and to permit persons to whom the Software is furnished to do&#xD;
+    so, subject to the following conditions:&#xD;
 &#xD;
-     The above copyright notice and this permission notice shall be included in all&#xD;
-     copies or substantial portions of the Software.&#xD;
+    The above copyright notice and this permission notice shall be included in all&#xD;
+    copies or substantial portions of the Software.&#xD;
 &#xD;
-     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR&#xD;
-     IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,&#xD;
-     FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE&#xD;
-     AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,&#xD;
-     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN&#xD;
-     CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.&#xD;
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR&#xD;
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,&#xD;
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE&#xD;
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,&#xD;
+    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN&#xD;
+    CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.&#xD;
 &#xD;
-     Disclaimer: SharpBlade is in no way affiliated&#xD;
-     with Razer and/or any of its employees and/or licensors.&#xD;
-     Adam Hellberg does not take responsibility for any harm caused, direct&#xD;
-     or indirect, to any Razer peripherals via the use of SharpBlade.&#xD;
+    Disclaimer: SharpBlade is in no way affiliated&#xD;
+    with Razer and/or any of its employees and/or licensors.&#xD;
+    Adam Hellberg does not take responsibility for any harm caused, direct&#xD;
+    or indirect, to any Razer peripherals via the use of SharpBlade.&#xD;
 &#xD;
-     "Razer" is a trademark of Razer USA Ltd.&#xD;
- &lt;/copyright&gt;&#xD;
+    "Razer" is a trademark of Razer USA Ltd.&#xD;
+&lt;/copyright&gt;&#xD;
 ---------------------------------------------------------------------------------------</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=API/@EntryIndexedValue">API</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=GDI/@EntryIndexedValue">GDI</s:String>

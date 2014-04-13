@@ -3,6 +3,26 @@
 // (Doesn't really count as auto-generated but we circumvent StyleCop this way)
 // </auto-generated>
 
+// Credits to itsbth for helping with P/Invoke
+
+// 2013-04-05: Major update to reflect changes in the new SDK.
+
+/* ╔══════════════════════════════╗
+ * ║ Help table for mapping types ║
+ * ╠════════╦═════════╦═══════════╩──────────┐
+ * │ C Type │ C# Type │ MarshalAs            │
+ * ├────────┼─────────┼──────────────────────┤
+ * │ BYTE   │ Byte    │                      │
+ * │ UINT   │ UInt32  │                      │
+ * │ HWND   │ IntPtr  │                      │
+ * │ WORD   │ UInt16  │                      │
+ * │ DWORD  │ UInt32  │                      │
+ * │ LPARAM │ Int32   │                      │
+ * │ WPARAM │ UInt32  │                      │
+ * │ LPWSTR │ String  │ UnmanagedType.LPWStr │
+ * └────────┴─────────┴──────────────────────┘
+ */
+
 using System;
 using System.Runtime.InteropServices;
 
