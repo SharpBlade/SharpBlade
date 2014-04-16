@@ -1,6 +1,6 @@
-﻿//---------------------------------------------------------------------------------------
+﻿// ---------------------------------------------------------------------------------------
 // <copyright file="RazerException.cs" company="SharpBlade">
-//     Copyright (c) 2013-2014 by Adam Hellberg and Brandon Scott.
+//     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
 //     this software and associated documentation files (the "Software"), to deal in
@@ -26,15 +26,17 @@
 //
 //     "Razer" is a trademark of Razer USA Ltd.
 // </copyright>
-//---------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------
 
 using System;
+using System.Runtime.Serialization;
 
 namespace Sharparam.SharpBlade.Razer.Exceptions
 {
     /// <summary>
     /// Exception for Razer related issues.
     /// </summary>
+    [Serializable]
     public class RazerException : Exception
     {
         /// <summary>
@@ -42,7 +44,19 @@ namespace Sharparam.SharpBlade.Razer.Exceptions
         /// </summary>
         /// <param name="message">Message associated with the exception.</param>
         /// <param name="innerException">Inner exception object.</param>
-        internal RazerException(string message = null, Exception innerException = null) : base(message, innerException)
+        internal RazerException(string message = null, Exception innerException = null)
+            : base(message, innerException)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RazerException" /> class
+        /// from serialization data.
+        /// </summary>
+        /// <param name="info">Serialization info object.</param>
+        /// <param name="context">Streaming context.</param>
+        protected RazerException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
         }
     }

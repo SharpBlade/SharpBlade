@@ -1,6 +1,6 @@
-﻿//---------------------------------------------------------------------------------------
+﻿// ---------------------------------------------------------------------------------------
 // <copyright file="RazerNativeException.cs" company="SharpBlade">
-//     Copyright (c) 2013-2014 by Adam Hellberg and Brandon Scott.
+//     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
 //     this software and associated documentation files (the "Software"), to deal in
@@ -26,7 +26,11 @@
 //
 //     "Razer" is a trademark of Razer USA Ltd.
 // </copyright>
-//---------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------
+
+using System;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 
 using Sharparam.SharpBlade.Native;
 
@@ -35,6 +39,7 @@ namespace Sharparam.SharpBlade.Razer.Exceptions
     /// <summary>
     /// Exception for failures in native code provided by Razer.
     /// </summary>
+    [Serializable]
     public class RazerNativeException : RazerException
     {
         /// <summary>
@@ -62,6 +67,33 @@ namespace Sharparam.SharpBlade.Razer.Exceptions
         {
             Function = function;
             Hresult = hresult;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RazerNativeException" /> class
+        /// from serialization data.
+        /// </summary>
+        /// <param name="info">Serialization info object.</param>
+        /// <param name="context">Streaming context.</param>
+        protected RazerNativeException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+            Function = info.GetString("Function");
+            Hresult = info.GetInt32("Hresult");
+        }
+
+        /// <summary>
+        /// Adds object data to serialization object.
+        /// </summary>
+        /// <param name="info">Serialization info object.</param>
+        /// <param name="context">Streaming context.</param>
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+
+            info.AddValue("Function", Function);
+            info.AddValue("Hresult", (int)Hresult);
         }
     }
 }

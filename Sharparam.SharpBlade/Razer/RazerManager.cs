@@ -1,6 +1,6 @@
-﻿//---------------------------------------------------------------------------------------
+﻿// ---------------------------------------------------------------------------------------
 // <copyright file="RazerManager.cs" company="SharpBlade">
-//     Copyright (c) 2013-2014 by Adam Hellberg and Brandon Scott.
+//     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
 //     this software and associated documentation files (the "Software"), to deal in
@@ -26,7 +26,7 @@
 //
 //     "Razer" is a trademark of Razer USA Ltd.
 // </copyright>
-//---------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------
 
 using System;
 using System.Linq;
@@ -59,34 +59,38 @@ namespace Sharparam.SharpBlade.Razer
         };
 
         /// <summary>
+        /// App event callback that is used as parameter in <see cref="RazerAPI.NativeMethods.RzSBAppEventSetCallback" />.
+        /// </summary>
+        private static RazerAPI.AppEventCallbackDelegate _appEventCallback;
+
+        // ReSharper disable PrivateFieldCanBeConvertedToLocalVariable
+
+        /// <summary>
+        /// Dynamic key callback that is used as parameter in <see cref="RazerAPI.NativeMethods.RzSBDynamicKeySetCallback" />.
+        /// </summary>
+        private static RazerAPI.DynamicKeyCallbackFunctionDelegate _dynamicKeyCallback;
+
+        /// <summary>
         /// RazerManager instance for singleton.
         /// </summary>
         private static RazerManager _instance;
 
         /// <summary>
-        /// App event callback that is used as parameter in <see cref="RazerAPI.RzSBAppEventSetCallback" />.
-        /// </summary>
-        private static RazerAPI.AppEventCallbackDelegate _appEventCallback;
-
-        /// <summary>
-        /// Dynamic key callback that is used as parameter in <see cref="RazerAPI.RzSBDynamicKeySetCallback" />.
-        /// </summary>
-        private static RazerAPI.DynamicKeyCallbackFunctionDelegate _dynamicKeyCallback;
-
-        /// <summary>
-        /// Keyboard callback that is used as parameter in <see cref="RazerAPI.RzSBKeyboardCaptureSetCallback" />.
+        /// Keyboard callback that is used as parameter in <see cref="RazerAPI.NativeMethods.RzSBKeyboardCaptureSetCallback" />.
         /// </summary>
         private static RazerAPI.KeyboardCallbackFunctionDelegate _keyboardCallback;
 
-        /// <summary>
-        /// Log object for the <see cref="RazerManager" />.
-        /// </summary>
-        private readonly log4net.ILog _log;
+        // ReSharper restore PrivateFieldCanBeConvertedToLocalVariable
 
         /// <summary>
         /// Contains all active and enabled dynamic key objects.
         /// </summary>
         private readonly DynamicKey[] _dynamicKeys;
+
+        /// <summary>
+        /// Log object for the <see cref="RazerManager" />.
+        /// </summary>
+        private readonly log4net.ILog _log;
 
         /// <summary>
         /// Indicates whether the <see cref="RazerManager" /> has been disposed.
@@ -117,11 +121,11 @@ namespace Sharparam.SharpBlade.Razer
 
             _log.Debug("Calling RzSBStart()");
 
-            var result = RazerAPI.RzSBStart();
+            var result = RazerAPI.NativeMethods.RzSBStart();
             if (HRESULT.RZSB_FAILED(result))
             {
                 // Try one more time
-                result = RazerAPI.RzSBStart();
+                result = RazerAPI.NativeMethods.RzSBStart();
                 if (HRESULT.RZSB_FAILED(result))
                     throw new RazerNativeException("RzSBStart", result);
             }
@@ -131,7 +135,7 @@ namespace Sharparam.SharpBlade.Razer
             _log.Debug("Creating new app event callback");
             _appEventCallback = HandleAppEvent;
             _log.Debug("Calling RzSBAppEventSetCallback");
-            result = RazerAPI.RzSBAppEventSetCallback(_appEventCallback);
+            result = RazerAPI.NativeMethods.RzSBAppEventSetCallback(_appEventCallback);
             if (HRESULT.RZSB_FAILED(result))
                 throw new RazerNativeException("RzSBAppEventSetCallback", result);
 
@@ -143,7 +147,7 @@ namespace Sharparam.SharpBlade.Razer
             _log.Debug("Creating dynamic key callback");
             _dynamicKeyCallback = HandleDynamicKeyEvent;
             _log.Debug("Calling RzSBDynamicKeySetCallback");
-            result = RazerAPI.RzSBDynamicKeySetCallback(_dynamicKeyCallback);
+            result = RazerAPI.NativeMethods.RzSBDynamicKeySetCallback(_dynamicKeyCallback);
             if (HRESULT.RZSB_FAILED(result))
                 throw new RazerNativeException("RzSBDynamicKeySetCallback", result);
 
@@ -153,7 +157,7 @@ namespace Sharparam.SharpBlade.Razer
             _log.Debug("Creating keyboard callback");
             _keyboardCallback = HandleKeyboardEvent;
             _log.Debug("Calling RzSBDynamicKeySetCallback");
-            result = RazerAPI.RzSBKeyboardCaptureSetCallback(_keyboardCallback);
+            result = RazerAPI.NativeMethods.RzSBKeyboardCaptureSetCallback(_keyboardCallback);
             if (HRESULT.RZSB_FAILED(result))
                 throw new RazerNativeException("RzSBKeyboardCaptureSetCallback", result);
 
@@ -166,7 +170,7 @@ namespace Sharparam.SharpBlade.Razer
         /// Finalizes an instance of the <see cref="RazerManager" /> class.
         /// Allows an object to try to free resources and perform other
         /// cleanup operations before it is reclaimed by garbage collection.
-        /// <see cref="RazerManager" /> will call <see cref="RazerAPI.RzSBStop" />
+        /// <see cref="RazerManager" /> will call <see cref="RazerAPI.NativeMethods.RzSBStop" />
         /// if not disposed at the point of finalization.
         /// </summary>
         ~RazerManager()
@@ -185,11 +189,6 @@ namespace Sharparam.SharpBlade.Razer
         public event EventHandler<DynamicKeyEventArgs> DynamicKeyEvent;
 
         /// <summary>
-        /// Raised when a keyboard raw event occurs.
-        /// </summary>
-        public event EventHandler<KeyboardRawEventArgs> KeyboardRawEvent;
-
-        /// <summary>
         /// Raised when a keyboard char event occurs.
         /// </summary>
         public event EventHandler<KeyboardCharEventArgs> KeyboardCharTyped;
@@ -205,16 +204,24 @@ namespace Sharparam.SharpBlade.Razer
         public event EventHandler<KeyboardKeyEventArgs> KeyboardKeyUp;
 
         /// <summary>
+        /// Raised when a keyboard raw event occurs.
+        /// </summary>
+        public event EventHandler<KeyboardRawEventArgs> KeyboardRawEvent;
+
+        /// <summary>
         /// Gets singleton instance of RazerManager.
         /// </summary>
         public static RazerManager Instance
         {
-            get { return _instance ?? (_instance = new RazerManager()); }
+            get
+            {
+                return _instance ?? (_instance = new RazerManager());
+            }
         }
 
         /// <summary>
         /// Gets or sets the image shown on Touchpad when it's blank or
-        /// after <see cref="Razer.Touchpad.ClearImage" /> or <see cref="Razer.Touchpad.ClearAll" />
+        /// after <see cref="Razer.Touchpad.ClearImage" /> or <see cref="Razer.Touchpad.Clear()" />.
         /// have been called.
         /// </summary>
         /// <remarks>Defaults to <see cref="Constants.BlankTouchpadImage" /></remarks>
@@ -227,14 +234,27 @@ namespace Sharparam.SharpBlade.Razer
         public string DisabledDynamicKeyImagePath { get; set; }
 
         /// <summary>
+        /// Gets a value indicating whether keyboard capture is enabled or not.
+        /// </summary>
+        public bool KeyboardCapture { get; private set; }
+
+        /// <summary>
         /// Gets the touchpad on the keyboard.
         /// </summary>
         public Touchpad Touchpad { get; private set; }
 
         /// <summary>
-        /// Gets a value indicating whether keyboard capture is enabled or not.
+        /// Disables a specific dynamic key.
         /// </summary>
-        public bool KeyboardCapture { get; private set; }
+        /// <param name="keyType">The key type to disable.</param>
+        public void DisableDynamicKey(RazerAPI.DynamicKeyType keyType)
+        {
+            var index = (int)keyType - 1;
+            var dk = _dynamicKeys[index];
+            if (dk != null)
+                dk.Disable();
+            _dynamicKeys[index] = null;
+        }
 
         /// <summary>
         /// Disposes of this <see cref="RazerManager" />.
@@ -246,26 +266,6 @@ namespace Sharparam.SharpBlade.Razer
         }
 
         /// <summary>
-        /// Stops all Razer interaction.
-        /// </summary>
-        public void Stop()
-        {
-            _log.Info("RazerManager is stopping! Calling RzSBStop...");
-            RazerAPI.RzSBStop();
-            _log.Info("RazerManager has stopped.");
-        }
-
-        /// <summary>
-        /// Gets a specific dynamic key.
-        /// </summary>
-        /// <param name="keyType">The key type to get.</param>
-        /// <returns><see cref="DynamicKey" /> object representing the specified key type.</returns>
-        public DynamicKey GetDynamicKey(RazerAPI.DynamicKeyType keyType)
-        {
-            return _dynamicKeys[(int)keyType - 1];
-        }
-
-        /// <summary>
         /// Enables a specific dynamic key.
         /// </summary>
         /// <param name="keyType">The key type to enable.</param>
@@ -274,7 +274,11 @@ namespace Sharparam.SharpBlade.Razer
         /// <param name="replace">True to override this key's previous configuration
         /// if it has already been enabled, otherwise returns current key if already enabled.</param>
         /// <returns>The dynamic key that was enabled.</returns>
-        public DynamicKey EnableDynamicKey(RazerAPI.DynamicKeyType keyType, string image, string presssedImage = null, bool replace = false)
+        public DynamicKey EnableDynamicKey(
+            RazerAPI.DynamicKeyType keyType,
+            string image,
+            string presssedImage = null,
+            bool replace = false)
         {
             return EnableDynamicKey(keyType, null, image, presssedImage, replace);
         }
@@ -289,7 +293,12 @@ namespace Sharparam.SharpBlade.Razer
         /// <param name="replace">True to override this key's previous configuration
         /// if it has already been enabled, otherwise returns current key if already enabled.</param>
         /// <returns>The dynamic key that was enabled.</returns>
-        public DynamicKey EnableDynamicKey(RazerAPI.DynamicKeyType keyType, EventHandler callback, string image, string pressedImage = null, bool replace = false)
+        public DynamicKey EnableDynamicKey(
+            RazerAPI.DynamicKeyType keyType,
+            EventHandler callback,
+            string image,
+            string pressedImage = null,
+            bool replace = false)
         {
             var index = (int)keyType - 1;
             if (_dynamicKeys[index] != null && !replace)
@@ -309,23 +318,22 @@ namespace Sharparam.SharpBlade.Razer
             catch (RazerNativeException ex)
             {
                 _log.ErrorFormat("Failed to enable dynamic key {0}: {1}", keyType, ex.Hresult);
-                throw new RazerDynamicKeyException(string.Format("Failed to enable dynamic key {0} due to a native call exception.", keyType), ex);
+                throw new RazerDynamicKeyException(
+                    string.Format("Failed to enable dynamic key {0} due to a native call exception.", keyType),
+                    ex);
             }
 
             return _dynamicKeys[index];
         }
 
         /// <summary>
-        /// Disables a specific dynamic key.
+        /// Gets a specific dynamic key.
         /// </summary>
-        /// <param name="keyType">The key type to disable.</param>
-        public void DisableDynamicKey(RazerAPI.DynamicKeyType keyType)
+        /// <param name="keyType">The key type to get.</param>
+        /// <returns><see cref="DynamicKey" /> object representing the specified key type.</returns>
+        public DynamicKey GetDynamicKey(RazerAPI.DynamicKeyType keyType)
         {
-            var index = (int)keyType - 1;
-            var dk = _dynamicKeys[index];
-            if (dk != null)
-                dk.Disable();
-            _dynamicKeys[index] = null;
+            return _dynamicKeys[(int)keyType - 1];
         }
 
         /// <summary>
@@ -337,7 +345,7 @@ namespace Sharparam.SharpBlade.Razer
             if (enabled == KeyboardCapture)
                 return;
 
-            var hresult = RazerAPI.RzSBCaptureKeyboard(enabled);
+            var hresult = RazerAPI.NativeMethods.RzSBCaptureKeyboard(enabled);
             if (HRESULT.RZSB_FAILED(hresult))
                 throw new RazerNativeException("RzSBCaptureKeyboard", hresult);
 
@@ -372,6 +380,16 @@ namespace Sharparam.SharpBlade.Razer
         }
 
         /// <summary>
+        /// Stops all Razer interaction.
+        /// </summary>
+        public void Stop()
+        {
+            _log.Info("RazerManager is stopping! Calling RzSBStop...");
+            RazerAPI.NativeMethods.RzSBStop();
+            _log.Info("RazerManager has stopped.");
+        }
+
+        /// <summary>
         /// Disposes of this <see cref="RazerManager" />.
         /// </summary>
         /// <param name="disposing"><c>true</c> if called from parameter-less <see cref="Dispose()" />, false otherwise.</param>
@@ -395,79 +413,6 @@ namespace Sharparam.SharpBlade.Razer
             Stop();
 
             _disposed = true;
-        }
-
-        /// <summary>
-        /// Raises app event to subscribers.
-        /// </summary>
-        /// <param name="type">App event type.</param>
-        /// <param name="mode">Mode associated with the app event.</param>
-        /// <param name="processId">The process ID.</param>
-        private void OnAppEvent(RazerAPI.AppEventType type, RazerAPI.AppEventMode mode, uint processId)
-        {
-            var func = AppEvent;
-            if (func != null)
-                func(this, new AppEventEventArgs(type, mode, processId));
-        }
-
-        /// <summary>
-        /// Raises dynamic key event to subscribers.
-        /// </summary>
-        /// <param name="keyType">The dynamic key affected.</param>
-        /// <param name="state">New key state.</param>
-        private void OnDynamicKeyEvent(RazerAPI.DynamicKeyType keyType, RazerAPI.DynamicKeyState state)
-        {
-            var func = DynamicKeyEvent;
-            if (func != null)
-                func(this, new DynamicKeyEventArgs(keyType, state));
-        }
-
-        /// <summary>
-        /// Raises raw keyboard event to subscribers.
-        /// </summary>
-        /// <param name="type">Key event type.</param>
-        /// <param name="data">Data for event.</param>
-        /// <param name="modifiers">Active modifiers.</param>
-        private void OnKeyboardRawEvent(uint type, UIntPtr data, IntPtr modifiers)
-        {
-            var func = KeyboardRawEvent;
-            if (func != null)
-                func(this, new KeyboardRawEventArgs(type, data, modifiers));
-        }
-
-        /// <summary>
-        /// Raises keyboard char typed event to subscribers.
-        /// </summary>
-        /// <param name="character">The character that was typed.</param>
-        private void OnKeyboardCharTyped(char character)
-        {
-            var func = KeyboardCharTyped;
-            if (func != null)
-                func(this, new KeyboardCharEventArgs(character));
-        }
-
-        /// <summary>
-        /// Raises key down event to subscribers.
-        /// </summary>
-        /// <param name="key">Key that was pressed.</param>
-        /// <param name="modifiers">Active modifier keys.</param>
-        private void OnKeyboardKeyDown(User32.VirtualKey key, ModifierKeys modifiers)
-        {
-            var func = KeyboardKeyDown;
-            if (func != null)
-                func(this, new KeyboardKeyEventArgs(key, modifiers));
-        }
-
-        /// <summary>
-        /// Raises key up event to subscribers.
-        /// </summary>
-        /// <param name="key">Key that was released.</param>
-        /// <param name="modifiers">Active modifier keys.</param>
-        private void OnKeyboardKeyUp(User32.VirtualKey key, ModifierKeys modifiers)
-        {
-            var func = KeyboardKeyUp;
-            if (func != null)
-                func(this, new KeyboardKeyEventArgs(key, modifiers));
         }
 
         /// <summary>
@@ -549,7 +494,8 @@ namespace Sharparam.SharpBlade.Razer
                 // Workaround to get the modifier keys
                 // Item1 = VK, Item2 = mask, Item3 = ModifierKey
                 var modifierKeys =
-                    KeyMapping.Where(mapping => (User32.GetKeyState((int)mapping.Item1) & mapping.Item2) != 0)
+                    KeyMapping.Where(
+                        mapping => (User32.NativeMethods.GetKeyState((int)mapping.Item1) & mapping.Item2) != 0)
                               .Aggregate(ModifierKeys.None, (current, mapping) => current | mapping.Item3);
 
                 if (msgType == User32.MessageType.KEYDOWN)
@@ -571,6 +517,79 @@ namespace Sharparam.SharpBlade.Razer
             }
 
             return HRESULT.RZSB_OK;
+        }
+
+        /// <summary>
+        /// Raises app event to subscribers.
+        /// </summary>
+        /// <param name="type">App event type.</param>
+        /// <param name="mode">Mode associated with the app event.</param>
+        /// <param name="processId">The process ID.</param>
+        private void OnAppEvent(RazerAPI.AppEventType type, RazerAPI.AppEventMode mode, uint processId)
+        {
+            var func = AppEvent;
+            if (func != null)
+                func(this, new AppEventEventArgs(type, mode, processId));
+        }
+
+        /// <summary>
+        /// Raises dynamic key event to subscribers.
+        /// </summary>
+        /// <param name="keyType">The dynamic key affected.</param>
+        /// <param name="state">New key state.</param>
+        private void OnDynamicKeyEvent(RazerAPI.DynamicKeyType keyType, RazerAPI.DynamicKeyState state)
+        {
+            var func = DynamicKeyEvent;
+            if (func != null)
+                func(this, new DynamicKeyEventArgs(keyType, state));
+        }
+
+        /// <summary>
+        /// Raises keyboard char typed event to subscribers.
+        /// </summary>
+        /// <param name="character">The character that was typed.</param>
+        private void OnKeyboardCharTyped(char character)
+        {
+            var func = KeyboardCharTyped;
+            if (func != null)
+                func(this, new KeyboardCharEventArgs(character));
+        }
+
+        /// <summary>
+        /// Raises key down event to subscribers.
+        /// </summary>
+        /// <param name="key">Key that was pressed.</param>
+        /// <param name="modifiers">Active modifier keys.</param>
+        private void OnKeyboardKeyDown(User32.VirtualKey key, ModifierKeys modifiers)
+        {
+            var func = KeyboardKeyDown;
+            if (func != null)
+                func(this, new KeyboardKeyEventArgs(key, modifiers));
+        }
+
+        /// <summary>
+        /// Raises key up event to subscribers.
+        /// </summary>
+        /// <param name="key">Key that was released.</param>
+        /// <param name="modifiers">Active modifier keys.</param>
+        private void OnKeyboardKeyUp(User32.VirtualKey key, ModifierKeys modifiers)
+        {
+            var func = KeyboardKeyUp;
+            if (func != null)
+                func(this, new KeyboardKeyEventArgs(key, modifiers));
+        }
+
+        /// <summary>
+        /// Raises raw keyboard event to subscribers.
+        /// </summary>
+        /// <param name="type">Key event type.</param>
+        /// <param name="data">Data for event.</param>
+        /// <param name="modifiers">Active modifiers.</param>
+        private void OnKeyboardRawEvent(uint type, UIntPtr data, IntPtr modifiers)
+        {
+            var func = KeyboardRawEvent;
+            if (func != null)
+                func(this, new KeyboardRawEventArgs(type, data, modifiers));
         }
     }
 }

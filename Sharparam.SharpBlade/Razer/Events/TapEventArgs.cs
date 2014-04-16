@@ -1,6 +1,6 @@
-﻿//---------------------------------------------------------------------------------------
+﻿// ---------------------------------------------------------------------------------------
 // <copyright file="TapEventArgs.cs" company="SharpBlade">
-//     Copyright (c) 2013-2014 by Adam Hellberg and Brandon Scott.
+//     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
 //     this software and associated documentation files (the "Software"), to deal in
@@ -26,7 +26,7 @@
 //
 //     "Razer" is a trademark of Razer USA Ltd.
 // </copyright>
-//---------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------
 
 using System;
 
@@ -47,7 +47,7 @@ namespace Sharparam.SharpBlade.Razer.Events
         /// Y-coordinate of the touch point.
         /// </summary>
         public readonly ushort Y;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TapEventArgs" /> class.
         /// </summary>

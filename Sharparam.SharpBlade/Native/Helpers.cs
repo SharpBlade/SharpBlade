@@ -1,6 +1,6 @@
-﻿//---------------------------------------------------------------------------------------
+﻿// ---------------------------------------------------------------------------------------
 // <copyright file="Helpers.cs" company="SharpBlade">
-//     Copyright (c) 2013-2014 by Adam Hellberg and Brandon Scott.
+//     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
 //     this software and associated documentation files (the "Software"), to deal in
@@ -26,7 +26,7 @@
 //
 //     "Razer" is a trademark of Razer USA Ltd.
 // </copyright>
-//---------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------
 
 using System.ComponentModel;
 using System.Runtime.InteropServices;
@@ -38,6 +38,16 @@ namespace Sharparam.SharpBlade.Native
     /// </summary>
     public static class Helpers
     {
+        /// <summary>
+        /// Gets the message associated with the specified error code.
+        /// </summary>
+        /// <param name="err">The error code.</param>
+        /// <returns>The message associated with this error code.</returns>
+        public static string GetErrorMessage(int err)
+        {
+            return GetWin32Exception(err).Message;
+        }
+
         /// <summary>
         /// Gets the last error code that was set by native code.
         /// </summary>
@@ -60,22 +70,21 @@ namespace Sharparam.SharpBlade.Native
         }
 
         /// <summary>
-        /// Gets the message associated with the specified error code.
-        /// </summary>
-        /// <param name="err">The error code.</param>
-        /// <returns>The message associated with this error code.</returns>
-        public static string GetErrorMessage(int err)
-        {
-            return GetWin32Exception(err).Message;
-        }
-
-        /// <summary>
         /// Gets the message associated with the last error.
         /// </summary>
         /// <returns>The message associated with the code of the last error.</returns>
         public static string GetLastErrorMessage()
         {
             return GetErrorMessage(GetLastError());
+        }
+
+        /// <summary>
+        /// Gets a Win32Exception object for the last error code.
+        /// </summary>
+        /// <returns>An exception object with more detailed information about the last error.</returns>
+        public static Win32Exception GetLastWin32Exception()
+        {
+            return GetWin32Exception(GetLastError());
         }
 
         /// <summary>
@@ -86,15 +95,6 @@ namespace Sharparam.SharpBlade.Native
         public static Win32Exception GetWin32Exception(int err)
         {
             return new Win32Exception(err);
-        }
-
-        /// <summary>
-        /// Gets a Win32Exception object for the last error code.
-        /// </summary>
-        /// <returns>An exception object with more detailed information about the last error.</returns>
-        public static Win32Exception GetLastWin32Exception()
-        {
-            return GetWin32Exception(GetLastError());
         }
     }
 }
