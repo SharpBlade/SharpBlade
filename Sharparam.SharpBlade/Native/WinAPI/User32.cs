@@ -15,49 +15,9 @@ namespace Sharparam.SharpBlade.Native.WinAPI
     public static class User32
     {
         /// <summary>
-        /// Horizontal scrollbar.
-        /// </summary>
-        public const int SB_HORZ = 0;
-
-        /// <summary>
-        /// Vertical scrollbar.
-        /// </summary>
-        public const int SB_VERT = 1;
-
-        /// <summary>
-        /// A scrollbar control.
-        /// </summary>
-        public const int SB_CTL = 2;
-
-        /// <summary>
-        /// Both scrollbars (horizontal and vertical).
-        /// </summary>
-        public const int SB_BOTH = 3;
-
-        /// <summary>
-        /// Enables both arrows on a scroll bar.
-        /// </summary>
-        public const uint ESB_ENABLE_BOTH = 0;
-
-        /// <summary>
         /// Disables both arrows on a scroll bar.
         /// </summary>
         public const uint ESB_DISABLE_BOTH = 3;
-
-        /// <summary>
-        /// Disables the left arrow on a horizontal scroll bar.
-        /// </summary>
-        public const uint ESB_DISABLE_LEFT = 1;
-
-        /// <summary>
-        /// Disables the right arrow on a horizontal scroll bar.
-        /// </summary>
-        public const uint ESB_DISABLE_RIGHT = 2;
-
-        /// <summary>
-        /// Disables the up arrow on a vertical scroll bar.
-        /// </summary>
-        public const uint ESB_DISABLE_UP = 1;
 
         /// <summary>
         /// Disables the down arrow on a vertical scroll bar.
@@ -65,14 +25,40 @@ namespace Sharparam.SharpBlade.Native.WinAPI
         public const uint ESB_DISABLE_DOWN = 2;
 
         /// <summary>
+        /// Disables the left arrow on a horizontal scroll bar.
+        /// </summary>
+        public const uint ESB_DISABLE_LEFT = 1;
+
+        /// <summary>
         /// Disables the left arrow on a horizontal scroll bar or the up arrow of a vertical scroll bar.
         /// </summary>
         public const uint ESB_DISABLE_LTUP = 1;
 
         /// <summary>
+        /// Disables the right arrow on a horizontal scroll bar.
+        /// </summary>
+        public const uint ESB_DISABLE_RIGHT = 2;
+
+        /// <summary>
         /// Disables the right arrow on a horizontal scroll bar or the down arrow of a vertical scroll bar.
         /// </summary>
         public const uint ESB_DISABLE_RTDN = 2;
+
+        /// <summary>
+        /// Disables the up arrow on a vertical scroll bar.
+        /// </summary>
+        public const uint ESB_DISABLE_UP = 1;
+
+        /// <summary>
+        /// Enables both arrows on a scroll bar.
+        /// </summary>
+        public const uint ESB_ENABLE_BOTH = 0;
+
+        /// <summary>
+        /// Pressed key.
+        /// Used with <see cref="NativeMethods.GetKeyState" />.
+        /// </summary>
+        public const int KEY_PRESSED = 0x8000;
 
         /// <summary>
         /// Toggled key (e.g. caps lock).
@@ -81,10 +67,24 @@ namespace Sharparam.SharpBlade.Native.WinAPI
         public const int KEY_TOGGLED = 0x1;
 
         /// <summary>
-        /// Pressed key.
-        /// Used with <see cref="NativeMethods.GetKeyState" />.
+        /// Both scrollbars (horizontal and vertical).
         /// </summary>
-        public const int KEY_PRESSED = 0x8000;
+        public const int SB_BOTH = 3;
+
+        /// <summary>
+        /// A scrollbar control.
+        /// </summary>
+        public const int SB_CTL = 2;
+
+        /// <summary>
+        /// Horizontal scrollbar.
+        /// </summary>
+        public const int SB_HORZ = 0;
+
+        /// <summary>
+        /// Vertical scrollbar.
+        /// </summary>
+        public const int SB_VERT = 1;
 
         /// <summary>
         /// Native windows message types.
@@ -1461,6 +1461,20 @@ namespace Sharparam.SharpBlade.Native.WinAPI
             private const string DllName = "user32.dll";
 
             /// <summary>
+            /// The EnableScrollBar function enables or disables one or both scroll bar arrows.
+            /// </summary>
+            /// <param name="hWnd">Handle to a window or a scroll bar control, depending on the value of the <c>wSBflags</c> parameter.</param>
+            /// <param name="wSBflags">Specifies the scroll bar type.</param>
+            /// <param name="wArrows">Specifies whether the scroll bar arrows are enabled or disabled and indicates which arrows are enabled or disabled.</param>
+            /// <returns>
+            /// If the arrows are enabled or disabled as specified, the return value is nonzero (true).
+            /// If the arrows are already in the requested state or an error occurs, the return value is zero (false).
+            /// To get extended error information, call GetLastError.
+            /// </returns>
+            [DllImport(DllName)]
+            internal static extern bool EnableScrollBar(IntPtr hWnd, uint wSBflags, uint wArrows);
+
+            /// <summary>
             /// Retrieves a handle to the desktop window. The desktop window covers the entire screen.
             /// The desktop window is the area on top of which other windows are painted.
             /// </summary>
@@ -1469,6 +1483,45 @@ namespace Sharparam.SharpBlade.Native.WinAPI
             /// </returns>
             [DllImport(DllName)]
             internal static extern IntPtr GetDesktopWindow();
+
+            /// <summary>
+            /// Retrieves the status of the specified virtual key.
+            /// The status specifies whether the key is up, down,
+            /// or toggled (on, off—alternating each time the key is pressed).
+            /// </summary>
+            /// <param name="keyCode">
+            /// A virtual key. If the desired virtual key is a letter or digit (A through Z, a through z, or 0 through 9),
+            /// <c>nVirtKey</c> must be set to the ASCII value of that character. For other keys, it must be a virtual-key code.
+            /// If a non-English keyboard layout is used, virtual keys with values in the range ASCII A through Z and 0
+            /// through 9 are used to specify most of the character keys. For example, for the German keyboard layout,
+            /// the virtual key of value ASCII O (0x4F) refers to the "o" key, whereas VK_OEM_1 refers to the "o with umlaut" key.
+            /// </param>
+            /// <returns>
+            /// The return value specifies the status of the specified virtual key, as follows:
+            /// <list type="bullet">
+            /// <item>If the high-order bit is 1, the key is down; otherwise, it is up.</item>
+            /// <item>
+            /// If the low-order bit is 1, the key is toggled. A key, such as the CAPS LOCK key,
+            /// is toggled if it is turned on. The key is off and untoggled if the low-order bit is 0.
+            /// A toggle key's indicator light (if any) on the keyboard will be on when the key is toggled,
+            /// and off when the key is untoggled.
+            /// </item>
+            /// </list>
+            /// </returns>
+            /// <remarks>
+            /// The key status returned from this function changes as a thread reads key messages from its message queue.
+            /// The status does not reflect the interrupt-level state associated with the hardware.
+            /// Use the <c>GetAsyncKeyState</c> function to retrieve that information.
+            /// An application calls <c>GetKeyState</c> in response to a keyboard-input message. This function retrieves
+            /// the state of the key when the input message was generated.
+            /// To retrieve state information for all the virtual keys, use the <c>GetKeyboardState</c> function.
+            /// An application can use the virtual key code constants
+            /// <c>VK_SHIFT</c>, <c>VK_CONTROL</c>, and <c>VK_MENU</c> as values for the <c>nVirtKey</c> parameter.
+            /// This gives the status of the SHIFT, CTRL, or ALT keys without distinguishing between left and right.
+            /// </remarks>
+            [DllImport(DllName, CharSet = CharSet.Auto, ExactSpelling = true,
+                CallingConvention = CallingConvention.Winapi)]
+            internal static extern short GetKeyState(int keyCode);
 
             /// <summary>
             /// The GetWindowDC function retrieves the device context (DC) for the entire window, including title bar, menus, and scroll bars.
@@ -1499,27 +1552,6 @@ namespace Sharparam.SharpBlade.Native.WinAPI
             internal static extern IntPtr GetWindowDC(IntPtr hWnd);
 
             /// <summary>
-            /// The ReleaseDC function releases a device context (DC), freeing it for use by other applications.
-            /// The effect of the ReleaseDC function depends on the type of DC. It frees only common and window DCs.
-            /// It has no effect on class or private DCs.
-            /// </summary>
-            /// <param name="hWnd">A handle to the window whose DC is to be released.</param>
-            /// <param name="hDC">A handle to the DC to be released.</param>
-            /// <returns>
-            /// The return value indicates whether the DC was released. If the DC was released, the return value is 1.
-            /// If the DC was not released, the return value is zero.
-            /// </returns>
-            /// <remarks>
-            /// The application must call the ReleaseDC function for each call to the GetWindowDC function
-            /// and for each call to the GetDC function that retrieves a common DC.
-            /// An application cannot use the ReleaseDC function to release a DC that was created by
-            /// calling the CreateDC function; instead, it must use the DeleteDC function.
-            /// ReleaseDC must be called from the same thread that called GetDC.
-            /// </remarks>
-            [DllImport(DllName)]
-            internal static extern int ReleaseDC(IntPtr hWnd, IntPtr hDC);
-
-            /// <summary>
             /// Retrieves the dimensions of the bounding rectangle of the specified window.
             /// The dimensions are given in screen coordinates that are relative to the upper-left corner of the screen.
             /// </summary>
@@ -1540,35 +1572,6 @@ namespace Sharparam.SharpBlade.Native.WinAPI
             /// </remarks>
             [DllImport(DllName)]
             internal static extern bool GetWindowRect(IntPtr hWnd, ref Rect rect);
-
-            /// <summary>
-            /// The ShowScrollBar function shows or hides the specified scroll bar.
-            /// </summary>
-            /// <param name="hWnd">Handle to a scroll bar control or a window with a standard scroll bar, depending on the value of the wBar parameter.</param>
-            /// <param name="wBar">Specifies the scroll bar(s) to be shown or hidden.</param>
-            /// <param name="bShow">Specifies whether the scroll bar is shown or hidden. If this parameter is TRUE, the scroll bar is shown; otherwise, it is hidden.</param>
-            /// <returns>
-            /// If the function succeeds, the return value is nonzero (true).
-            /// If the function fails, the return value is zero (false). To get extended error information, call GetLastError.
-            /// </returns>
-            /// <remarks>You should not call this function to hide a scroll bar while processing a scroll bar message. </remarks>
-            [return: MarshalAs(UnmanagedType.Bool)]
-            [DllImport(DllName)]
-            internal static extern bool ShowScrollBar(IntPtr hWnd, int wBar, [MarshalAs(UnmanagedType.Bool)] bool bShow);
-
-            /// <summary>
-            /// The EnableScrollBar function enables or disables one or both scroll bar arrows.
-            /// </summary>
-            /// <param name="hWnd">Handle to a window or a scroll bar control, depending on the value of the <c>wSBflags</c> parameter.</param>
-            /// <param name="wSBflags">Specifies the scroll bar type.</param>
-            /// <param name="wArrows">Specifies whether the scroll bar arrows are enabled or disabled and indicates which arrows are enabled or disabled.</param>
-            /// <returns>
-            /// If the arrows are enabled or disabled as specified, the return value is nonzero (true).
-            /// If the arrows are already in the requested state or an error occurs, the return value is zero (false).
-            /// To get extended error information, call GetLastError.
-            /// </returns>
-            [DllImport(DllName)]
-            internal static extern bool EnableScrollBar(IntPtr hWnd, uint wSBflags, uint wArrows);
 
             /// <summary>
             /// Places (posts) a message in the message queue associated with the thread that created
@@ -1607,6 +1610,27 @@ namespace Sharparam.SharpBlade.Native.WinAPI
             [return: MarshalAs(UnmanagedType.Bool)]
             [DllImport(DllName, SetLastError = true)]
             internal static extern bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+            /// <summary>
+            /// The ReleaseDC function releases a device context (DC), freeing it for use by other applications.
+            /// The effect of the ReleaseDC function depends on the type of DC. It frees only common and window DCs.
+            /// It has no effect on class or private DCs.
+            /// </summary>
+            /// <param name="hWnd">A handle to the window whose DC is to be released.</param>
+            /// <param name="hDC">A handle to the DC to be released.</param>
+            /// <returns>
+            /// The return value indicates whether the DC was released. If the DC was released, the return value is 1.
+            /// If the DC was not released, the return value is zero.
+            /// </returns>
+            /// <remarks>
+            /// The application must call the ReleaseDC function for each call to the GetWindowDC function
+            /// and for each call to the GetDC function that retrieves a common DC.
+            /// An application cannot use the ReleaseDC function to release a DC that was created by
+            /// calling the CreateDC function; instead, it must use the DeleteDC function.
+            /// ReleaseDC must be called from the same thread that called GetDC.
+            /// </remarks>
+            [DllImport(DllName)]
+            internal static extern int ReleaseDC(IntPtr hWnd, IntPtr hDC);
 
             /// <summary>
             /// Sends the specified message to a window or windows.
@@ -1648,43 +1672,19 @@ namespace Sharparam.SharpBlade.Native.WinAPI
             internal static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
             /// <summary>
-            /// Retrieves the status of the specified virtual key.
-            /// The status specifies whether the key is up, down,
-            /// or toggled (on, off—alternating each time the key is pressed).
+            /// The ShowScrollBar function shows or hides the specified scroll bar.
             /// </summary>
-            /// <param name="keyCode">
-            /// A virtual key. If the desired virtual key is a letter or digit (A through Z, a through z, or 0 through 9),
-            /// <c>nVirtKey</c> must be set to the ASCII value of that character. For other keys, it must be a virtual-key code.
-            /// If a non-English keyboard layout is used, virtual keys with values in the range ASCII A through Z and 0
-            /// through 9 are used to specify most of the character keys. For example, for the German keyboard layout,
-            /// the virtual key of value ASCII O (0x4F) refers to the "o" key, whereas VK_OEM_1 refers to the "o with umlaut" key.
-            /// </param>
+            /// <param name="hWnd">Handle to a scroll bar control or a window with a standard scroll bar, depending on the value of the wBar parameter.</param>
+            /// <param name="wBar">Specifies the scroll bar(s) to be shown or hidden.</param>
+            /// <param name="bShow">Specifies whether the scroll bar is shown or hidden. If this parameter is TRUE, the scroll bar is shown; otherwise, it is hidden.</param>
             /// <returns>
-            /// The return value specifies the status of the specified virtual key, as follows:
-            /// <list type="bullet">
-            /// <item>If the high-order bit is 1, the key is down; otherwise, it is up.</item>
-            /// <item>
-            /// If the low-order bit is 1, the key is toggled. A key, such as the CAPS LOCK key,
-            /// is toggled if it is turned on. The key is off and untoggled if the low-order bit is 0.
-            /// A toggle key's indicator light (if any) on the keyboard will be on when the key is toggled,
-            /// and off when the key is untoggled.
-            /// </item>
-            /// </list>
+            /// If the function succeeds, the return value is nonzero (true).
+            /// If the function fails, the return value is zero (false). To get extended error information, call GetLastError.
             /// </returns>
-            /// <remarks>
-            /// The key status returned from this function changes as a thread reads key messages from its message queue.
-            /// The status does not reflect the interrupt-level state associated with the hardware.
-            /// Use the <c>GetAsyncKeyState</c> function to retrieve that information.
-            /// An application calls <c>GetKeyState</c> in response to a keyboard-input message. This function retrieves
-            /// the state of the key when the input message was generated.
-            /// To retrieve state information for all the virtual keys, use the <c>GetKeyboardState</c> function.
-            /// An application can use the virtual key code constants
-            /// <c>VK_SHIFT</c>, <c>VK_CONTROL</c>, and <c>VK_MENU</c> as values for the <c>nVirtKey</c> parameter.
-            /// This gives the status of the SHIFT, CTRL, or ALT keys without distinguishing between left and right.
-            /// </remarks>
-            [DllImport(DllName, CharSet = CharSet.Auto, ExactSpelling = true,
-                CallingConvention = CallingConvention.Winapi)]
-            internal static extern short GetKeyState(int keyCode);
+            /// <remarks>You should not call this function to hide a scroll bar while processing a scroll bar message. </remarks>
+            [return: MarshalAs(UnmanagedType.Bool)]
+            [DllImport(DllName)]
+            internal static extern bool ShowScrollBar(IntPtr hWnd, int wBar, [MarshalAs(UnmanagedType.Bool)] bool bShow);
         }
     }
 }

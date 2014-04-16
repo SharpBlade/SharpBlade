@@ -1,29 +1,29 @@
 ﻿// ---------------------------------------------------------------------------------------
 // <copyright file="EnumerationExtensions.cs" company="SharpBlade">
 //     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
-// 
+//
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
 //     this software and associated documentation files (the "Software"), to deal in
 //     the Software without restriction, including without limitation the rights to
 //     use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
 //     of the Software, and to permit persons to whom the Software is furnished to do
 //     so, subject to the following conditions:
-// 
+//
 //     The above copyright notice and this permission notice shall be included in all
 //     copies or substantial portions of the Software.
-// 
+//
 //     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 //     IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 //     FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 //     AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 //     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 //     CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// 
+//
 //     Disclaimer: SharpBlade is in no way affiliated
 //     with Razer and/or any of its employees and/or licensors.
 //     Adam Hellberg does not take responsibility for any harm caused, direct
 //     or indirect, to any Razer peripherals via the use of SharpBlade.
-// 
+//
 //     "Razer" is a trademark of Razer USA Ltd.
 // </copyright>
 // ---------------------------------------------------------------------------------------
@@ -38,54 +38,6 @@ namespace Sharparam.SharpBlade.Extensions
     public static class EnumerationExtensions
     {
         #region Extension Methods
-
-        /// <summary>
-        /// Includes an enumerated type and returns the new value
-        /// </summary>
-        /// <typeparam name="T">The type of the value(s) being appended.</typeparam>
-        /// <param name="value">The <see cref="Enum" /> to add values to.</param>
-        /// <param name="append">The value(s) to append.</param>
-        /// <returns>A new enumeration of the specified type with the
-        /// value(s) in the parameter append included.</returns>
-        public static T Include<T>(this Enum value, T append)
-        {
-            var type = value.GetType();
-
-            // determine the values
-            object result = value;
-            var parsed = new Value(append, type);
-            if (parsed.Signed.HasValue)
-                result = Convert.ToInt64(value) | (long)parsed.Signed;
-            else if (parsed.Unsigned.HasValue)
-                result = Convert.ToUInt64(value) | (ulong)parsed.Unsigned;
-
-            // return the final value
-            return (T)Enum.Parse(type, result.ToString());
-        }
-
-        /// <summary>
-        /// Removes an enumerated type and returns the new value
-        /// </summary>
-        /// <typeparam name="T">The type of the value(s) being removed.</typeparam>
-        /// <param name="value">The <see cref="Enum" /> to remove values from.</param>
-        /// <param name="remove">The value(s) to remove from the enumeration.</param>
-        /// <returns>A new enumeration of the specified type with the value(s)
-        /// supplied in <c>remove</c> removed.</returns>
-        public static T Remove<T>(this Enum value, T remove)
-        {
-            Type type = value.GetType();
-
-            // determine the values
-            object result = value;
-            var parsed = new Value(remove, type);
-            if (parsed.Signed.HasValue)
-                result = Convert.ToInt64(value) & ~(long)parsed.Signed;
-            else if (parsed.Unsigned.HasValue)
-                result = Convert.ToUInt64(value) & ~(ulong)parsed.Unsigned;
-
-            // return the final value
-            return (T)Enum.Parse(type, result.ToString());
-        }
 
         /// <summary>
         /// Checks if an enumerated type contains a value
@@ -112,6 +64,30 @@ namespace Sharparam.SharpBlade.Extensions
         }
 
         /// <summary>
+        /// Includes an enumerated type and returns the new value
+        /// </summary>
+        /// <typeparam name="T">The type of the value(s) being appended.</typeparam>
+        /// <param name="value">The <see cref="Enum" /> to add values to.</param>
+        /// <param name="append">The value(s) to append.</param>
+        /// <returns>A new enumeration of the specified type with the
+        /// value(s) in the parameter append included.</returns>
+        public static T Include<T>(this Enum value, T append)
+        {
+            var type = value.GetType();
+
+            // determine the values
+            object result = value;
+            var parsed = new Value(append, type);
+            if (parsed.Signed.HasValue)
+                result = Convert.ToInt64(value) | (long)parsed.Signed;
+            else if (parsed.Unsigned.HasValue)
+                result = Convert.ToUInt64(value) | (ulong)parsed.Unsigned;
+
+            // return the final value
+            return (T)Enum.Parse(type, result.ToString());
+        }
+
+        /// <summary>
         /// Checks if an enumerated type is missing a value
         /// </summary>
         /// <typeparam name="T">The type of the <c>value</c> parameter.</typeparam>
@@ -122,6 +98,30 @@ namespace Sharparam.SharpBlade.Extensions
         public static bool Missing<T>(this Enum obj, T value)
         {
             return !Has(obj, value);
+        }
+
+        /// <summary>
+        /// Removes an enumerated type and returns the new value
+        /// </summary>
+        /// <typeparam name="T">The type of the value(s) being removed.</typeparam>
+        /// <param name="value">The <see cref="Enum" /> to remove values from.</param>
+        /// <param name="remove">The value(s) to remove from the enumeration.</param>
+        /// <returns>A new enumeration of the specified type with the value(s)
+        /// supplied in <c>remove</c> removed.</returns>
+        public static T Remove<T>(this Enum value, T remove)
+        {
+            Type type = value.GetType();
+
+            // determine the values
+            object result = value;
+            var parsed = new Value(remove, type);
+            if (parsed.Signed.HasValue)
+                result = Convert.ToInt64(value) & ~(long)parsed.Signed;
+            else if (parsed.Unsigned.HasValue)
+                result = Convert.ToUInt64(value) & ~(ulong)parsed.Unsigned;
+
+            // return the final value
+            return (T)Enum.Parse(type, result.ToString());
         }
 
         #endregion Extension Methods
@@ -148,14 +148,14 @@ namespace Sharparam.SharpBlade.Extensions
             // cached comparisons for tye to use
 
             /// <summary>
-            /// Cached comparison variable for unsigned 64bit integers.
-            /// </summary>
-            private static readonly Type CachedUInt64 = typeof(ulong);
-
-            /// <summary>
             /// Cached comparison variable for unsigned 32bit integers.
             /// </summary>
             private static readonly Type CachedUint32 = typeof(long);
+
+            /// <summary>
+            /// Cached comparison variable for unsigned 64bit integers.
+            /// </summary>
+            private static readonly Type CachedUInt64 = typeof(ulong);
 
             /// <summary>
             /// Initializes a new instance of the <see cref="Value" /> class.

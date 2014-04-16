@@ -44,26 +44,9 @@ namespace Sharparam.SharpBlade.Native
          */
 
         /// <summary>
-        /// Number of dynamic keys per row on the device.
+        /// Color depth of the device's display areas.
         /// </summary>
-        public const int DynamicKeysPerRow = 5;
-
-        /// <summary>
-        /// Number of rows on the dynamic keys.
-        /// </summary>
-        public const int DynamicKeysRows = 2;
-
-        /// <summary>
-        /// Total number of dynamic keys that exist on the device.
-        /// </summary>
-        public const int DynamicKeysCount = DynamicKeysPerRow * DynamicKeysRows;
-
-        /// <summary>
-        /// The width of one dynamic key, in pixels.
-        /// </summary>
-        /// <remarks>Note that this refers to the width of the display area on a dynamic key,
-        /// not physical size.</remarks>
-        public const int DynamicKeyWidth = 115;
+        public const int DisplayColorDepth = 16;
 
         /// <summary>
         /// The height of one dynamic key, in pixels.
@@ -77,29 +60,31 @@ namespace Sharparam.SharpBlade.Native
         /// </summary>
         public const int DynamicKeyImageDataSize = DynamicKeyWidth * DynamicKeyHeight * sizeof(ushort);
 
+        /// <summary>
+        /// Total number of dynamic keys that exist on the device.
+        /// </summary>
+        public const int DynamicKeysCount = DynamicKeysPerRow * DynamicKeysRows;
+
+        /// <summary>
+        /// Number of dynamic keys per row on the device.
+        /// </summary>
+        public const int DynamicKeysPerRow = 5;
+
+        /// <summary>
+        /// Number of rows on the dynamic keys.
+        /// </summary>
+        public const int DynamicKeysRows = 2;
+
+        /// <summary>
+        /// The width of one dynamic key, in pixels.
+        /// </summary>
+        /// <remarks>Note that this refers to the width of the display area on a dynamic key,
+        /// not physical size.</remarks>
+        public const int DynamicKeyWidth = 115;
+
         /*
          * definitions for the Touchpad display region of the Switchblade
          */
-
-        /// <summary>
-        /// Width of the touchpad on standard devices.
-        /// </summary>
-        public const int TouchpadWidth = 800;
-
-        /// <summary>
-        /// Height of the touchpad on standard devices.
-        /// </summary>
-        public const int TouchpadHeight = 480;
-
-        /// <summary>
-        /// Size of image data to cover the touchpad.
-        /// </summary>
-        public const int TouchpadImageDataSize = TouchpadWidth * TouchpadHeight * sizeof(ushort);
-
-        /// <summary>
-        /// Color depth of the device's display areas.
-        /// </summary>
-        public const int DisplayColorDepth = 16;
 
         /// <summary>
         /// Max string length.
@@ -121,9 +106,34 @@ namespace Sharparam.SharpBlade.Native
         /// </summary>
         public const int PixelFormatRgb565 = 1;
 
+        /// <summary>
+        /// Height of the touchpad on standard devices.
+        /// </summary>
+        public const int TouchpadHeight = 480;
+
+        /// <summary>
+        /// Size of image data to cover the touchpad.
+        /// </summary>
+        public const int TouchpadImageDataSize = TouchpadWidth * TouchpadHeight * sizeof(ushort);
+
+        /// <summary>
+        /// Width of the touchpad on standard devices.
+        /// </summary>
+        public const int TouchpadWidth = 800;
+
         #endregion Constants
 
         #region Delegates
+
+        /// <summary>
+        /// Function delegate for app events.
+        /// </summary>
+        /// <param name="appEventType">The type of app event.</param>
+        /// <param name="dwAppMode">The app mode-</param>
+        /// <param name="dwProcessID">The process ID.</param>
+        /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate HRESULT AppEventCallbackDelegate(AppEventType appEventType, uint dwAppMode, uint dwProcessID);
 
         /// <summary>
         /// Function delegate for dynamic key callbacks.
@@ -137,14 +147,14 @@ namespace Sharparam.SharpBlade.Native
             DynamicKeyState dynamicKeyState);
 
         /// <summary>
-        /// Function delegate for app events.
+        /// Function delegate for keyboard callback.
         /// </summary>
-        /// <param name="appEventType">The type of app event.</param>
-        /// <param name="dwAppMode">The app mode-</param>
-        /// <param name="dwProcessID">The process ID.</param>
-        /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
+        /// <param name="uMsg">Indicates the keyboard event (WM_KEYDOWN, WM_KEYUP, WM_CHAR).</param>
+        /// <param name="wParam">Indicates the key that was pressed (Virtual Key value).</param>
+        /// <param name="lParam">Indicates key modifiers (CTRL, ALT, SHIFT).</param>
+        /// <returns><see cref="HRESULT" /> object indicating success or failure</returns>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate HRESULT AppEventCallbackDelegate(AppEventType appEventType, uint dwAppMode, uint dwProcessID);
+        public delegate HRESULT KeyboardCallbackFunctionDelegate(uint uMsg, UIntPtr wParam, IntPtr lParam);
 
         /// <summary>
         /// Function delegate for touchpad gesture events.
@@ -163,47 +173,64 @@ namespace Sharparam.SharpBlade.Native
             ushort wYPos,
             ushort wZPos);
 
-        /// <summary>
-        /// Function delegate for keyboard callback.
-        /// </summary>
-        /// <param name="uMsg">Indicates the keyboard event (WM_KEYDOWN, WM_KEYUP, WM_CHAR).</param>
-        /// <param name="wParam">Indicates the key that was pressed (Virtual Key value).</param>
-        /// <param name="lParam">Indicates key modifiers (CTRL, ALT, SHIFT).</param>
-        /// <returns><see cref="HRESULT" /> object indicating success or failure</returns>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate HRESULT KeyboardCallbackFunctionDelegate(uint uMsg, UIntPtr wParam, IntPtr lParam);
-
         #endregion Delegates
 
         #region Enumerations
 
         /// <summary>
-        /// Possible states of a dynamic key.
+        /// Mode that app is running in.
         /// </summary>
-        public enum DynamicKeyState
+        public enum AppEventMode
         {
             /// <summary>
-            /// No active state.
+            /// Running in applet mode.
+            /// </summary>
+            Applet = 0x02,
+
+            /// <summary>
+            /// Running normally.
+            /// </summary>
+            Normal = 0x04
+        }
+
+        /// <summary>
+        /// App event types used by Razer's AppEvent callback system.
+        /// </summary>
+        public enum AppEventType
+        {
+            /// <summary>
+            /// No/empty app event.
             /// </summary>
             None = 0,
 
             /// <summary>
-            /// Depressed state.
+            /// The Switchblade framework has activated the SDK application.
+            /// The application can resume its operations and update the Switchblade UI display.
             /// </summary>
-            Up,
+            Activated,
 
             /// <summary>
-            /// Pressed state.
+            /// The application has been deactivated to make way for another application.
+            /// In this state, the SDK application will not receive any Dynamic Key or Gesture events,
+            /// nor will it be able to update the Switchblade displays.
             /// </summary>
-            Down,
+            Deactivated,
 
             /// <summary>
-            /// Being held.
+            /// The Switchblade framework has initiated a request to close the application.
+            /// The application should perform cleanup and can terminate on its own when done.
             /// </summary>
-            Hold,
+            Close,
 
             /// <summary>
-            /// Invalid key state.
+            /// The Switchblade framework will forcibly close the application.
+            /// This event is always preceded by the <see cref="Close" /> event.
+            /// Cleanup should be done there.
+            /// </summary>
+            Exit,
+
+            /// <summary>
+            /// Invalid app event.
             /// </summary>
             Invalid
         }
@@ -240,6 +267,37 @@ namespace Sharparam.SharpBlade.Native
 
             /// <summary>
             /// Invalid direction.
+            /// </summary>
+            Invalid
+        }
+
+        /// <summary>
+        /// Possible states of a dynamic key.
+        /// </summary>
+        public enum DynamicKeyState
+        {
+            /// <summary>
+            /// No active state.
+            /// </summary>
+            None = 0,
+
+            /// <summary>
+            /// Depressed state.
+            /// </summary>
+            Up,
+
+            /// <summary>
+            /// Pressed state.
+            /// </summary>
+            Down,
+
+            /// <summary>
+            /// Being held.
+            /// </summary>
+            Hold,
+
+            /// <summary>
+            /// Invalid key state.
             /// </summary>
             Invalid
         }
@@ -313,136 +371,6 @@ namespace Sharparam.SharpBlade.Native
             /// Number of keys available.
             /// </summary>
             Count = 10
-        }
-
-        /// <summary>
-        /// Target displays available on SwitchBlade device.
-        /// </summary>
-        public enum TargetDisplay
-        {
-            /// <summary>
-            /// The touchpad screen.
-            /// </summary>
-            Widget = 0x10000,
-
-            /// <summary>
-            /// Dynamic key #1.
-            /// </summary>
-            DK1 = 0x10001,
-
-            /// <summary>
-            /// Dynamic key #2.
-            /// </summary>
-            DK2 = 0x10002,
-
-            /// <summary>
-            /// Dynamic key #3.
-            /// </summary>
-            DK3 = 0x10003,
-
-            /// <summary>
-            /// Dynamic key #4.
-            /// </summary>
-            DK4 = 0x10004,
-
-            /// <summary>
-            /// Dynamic key #5.
-            /// </summary>
-            DK5 = 0x10005,
-
-            /// <summary>
-            /// Dynamic key #6.
-            /// </summary>
-            DK6 = 0x10006,
-
-            /// <summary>
-            /// Dynamic key #7.
-            /// </summary>
-            DK7 = 0x10007,
-
-            /// <summary>
-            /// Dynamic key #8.
-            /// </summary>
-            DK8 = 0x10008,
-
-            /// <summary>
-            /// Dynamic key #9.
-            /// </summary>
-            DK9 = 0x10009,
-
-            /// <summary>
-            /// Dynamic key #10.
-            /// </summary>
-            DK10 = 0x1000A
-        }
-
-        /// <summary>
-        /// Supported pixel formats.
-        /// </summary>
-        public enum PixelType
-        {
-            /// <summary>
-            /// RGB565 pixel format.
-            /// </summary>
-            RGB565 = 0
-        }
-
-        /// <summary>
-        /// App event types used by Razer's AppEvent callback system.
-        /// </summary>
-        public enum AppEventType
-        {
-            /// <summary>
-            /// No/empty app event.
-            /// </summary>
-            None = 0,
-
-            /// <summary>
-            /// The Switchblade framework has activated the SDK application.
-            /// The application can resume its operations and update the Switchblade UI display.
-            /// </summary>
-            Activated,
-
-            /// <summary>
-            /// The application has been deactivated to make way for another application.
-            /// In this state, the SDK application will not receive any Dynamic Key or Gesture events,
-            /// nor will it be able to update the Switchblade displays.
-            /// </summary>
-            Deactivated,
-
-            /// <summary>
-            /// The Switchblade framework has initiated a request to close the application.
-            /// The application should perform cleanup and can terminate on its own when done.
-            /// </summary>
-            Close,
-
-            /// <summary>
-            /// The Switchblade framework will forcibly close the application.
-            /// This event is always preceded by the <see cref="Close" /> event.
-            /// Cleanup should be done there.
-            /// </summary>
-            Exit,
-
-            /// <summary>
-            /// Invalid app event.
-            /// </summary>
-            Invalid
-        }
-
-        /// <summary>
-        /// Mode that app is running in.
-        /// </summary>
-        public enum AppEventMode
-        {
-            /// <summary>
-            /// Running in applet mode.
-            /// </summary>
-            Applet = 0x02,
-
-            /// <summary>
-            /// Running normally.
-            /// </summary>
-            Normal = 0x04
         }
 
         /// <summary>
@@ -528,19 +456,81 @@ namespace Sharparam.SharpBlade.Native
             Undefined
         }
 
+        /// <summary>
+        /// Supported pixel formats.
+        /// </summary>
+        public enum PixelType
+        {
+            /// <summary>
+            /// RGB565 pixel format.
+            /// </summary>
+            RGB565 = 0
+        }
+
+        /// <summary>
+        /// Target displays available on SwitchBlade device.
+        /// </summary>
+        public enum TargetDisplay
+        {
+            /// <summary>
+            /// The touchpad screen.
+            /// </summary>
+            Widget = 0x10000,
+
+            /// <summary>
+            /// Dynamic key #1.
+            /// </summary>
+            DK1 = 0x10001,
+
+            /// <summary>
+            /// Dynamic key #2.
+            /// </summary>
+            DK2 = 0x10002,
+
+            /// <summary>
+            /// Dynamic key #3.
+            /// </summary>
+            DK3 = 0x10003,
+
+            /// <summary>
+            /// Dynamic key #4.
+            /// </summary>
+            DK4 = 0x10004,
+
+            /// <summary>
+            /// Dynamic key #5.
+            /// </summary>
+            DK5 = 0x10005,
+
+            /// <summary>
+            /// Dynamic key #6.
+            /// </summary>
+            DK6 = 0x10006,
+
+            /// <summary>
+            /// Dynamic key #7.
+            /// </summary>
+            DK7 = 0x10007,
+
+            /// <summary>
+            /// Dynamic key #8.
+            /// </summary>
+            DK8 = 0x10008,
+
+            /// <summary>
+            /// Dynamic key #9.
+            /// </summary>
+            DK9 = 0x10009,
+
+            /// <summary>
+            /// Dynamic key #10.
+            /// </summary>
+            DK10 = 0x1000A
+        }
+
         #endregion Enumerations
 
         #region Macros
-
-        /// <summary>
-        /// Checks that the specified gesture type value is valid.
-        /// </summary>
-        /// <param name="a">Gesture type value to check.</param>
-        /// <returns>True if valid gesture, false otherwise.</returns>
-        public static bool ValidGesture(uint a)
-        {
-            return (a & (uint)GestureType.All) != 0;
-        }
 
         /// <summary>
         /// Checks if the gesture type value denotes a single gesture.
@@ -552,26 +542,19 @@ namespace Sharparam.SharpBlade.Native
             return 0 == ((a - a) & a);
         }
 
+        /// <summary>
+        /// Checks that the specified gesture type value is valid.
+        /// </summary>
+        /// <param name="a">Gesture type value to check.</param>
+        /// <returns>True if valid gesture, false otherwise.</returns>
+        public static bool ValidGesture(uint a)
+        {
+            return (a & (uint)GestureType.All) != 0;
+        }
+
         #endregion Macros
 
         #region Structs
-
-        /// <summary>
-        /// Specifies a specific point on the touchpad.
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        public struct Point
-        {
-            /// <summary>
-            /// X position on the touchpad.
-            /// </summary>
-            public int X;
-
-            /// <summary>
-            /// Y position on the touchpad.
-            /// </summary>
-            public int Y;
-        }
 
         /// <summary>
         /// Specifies the capabilities of this SwitchBlade device.
@@ -630,6 +613,23 @@ namespace Sharparam.SharpBlade.Native
         }
 
         /// <summary>
+        /// Specifies a specific point on the touchpad.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        public struct Point
+        {
+            /// <summary>
+            /// X position on the touchpad.
+            /// </summary>
+            public int X;
+
+            /// <summary>
+            /// Y position on the touchpad.
+            /// </summary>
+            public int Y;
+        }
+
+        /// <summary>
         /// Buffer data sent to display when rendering image data.
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
@@ -667,48 +667,87 @@ namespace Sharparam.SharpBlade.Native
             private const string DllName = "RzSwitchbladeSDK2.dll";
 
             /// <summary>
-            /// Grants access to the Switchblade device, establishing application connections.
+            /// Sets the callback function for application event callbacks.
             /// </summary>
+            /// <param name="callback">
+            /// Pointer to a callback function. If this argument is set to NULL, the routine clears the previously set callback function.
+            /// </param>
+            /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
+            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
+            internal static extern HRESULT RzSBAppEventSetCallback([In] AppEventCallbackDelegate callback);
+
+            /// <summary>
+            /// Enables or disables the keyboard capture functionality.
+            /// </summary>
+            /// <param name="enable">The enable state. true enables the capture while false disables it.</param>
             /// <remarks>
-            /// <see cref="RzSBStart" /> sets up the connections that allow an application to access the Switchblade hardware device.
-            /// This routine returns <see cref="HRESULT.RZSB_OK" /> on success, granting the calling application control of the device.
-            /// Subsequent calls to this routine prior to a matching <see cref="RzSBStop" /> call are ignored.
-            /// <see cref="RzSBStart" /> must be called before other Switchblade SDK routines will succeed.
-            /// <see cref="RzSBStart" /> must always be accompanied by an <see cref="RzSBStop" />.
-            /// COM initialization should be called prior to calling <see cref="RzSBStart" />.
-            /// If the application developer intends to use Single-Threaded Apartment model (STA) and call the SDK
-            /// functions within the same thread where the COM was initialized, then <c>CoInitialize()</c> should be called
-            /// before <see cref="RzSBStart" />. Note that some MFC controls automatically initializes to STA.
-            /// If the application developer intends to call the SDK functions on different threads,
-            /// then the <c>CoInitializeEx()</c> should be called before <see cref="RzSBStart" />.
-            /// Note: When the <see cref="RzSBStart()" /> is called without the COM being initialized
-            /// (e.g. thru calling <c>CoInitializeEx</c>)
-            /// the SDK initializes the COM to Multi-Threaded Apartment (MTA) model.
-            /// As such, callers must invoke SDK functions from an MTA thread.
-            /// Future SDK versions will move these calls into an isolated STA, giving application developers additional
-            /// freedom to use COM in any fashion.
-            /// However, application developers may already implement their own processing to isolate the SDK
-            /// initialization and calls to avoid the issues for COM in different threading models.
+            /// When the capture is enabled, the SDK application can receive keyboard
+            /// input events through the callback assigned using <see cref="RzSBKeyboardCaptureSetCallback" />.
+            /// The OS will not receive any keyboard input from the Switchblade device as long as the capture is active.
+            /// Hence, applications must release the capture when no longer in use (call <see cref="RzSBEnableGesture" /> with false as parameter).
+            /// The function only affects the keyboard device where the application is running. Other keyboard devices will work normally.
             /// </remarks>
             /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
             [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-            internal static extern HRESULT RzSBStart();
+            internal static extern HRESULT RzSBCaptureKeyboard(bool enable);
 
             /// <summary>
-            /// Cleans up the Switchblade device connections and releases it for other applications.
+            /// Sets the callback function for dynamic key events.
             /// </summary>
-            /// <remarks>
-            /// <see cref="RzSBStop" /> cleans up the connections made by <see cref="RzSBStart" />.
-            /// This routine releases an application’s control of the Switchblade hardware device,
-            /// allowing other applications to take control.
-            /// Subsequent calls to this routine prior to a matching <see cref="RzSBStart" /> are ignored.
-            /// If an application terminates after calling <see cref="RzSBStart" />
-            /// without a matching call to <see cref="RzSBStop" />,
-            /// other applications may fail to acquire control of the Switchblade device.
-            /// In this case, manually kill the framework processes.
-            /// </remarks>
+            /// <param name="callback">
+            /// Pointer to a callback function. If this argument is set to NULL, the routine clears the previously set callback function.
+            /// </param>
+            /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
             [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-            internal static extern void RzSBStop();
+            internal static extern HRESULT RzSBDynamicKeySetCallback([In] DynamicKeyCallbackFunctionDelegate callback);
+
+            /// <summary>
+            /// Enables or disables gesture events.
+            /// </summary>
+            /// <param name="gestureType"><see cref="GestureType" /> to be enabled or disabled.</param>
+            /// <param name="enable">The enable state. true enables the gesture while false disables it.</param>
+            /// <remarks>
+            /// In nearly all cases, gestural events are preceded by a <see cref="GestureType.Press" /> event.
+            /// With multiple finger gestures, the first finger contact registers as a press,
+            /// and the touchpad reports subsequent contacts as the appropriate compound gesture (tap, flick, zoom or rotate).
+            /// </remarks>
+            /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
+            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
+            internal static extern HRESULT RzSBEnableGesture([In] GestureType gestureType, [In] bool enable);
+
+            /// <summary>
+            /// Enables or disables gesture event forwarding to the OS.
+            /// </summary>
+            /// <param name="gestureType"><see cref="GestureType" /> to be enabled or disabled.</param>
+            /// <param name="enable">The enable state. true enables the gesture while false disables it.</param>
+            /// <remarks>
+            /// Setting the <see cref="GestureType.Press"/> for OS gesture is equivalent to
+            /// <see cref="GestureType.Press"/>, <see cref="GestureType.Move" /> and <see cref="GestureType.Release" />.
+            /// </remarks>
+            /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
+            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
+            internal static extern HRESULT RzSBEnableOSGesture([In] GestureType gestureType, [In] bool enable);
+
+            /// <summary>
+            /// Sets the callback function for gesture events.
+            /// </summary>
+            /// <param name="callback">
+            /// Pointer to a callback function. If this argument is set to NULL, the routine clears the previously set callback function.
+            /// </param>
+            /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
+            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
+            internal static extern HRESULT RzSBGestureSetCallback([In] TouchpadGestureCallbackFunctionDelegate callback);
+
+            /// <summary>
+            /// Sets the callback function for dynamic key events. [sic]
+            /// </summary>
+            /// <param name="callback">
+            /// Pointer to a callback function. If this argument is set to NULL, the routine clears the previously set callback function.
+            /// </param>
+            /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
+            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
+            internal static extern HRESULT RzSBKeyboardCaptureSetCallback(
+                [In] KeyboardCallbackFunctionDelegate callback);
 
             /// <summary>
             /// Collects information about the SDK and the hardware supported.
@@ -780,87 +819,48 @@ namespace Sharparam.SharpBlade.Native
             internal static extern HRESULT RzSBSetImageTouchpad([In] [MarshalAs(UnmanagedType.LPWStr)] string filename);
 
             /// <summary>
-            /// Sets the callback function for application event callbacks.
+            /// Grants access to the Switchblade device, establishing application connections.
             /// </summary>
-            /// <param name="callback">
-            /// Pointer to a callback function. If this argument is set to NULL, the routine clears the previously set callback function.
-            /// </param>
-            /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-            internal static extern HRESULT RzSBAppEventSetCallback([In] AppEventCallbackDelegate callback);
-
-            /// <summary>
-            /// Sets the callback function for dynamic key events.
-            /// </summary>
-            /// <param name="callback">
-            /// Pointer to a callback function. If this argument is set to NULL, the routine clears the previously set callback function.
-            /// </param>
-            /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-            internal static extern HRESULT RzSBDynamicKeySetCallback([In] DynamicKeyCallbackFunctionDelegate callback);
-
-            /// <summary>
-            /// Enables or disables the keyboard capture functionality.
-            /// </summary>
-            /// <param name="enable">The enable state. true enables the capture while false disables it.</param>
             /// <remarks>
-            /// When the capture is enabled, the SDK application can receive keyboard
-            /// input events through the callback assigned using <see cref="RzSBKeyboardCaptureSetCallback" />.
-            /// The OS will not receive any keyboard input from the Switchblade device as long as the capture is active.
-            /// Hence, applications must release the capture when no longer in use (call <see cref="RzSBEnableGesture" /> with false as parameter).
-            /// The function only affects the keyboard device where the application is running. Other keyboard devices will work normally.
+            /// <see cref="RzSBStart" /> sets up the connections that allow an application to access the Switchblade hardware device.
+            /// This routine returns <see cref="HRESULT.RZSB_OK" /> on success, granting the calling application control of the device.
+            /// Subsequent calls to this routine prior to a matching <see cref="RzSBStop" /> call are ignored.
+            /// <see cref="RzSBStart" /> must be called before other Switchblade SDK routines will succeed.
+            /// <see cref="RzSBStart" /> must always be accompanied by an <see cref="RzSBStop" />.
+            /// COM initialization should be called prior to calling <see cref="RzSBStart" />.
+            /// If the application developer intends to use Single-Threaded Apartment model (STA) and call the SDK
+            /// functions within the same thread where the COM was initialized, then <c>CoInitialize()</c> should be called
+            /// before <see cref="RzSBStart" />. Note that some MFC controls automatically initializes to STA.
+            /// If the application developer intends to call the SDK functions on different threads,
+            /// then the <c>CoInitializeEx()</c> should be called before <see cref="RzSBStart" />.
+            /// Note: When the <see cref="RzSBStart()" /> is called without the COM being initialized
+            /// (e.g. thru calling <c>CoInitializeEx</c>)
+            /// the SDK initializes the COM to Multi-Threaded Apartment (MTA) model.
+            /// As such, callers must invoke SDK functions from an MTA thread.
+            /// Future SDK versions will move these calls into an isolated STA, giving application developers additional
+            /// freedom to use COM in any fashion.
+            /// However, application developers may already implement their own processing to isolate the SDK
+            /// initialization and calls to avoid the issues for COM in different threading models.
             /// </remarks>
             /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
             [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-            internal static extern HRESULT RzSBCaptureKeyboard(bool enable);
+            internal static extern HRESULT RzSBStart();
 
             /// <summary>
-            /// Sets the callback function for dynamic key events. [sic]
+            /// Cleans up the Switchblade device connections and releases it for other applications.
             /// </summary>
-            /// <param name="callback">
-            /// Pointer to a callback function. If this argument is set to NULL, the routine clears the previously set callback function.
-            /// </param>
-            /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-            internal static extern HRESULT RzSBKeyboardCaptureSetCallback(
-                [In] KeyboardCallbackFunctionDelegate callback);
-
-            /// <summary>
-            /// Sets the callback function for gesture events.
-            /// </summary>
-            /// <param name="callback">
-            /// Pointer to a callback function. If this argument is set to NULL, the routine clears the previously set callback function.
-            /// </param>
-            /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-            internal static extern HRESULT RzSBGestureSetCallback([In] TouchpadGestureCallbackFunctionDelegate callback);
-
-            /// <summary>
-            /// Enables or disables gesture events.
-            /// </summary>
-            /// <param name="gestureType"><see cref="GestureType" /> to be enabled or disabled.</param>
-            /// <param name="enable">The enable state. true enables the gesture while false disables it.</param>
             /// <remarks>
-            /// In nearly all cases, gestural events are preceded by a <see cref="GestureType.Press" /> event.
-            /// With multiple finger gestures, the first finger contact registers as a press,
-            /// and the touchpad reports subsequent contacts as the appropriate compound gesture (tap, flick, zoom or rotate).
+            /// <see cref="RzSBStop" /> cleans up the connections made by <see cref="RzSBStart" />.
+            /// This routine releases an application’s control of the Switchblade hardware device,
+            /// allowing other applications to take control.
+            /// Subsequent calls to this routine prior to a matching <see cref="RzSBStart" /> are ignored.
+            /// If an application terminates after calling <see cref="RzSBStart" />
+            /// without a matching call to <see cref="RzSBStop" />,
+            /// other applications may fail to acquire control of the Switchblade device.
+            /// In this case, manually kill the framework processes.
             /// </remarks>
-            /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
             [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-            internal static extern HRESULT RzSBEnableGesture([In] GestureType gestureType, [In] bool enable);
-
-            /// <summary>
-            /// Enables or disables gesture event forwarding to the OS.
-            /// </summary>
-            /// <param name="gestureType"><see cref="GestureType" /> to be enabled or disabled.</param>
-            /// <param name="enable">The enable state. true enables the gesture while false disables it.</param>
-            /// <remarks>
-            /// Setting the <see cref="GestureType.Press"/> for OS gesture is equivalent to
-            /// <see cref="GestureType.Press"/>, <see cref="GestureType.Move" /> and <see cref="GestureType.Release" />.
-            /// </remarks>
-            /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
-            [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-            internal static extern HRESULT RzSBEnableOSGesture([In] GestureType gestureType, [In] bool enable);
+            internal static extern void RzSBStop();
         }
 
         #endregion Functions

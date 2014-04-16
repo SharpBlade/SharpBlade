@@ -15,6 +15,16 @@ namespace Sharparam.SharpBlade.Native.WinAPI
     public static class Kernel32
     {
         /// <summary>
+        /// The code page recommended for consoles spawned with <see cref="NativeMethods.AllocConsole" />.
+        /// </summary>
+        public const int CODE_PAGE = 437;
+
+        /// <summary>
+        /// The standard error device. Initially, this is the active console screen buffer, CONOUT$.
+        /// </summary>
+        public const int STD_ERROR_HANDLE = -12;
+
+        /// <summary>
         /// The standard input device. Initially, this is the console input buffer, CONIN$.
         /// </summary>
         public const int STD_INPUT_HANDLE = -10;
@@ -25,16 +35,6 @@ namespace Sharparam.SharpBlade.Native.WinAPI
         public const int STD_OUTPUT_HANDLE = -11;
 
         /// <summary>
-        /// The standard error device. Initially, this is the active console screen buffer, CONOUT$.
-        /// </summary>
-        public const int STD_ERROR_HANDLE = -12;
-
-        /// <summary>
-        /// The code page recommended for consoles spawned with <see cref="NativeMethods.AllocConsole" />.
-        /// </summary>
-        public const int CODE_PAGE = 437;
-
-        /// <summary>
         /// Native methods for Kernel32.
         /// </summary>
         internal static class NativeMethods
@@ -43,25 +43,6 @@ namespace Sharparam.SharpBlade.Native.WinAPI
             /// DLL file to import functions from.
             /// </summary>
             private const string DllName = "kernel32.dll";
-
-            /// <summary>
-            /// Retrieves a handle to the specified standard device (standard input, standard output, or standard error).
-            /// </summary>
-            /// <param name="nStdHandle">The standard device.</param>
-            /// <returns>
-            /// If the function succeeds, the return value is a handle to the specified device,
-            /// or a redirected handle set by a previous call to <c>SetStdHandle</c>.
-            /// The handle has <c>GENERIC_READ</c> and <c>GENERIC_WRITE</c> access rights,
-            /// unless the application has used <c>SetStdHandle</c> to set a standard handle with lesser access.
-            /// If the function fails, the return value is <c>INVALID_HANDLE_VALUE</c>.
-            /// To get extended error information, call <c>GetLastError</c>.
-            /// If an application does not have associated standard handles,
-            /// such as a service running on an interactive desktop,
-            /// and has not redirected them, the return value is <c>NULL</c>.
-            /// </returns>
-            [DllImport(DllName, EntryPoint = "GetStdHandle", SetLastError = true, CharSet = CharSet.Auto,
-                CallingConvention = CallingConvention.StdCall)]
-            internal static extern IntPtr GetStdHandle(int nStdHandle);
 
             /// <summary>
             /// Allocates a new console for the calling process.
@@ -112,6 +93,25 @@ namespace Sharparam.SharpBlade.Native.WinAPI
             [DllImport(DllName, EntryPoint = "FreeConsole", SetLastError = true, CharSet = CharSet.Auto,
                 CallingConvention = CallingConvention.StdCall)]
             internal static extern int FreeConsole();
+
+            /// <summary>
+            /// Retrieves a handle to the specified standard device (standard input, standard output, or standard error).
+            /// </summary>
+            /// <param name="nStdHandle">The standard device.</param>
+            /// <returns>
+            /// If the function succeeds, the return value is a handle to the specified device,
+            /// or a redirected handle set by a previous call to <c>SetStdHandle</c>.
+            /// The handle has <c>GENERIC_READ</c> and <c>GENERIC_WRITE</c> access rights,
+            /// unless the application has used <c>SetStdHandle</c> to set a standard handle with lesser access.
+            /// If the function fails, the return value is <c>INVALID_HANDLE_VALUE</c>.
+            /// To get extended error information, call <c>GetLastError</c>.
+            /// If an application does not have associated standard handles,
+            /// such as a service running on an interactive desktop,
+            /// and has not redirected them, the return value is <c>NULL</c>.
+            /// </returns>
+            [DllImport(DllName, EntryPoint = "GetStdHandle", SetLastError = true, CharSet = CharSet.Auto,
+                CallingConvention = CallingConvention.StdCall)]
+            internal static extern IntPtr GetStdHandle(int nStdHandle);
         }
     }
 }

@@ -1,29 +1,29 @@
 ﻿// ---------------------------------------------------------------------------------------
 // <copyright file="Touchpad.cs" company="SharpBlade">
 //     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
-// 
+//
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
 //     this software and associated documentation files (the "Software"), to deal in
 //     the Software without restriction, including without limitation the rights to
 //     use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
 //     of the Software, and to permit persons to whom the Software is furnished to do
 //     so, subject to the following conditions:
-// 
+//
 //     The above copyright notice and this permission notice shall be included in all
 //     copies or substantial portions of the Software.
-// 
+//
 //     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 //     IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 //     FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 //     AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 //     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 //     CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// 
+//
 //     Disclaimer: SharpBlade is in no way affiliated
 //     with Razer and/or any of its employees and/or licensors.
 //     Adam Hellberg does not take responsibility for any harm caused, direct
 //     or indirect, to any Razer peripherals via the use of SharpBlade.
-// 
+//
 //     "Razer" is a trademark of Razer USA Ltd.
 // </copyright>
 // ---------------------------------------------------------------------------------------
@@ -54,24 +54,19 @@ namespace Sharparam.SharpBlade.Razer
     public class Touchpad : IDisposable
     {
         /// <summary>
-        /// Instance of Touchpad for the singleton.
-        /// </summary>
-        private static Touchpad _instance;
-
-        /// <summary>
         /// Gesture callback that is used as parameter in <see cref="RazerAPI.NativeMethods.RzSBGestureSetCallback" />.
         /// </summary>
         private static RazerAPI.TouchpadGestureCallbackFunctionDelegate _gestureCallback;
 
         /// <summary>
+        /// Instance of Touchpad for the singleton.
+        /// </summary>
+        private static Touchpad _instance;
+
+        /// <summary>
         /// Log object for the <see cref="Touchpad" />.
         /// </summary>
         private readonly log4net.ILog _log;
-
-        /// <summary>
-        /// Indicates whether the <see cref="Touchpad" /> has been disposed.
-        /// </summary>
-        private bool _disposed;
 
         /// <summary>
         /// Currently active gestures.
@@ -92,6 +87,11 @@ namespace Sharparam.SharpBlade.Razer
         /// Whether or not all gestures are currently being forwarded to the OS.
         /// </summary>
         private bool _allOSGestureEnabled;
+
+        /// <summary>
+        /// Indicates whether the <see cref="Touchpad" /> has been disposed.
+        /// </summary>
+        private bool _disposed;
 
         /// <summary>
         /// <see cref="Renderer" /> instance used to render forms or windows.
@@ -124,39 +124,14 @@ namespace Sharparam.SharpBlade.Razer
         }
 
         /// <summary>
-        /// Raised when a gesture occurs on the touchpad.
-        /// </summary>
-        public event EventHandler<GestureEventArgs> Gesture;
-
-        /// <summary>
-        /// Raised when the touchpad is pressed.
-        /// </summary>
-        public event EventHandler<PressEventArgs> Press;
-
-        /// <summary>
-        /// Raised when the touchpad is tapped.
-        /// </summary>
-        public event EventHandler<TapEventArgs> Tap;
-
-        /// <summary>
         /// Raised when a finger(s?) flick on the touchpad.
         /// </summary>
         public event EventHandler<FlickEventArgs> Flick;
 
         /// <summary>
-        /// Raised when a pinch motion is performed on the touchpad.
+        /// Raised when a gesture occurs on the touchpad.
         /// </summary>
-        public event EventHandler<ZoomEventArgs> Zoom;
-
-        /// <summary>
-        /// Raised when a rotating motion is performed on the touchpad.
-        /// </summary>
-        public event EventHandler<RotateEventArgs> Rotate;
-
-        /// <summary>
-        /// Raised when the finger moves on the touchpad.
-        /// </summary>
-        public event EventHandler<MoveEventArgs> Move;
+        public event EventHandler<GestureEventArgs> Gesture;
 
         /// <summary>
         /// Raised when a finger is held on the touchpad.
@@ -164,14 +139,39 @@ namespace Sharparam.SharpBlade.Razer
         public event EventHandler<GestureEventArgs> Hold;
 
         /// <summary>
+        /// Raised when the finger moves on the touchpad.
+        /// </summary>
+        public event EventHandler<MoveEventArgs> Move;
+
+        /// <summary>
+        /// Raised when the touchpad is pressed.
+        /// </summary>
+        public event EventHandler<PressEventArgs> Press;
+
+        /// <summary>
         /// Raised when a finger is released from the touchpad.
         /// </summary>
         public event EventHandler<ReleaseEventArgs> Release;
 
         /// <summary>
+        /// Raised when a rotating motion is performed on the touchpad.
+        /// </summary>
+        public event EventHandler<RotateEventArgs> Rotate;
+
+        /// <summary>
         /// Raised when a scrolling motion is performed on the touchpad.
         /// </summary>
         public event EventHandler<GestureEventArgs> Scroll;
+
+        /// <summary>
+        /// Raised when the touchpad is tapped.
+        /// </summary>
+        public event EventHandler<TapEventArgs> Tap;
+
+        /// <summary>
+        /// Raised when a pinch motion is performed on the touchpad.
+        /// </summary>
+        public event EventHandler<ZoomEventArgs> Zoom;
 
         /// <summary>
         /// Specifies what method to use for
@@ -200,6 +200,12 @@ namespace Sharparam.SharpBlade.Razer
         public Form CurrentForm { get; private set; }
 
         /// <summary>
+        /// Gets the path to the image currently shown on the touchpad,
+        /// or null if no image is showing.
+        /// </summary>
+        public string CurrentImage { get; private set; }
+
+        /// <summary>
         /// Gets the currently rendering Native window, <c>IntPtr.Zero</c> if no window set
         /// </summary>
         public IntPtr CurrentNativeWindow { get; private set; }
@@ -208,12 +214,6 @@ namespace Sharparam.SharpBlade.Razer
         /// Gets the currently rendering WPF window, null if no window is set.
         /// </summary>
         public Window CurrentWindow { get; private set; }
-
-        /// <summary>
-        /// Gets the path to the image currently shown on the touchpad,
-        /// or null if no image is showing.
-        /// </summary>
-        public string CurrentImage { get; private set; }
 
         /// <summary>
         /// Gets singleton instance of Touchpad.
@@ -236,6 +236,42 @@ namespace Sharparam.SharpBlade.Razer
         }
 
         #region Gesture Methods
+
+        /// <summary>
+        /// Disables a gesture from being handled by the touchpad.
+        /// </summary>
+        /// <param name="gestureType">Gesture to disable.</param>
+        public void DisableGesture(RazerAPI.GestureType gestureType)
+        {
+            SetGesture(gestureType, false);
+        }
+
+        /// <summary>
+        /// Disables forwarding of a gesture.
+        /// </summary>
+        /// <param name="gestureType">Gesture to disable.</param>
+        public void DisableOSGesture(RazerAPI.GestureType gestureType)
+        {
+            SetOSGesture(gestureType, false);
+        }
+
+        /// <summary>
+        /// Enables a gesture to be handled by the touchpad.
+        /// </summary>
+        /// <param name="gestureType">Gesture to enable.</param>
+        public void EnableGesture(RazerAPI.GestureType gestureType)
+        {
+            SetGesture(gestureType, true);
+        }
+
+        /// <summary>
+        /// Enables a gesture to be forwarded to the host operating system.
+        /// </summary>
+        /// <param name="gestureType">Gesture to forward.</param>
+        public void EnableOSGesture(RazerAPI.GestureType gestureType)
+        {
+            SetOSGesture(gestureType, true);
+        }
 
         /// <summary>
         /// Sets whether a gesture should be handled by the touchpad.
@@ -304,24 +340,6 @@ namespace Sharparam.SharpBlade.Razer
         }
 
         /// <summary>
-        /// Enables a gesture to be handled by the touchpad.
-        /// </summary>
-        /// <param name="gestureType">Gesture to enable.</param>
-        public void EnableGesture(RazerAPI.GestureType gestureType)
-        {
-            SetGesture(gestureType, true);
-        }
-
-        /// <summary>
-        /// Disables a gesture from being handled by the touchpad.
-        /// </summary>
-        /// <param name="gestureType">Gesture to disable.</param>
-        public void DisableGesture(RazerAPI.GestureType gestureType)
-        {
-            SetGesture(gestureType, false);
-        }
-
-        /// <summary>
         /// Sets whether a gesture should be forwarded to the host operating system.
         /// </summary>
         /// <param name="gestureType">Gesture to set.</param>
@@ -379,27 +397,22 @@ namespace Sharparam.SharpBlade.Razer
             _allOSGestureEnabled = _activeGesturesType == RazerAPI.GestureType.All && enabled;
         }
 
-        /// <summary>
-        /// Enables a gesture to be forwarded to the host operating system.
-        /// </summary>
-        /// <param name="gestureType">Gesture to forward.</param>
-        public void EnableOSGesture(RazerAPI.GestureType gestureType)
-        {
-            SetOSGesture(gestureType, true);
-        }
-
-        /// <summary>
-        /// Disables forwarding of a gesture.
-        /// </summary>
-        /// <param name="gestureType">Gesture to disable.</param>
-        public void DisableOSGesture(RazerAPI.GestureType gestureType)
-        {
-            SetOSGesture(gestureType, false);
-        }
-
         #endregion Gesture Methods
 
         #region Drawing Methods
+
+        /// <summary>
+        /// Clears anything drawing to the touchpad.
+        /// Also clears the current image if one is set.
+        /// </summary>
+        /// <remarks>
+        /// Will not attempt to clear the image if the object is disposing,
+        /// in order to avoid sending commands to the hardware.
+        /// </remarks>
+        public void Clear()
+        {
+            Clear(false);
+        }
 
         /// <summary>
         /// Renders a raw bitmap to the touchpad display.
@@ -483,6 +496,7 @@ namespace Sharparam.SharpBlade.Razer
 
             BitmapEncoder encoder = new BmpBitmapEncoder();
 
+            // CA2202 warning marked here, for reference, complains about possible multiple dispose of MemoryStream stream
             using (var stream = new MemoryStream())
             {
                 encoder.Frames.Add(BitmapFrame.Create(rtb));
@@ -504,9 +518,31 @@ namespace Sharparam.SharpBlade.Razer
 
                 encoder.Frames.Clear();
             }
-                // CA2202 warning marked here, for reference, complains about possible multiple dispose of MemoryStream stream
 
             rtb.Clear();
+        }
+
+        /// <summary>
+        /// Sets an <see cref="IBitmapProvider" /> to provide the Touchpad with
+        /// a <see cref="Bitmap" /> object to draw.
+        /// Initializes the polling interval to 42ms (circa 24 FPS).
+        /// </summary>
+        /// <param name="provider">An object implementing the <see cref="IBitmapProvider" /> interface.</param>
+        public void SetBitmapProvider(IBitmapProvider provider)
+        {
+            SetBitmapProvider(provider, new TimeSpan(0, 0, 0, 0, 42));
+        }
+
+        /// <summary>
+        /// Sets an <see cref="IBitmapProvider" /> to provide the Touchpad with
+        /// a <see cref="Bitmap" /> object to draw.
+        /// </summary>
+        /// <param name="provider">An object implementing the <see cref="IBitmapProvider" /> interface.</param>
+        /// <param name="interval">How often to query the object for a bitmap and draw it.</param>
+        public void SetBitmapProvider(IBitmapProvider provider, TimeSpan interval)
+        {
+            Clear();
+            _renderer = new BitmapRenderer(this, provider, interval);
         }
 
         /// <summary>
@@ -527,6 +563,23 @@ namespace Sharparam.SharpBlade.Razer
                 CurrentForm.Paint += FormPaintHandler;
             else
                 _renderer = new WinFormsRenderer(this, CurrentForm, interval);
+        }
+
+        /// <summary>
+        /// Set a static image to be displayed on the touchpad.
+        /// </summary>
+        /// <param name="image">Path to image.</param>
+        public void SetImage(string image)
+        {
+            Clear();
+
+            image = IO.GetAbsolutePath(image);
+
+            var result = RazerAPI.NativeMethods.RzSBSetImageTouchpad(image);
+            if (HRESULT.RZSB_FAILED(result))
+                throw new RazerNativeException("RzSBSetImageTouchpad", result);
+
+            CurrentImage = image;
         }
 
         /// <summary>
@@ -575,59 +628,6 @@ namespace Sharparam.SharpBlade.Razer
         }
 
         /// <summary>
-        /// Sets an <see cref="IBitmapProvider" /> to provide the Touchpad with
-        /// a <see cref="Bitmap" /> object to draw.
-        /// Initializes the polling interval to 42ms (circa 24 FPS).
-        /// </summary>
-        /// <param name="provider">An object implementing the <see cref="IBitmapProvider" /> interface.</param>
-        public void SetBitmapProvider(IBitmapProvider provider)
-        {
-            SetBitmapProvider(provider, new TimeSpan(0, 0, 0, 0, 42));
-        }
-
-        /// <summary>
-        /// Sets an <see cref="IBitmapProvider" /> to provide the Touchpad with
-        /// a <see cref="Bitmap" /> object to draw.
-        /// </summary>
-        /// <param name="provider">An object implementing the <see cref="IBitmapProvider" /> interface.</param>
-        /// <param name="interval">How often to query the object for a bitmap and draw it.</param>
-        public void SetBitmapProvider(IBitmapProvider provider, TimeSpan interval)
-        {
-            Clear();
-            _renderer = new BitmapRenderer(this, provider, interval);
-        }
-
-        /// <summary>
-        /// Set a static image to be displayed on the touchpad.
-        /// </summary>
-        /// <param name="image">Path to image.</param>
-        public void SetImage(string image)
-        {
-            Clear();
-
-            image = IO.GetAbsolutePath(image);
-
-            var result = RazerAPI.NativeMethods.RzSBSetImageTouchpad(image);
-            if (HRESULT.RZSB_FAILED(result))
-                throw new RazerNativeException("RzSBSetImageTouchpad", result);
-
-            CurrentImage = image;
-        }
-
-        /// <summary>
-        /// Clears anything drawing to the touchpad.
-        /// Also clears the current image if one is set.
-        /// </summary>
-        /// <remarks>
-        /// Will not attempt to clear the image if the object is disposing,
-        /// in order to avoid sending commands to the hardware.
-        /// </remarks>
-        public void Clear()
-        {
-            Clear(false);
-        }
-
-        /// <summary>
         /// Clears anything drawing to the touchpad.
         /// Also clears the current image if one is set.
         /// </summary>
@@ -652,6 +652,18 @@ namespace Sharparam.SharpBlade.Razer
 
             _renderer.Dispose();
             _renderer = null;
+        }
+
+        /// <summary>
+        /// Clears the current form from touchpad
+        /// and stops rendering of it.
+        /// </summary>
+        private void ClearForm()
+        {
+            if (CurrentForm != null && _renderer == null)
+                CurrentForm.Paint -= FormPaintHandler;
+
+            CurrentForm = null;
         }
 
         /// <summary>
@@ -689,18 +701,6 @@ namespace Sharparam.SharpBlade.Razer
             CurrentWindow = null;
         }
 
-        /// <summary>
-        /// Clears the current form from touchpad
-        /// and stops rendering of it.
-        /// </summary>
-        private void ClearForm()
-        {
-            if (CurrentForm != null && _renderer == null)
-                CurrentForm.Paint -= FormPaintHandler;
-
-            CurrentForm = null;
-        }
-
         #endregion Drawing Methods
 
         /// <summary>
@@ -721,46 +721,6 @@ namespace Sharparam.SharpBlade.Razer
         #region Event Dispatchers
 
         /// <summary>
-        /// Raises gesture event to subscribers.
-        /// </summary>
-        /// <param name="gestureType">Type of gesture.</param>
-        /// <param name="parameter">Contextual parameter associated with gesture.</param>
-        /// <param name="x">X position of gesture.</param>
-        /// <param name="y">Y position of gesture.</param>
-        /// <param name="z">Z position of gesture.</param>
-        private void OnGesture(RazerAPI.GestureType gestureType, uint parameter, ushort x, ushort y, ushort z)
-        {
-            var func = Gesture;
-            if (func != null)
-                func(this, new GestureEventArgs(gestureType, parameter, x, y, z));
-        }
-
-        /// <summary>
-        /// Raises press gesture event to subscribers.
-        /// </summary>
-        /// <param name="touchCount">Number of touch points.</param>
-        /// <param name="x">X position of press.</param>
-        /// <param name="y">Y position of press.</param>
-        private void OnPress(uint touchCount, ushort x, ushort y)
-        {
-            var func = Press;
-            if (func != null)
-                func(this, new PressEventArgs(touchCount, x, y));
-        }
-
-        /// <summary>
-        /// Raises tap gesture event to subscribers.
-        /// </summary>
-        /// <param name="x">X position of tap.</param>
-        /// <param name="y">Y position of tap.</param>
-        private void OnTap(ushort x, ushort y)
-        {
-            var func = Tap;
-            if (func != null)
-                func(this, new TapEventArgs(x, y));
-        }
-
-        /// <summary>
         /// Raises flick gesture event to subscribers.
         /// </summary>
         /// <param name="touchCount">Number of touch points</param>
@@ -773,37 +733,18 @@ namespace Sharparam.SharpBlade.Razer
         }
 
         /// <summary>
-        /// Raises zoom gesture event to subscribers.
+        /// Raises gesture event to subscribers.
         /// </summary>
-        /// <param name="direction">Zoom direction.</param>
-        private void OnZoom(ZoomDirection direction)
+        /// <param name="gestureType">Type of gesture.</param>
+        /// <param name="parameter">Contextual parameter associated with gesture.</param>
+        /// <param name="x">X position of gesture.</param>
+        /// <param name="y">Y position of gesture.</param>
+        /// <param name="z">Z position of gesture.</param>
+        private void OnGesture(RazerAPI.GestureType gestureType, uint parameter, ushort x, ushort y, ushort z)
         {
-            var func = Zoom;
+            var func = Gesture;
             if (func != null)
-                func(this, new ZoomEventArgs(direction));
-        }
-
-        /// <summary>
-        /// Raises rotate gesture event to subscribers.
-        /// </summary>
-        /// <param name="direction">Rotate direction.</param>
-        private void OnRotate(RotateDirection direction)
-        {
-            var func = Rotate;
-            if (func != null)
-                func(this, new RotateEventArgs(direction));
-        }
-
-        /// <summary>
-        /// Raises move gesture event to subscribers.
-        /// </summary>
-        /// <param name="x">New X position.</param>
-        /// <param name="y">New Y position.</param>
-        private void OnMove(ushort x, ushort y)
-        {
-            var func = Move;
-            if (func != null)
-                func(this, new MoveEventArgs(x, y));
+                func(this, new GestureEventArgs(gestureType, parameter, x, y, z));
         }
 
         /// <summary>
@@ -821,6 +762,31 @@ namespace Sharparam.SharpBlade.Razer
         }
 
         /// <summary>
+        /// Raises move gesture event to subscribers.
+        /// </summary>
+        /// <param name="x">New X position.</param>
+        /// <param name="y">New Y position.</param>
+        private void OnMove(ushort x, ushort y)
+        {
+            var func = Move;
+            if (func != null)
+                func(this, new MoveEventArgs(x, y));
+        }
+
+        /// <summary>
+        /// Raises press gesture event to subscribers.
+        /// </summary>
+        /// <param name="touchCount">Number of touch points.</param>
+        /// <param name="x">X position of press.</param>
+        /// <param name="y">Y position of press.</param>
+        private void OnPress(uint touchCount, ushort x, ushort y)
+        {
+            var func = Press;
+            if (func != null)
+                func(this, new PressEventArgs(touchCount, x, y));
+        }
+
+        /// <summary>
         /// Raises release gesture event to subscribers.
         /// </summary>
         /// <param name="touchCount">Number of touch points.</param>
@@ -831,6 +797,17 @@ namespace Sharparam.SharpBlade.Razer
             var func = Release;
             if (func != null)
                 func(this, new ReleaseEventArgs(touchCount, x, y));
+        }
+
+        /// <summary>
+        /// Raises rotate gesture event to subscribers.
+        /// </summary>
+        /// <param name="direction">Rotate direction.</param>
+        private void OnRotate(RotateDirection direction)
+        {
+            var func = Rotate;
+            if (func != null)
+                func(this, new RotateEventArgs(direction));
         }
 
         /// <summary>
@@ -845,6 +822,29 @@ namespace Sharparam.SharpBlade.Razer
             var func = Scroll;
             if (func != null)
                 func(this, new GestureEventArgs(RazerAPI.GestureType.Scroll, param, x, y, z));
+        }
+
+        /// <summary>
+        /// Raises tap gesture event to subscribers.
+        /// </summary>
+        /// <param name="x">X position of tap.</param>
+        /// <param name="y">Y position of tap.</param>
+        private void OnTap(ushort x, ushort y)
+        {
+            var func = Tap;
+            if (func != null)
+                func(this, new TapEventArgs(x, y));
+        }
+
+        /// <summary>
+        /// Raises zoom gesture event to subscribers.
+        /// </summary>
+        /// <param name="direction">Zoom direction.</param>
+        private void OnZoom(ZoomDirection direction)
+        {
+            var func = Zoom;
+            if (func != null)
+                func(this, new ZoomEventArgs(direction));
         }
 
         #endregion Event Dispatchers
@@ -880,55 +880,55 @@ namespace Sharparam.SharpBlade.Razer
                     break;
 
                 case RazerAPI.GestureType.Flick:
-                {
-                    var direction = (RazerAPI.Direction)z;
-                    OnFlick(parameters, direction);
-                    break;
-                }
+                    {
+                        var direction = (RazerAPI.Direction)z;
+                        OnFlick(parameters, direction);
+                        break;
+                    }
 
                 case RazerAPI.GestureType.Zoom:
-                {
-                    ZoomDirection direction;
-                    switch (parameters)
                     {
-                        case 1:
-                            direction = ZoomDirection.In;
-                            break;
+                        ZoomDirection direction;
+                        switch (parameters)
+                        {
+                            case 1:
+                                direction = ZoomDirection.In;
+                                break;
 
-                        case 2:
-                            direction = ZoomDirection.Out;
-                            break;
+                            case 2:
+                                direction = ZoomDirection.Out;
+                                break;
 
-                        default:
-                            direction = ZoomDirection.Invalid;
-                            break;
+                            default:
+                                direction = ZoomDirection.Invalid;
+                                break;
+                        }
+
+                        OnZoom(direction);
+                        break;
                     }
-
-                    OnZoom(direction);
-                    break;
-                }
 
                 case RazerAPI.GestureType.Rotate:
-                {
-                    RotateDirection direction;
-                    switch (parameters)
                     {
-                        case 1:
-                            direction = RotateDirection.Clockwise;
-                            break;
+                        RotateDirection direction;
+                        switch (parameters)
+                        {
+                            case 1:
+                                direction = RotateDirection.Clockwise;
+                                break;
 
-                        case 2:
-                            direction = RotateDirection.CounterClockwise;
-                            break;
+                            case 2:
+                                direction = RotateDirection.CounterClockwise;
+                                break;
 
-                        default:
-                            direction = RotateDirection.Invalid;
-                            break;
+                            default:
+                                direction = RotateDirection.Invalid;
+                                break;
+                        }
+
+                        OnRotate(direction);
+                        break;
                     }
-
-                    OnRotate(direction);
-                    break;
-                }
 
                 case RazerAPI.GestureType.Move:
                     OnMove(x, y);

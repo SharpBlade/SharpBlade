@@ -1,29 +1,29 @@
 ﻿// ---------------------------------------------------------------------------------------
 // <copyright file="LogManager.cs" company="SharpBlade">
 //     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
-// 
+//
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
 //     this software and associated documentation files (the "Software"), to deal in
 //     the Software without restriction, including without limitation the rights to
 //     use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
 //     of the Software, and to permit persons to whom the Software is furnished to do
 //     so, subject to the following conditions:
-// 
+//
 //     The above copyright notice and this permission notice shall be included in all
 //     copies or substantial portions of the Software.
-// 
+//
 //     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 //     IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 //     FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 //     AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 //     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 //     CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// 
+//
 //     Disclaimer: SharpBlade is in no way affiliated
 //     with Razer and/or any of its employees and/or licensors.
 //     Adam Hellberg does not take responsibility for any harm caused, direct
 //     or indirect, to any Razer peripherals via the use of SharpBlade.
-// 
+//
 //     "Razer" is a trademark of Razer USA Ltd.
 // </copyright>
 // ---------------------------------------------------------------------------------------
@@ -35,29 +35,24 @@ using System.Xml.Linq;
 
 using log4net;
 using log4net.Config;
-#if DEBUG
-using System.Text;
-#endif
-#if DEBUG
-using Microsoft.Win32.SafeHandles;
-
-using Sharparam.SharpBlade.Native.WinAPI;
-
-#endif
 
 namespace Sharparam.SharpBlade.Logging
 {
+#if DEBUG
+
+    using System.Text;
+
+    using Microsoft.Win32.SafeHandles;
+
+    using Sharparam.SharpBlade.Native.WinAPI;
+
+#endif
+
     /// <summary>
     /// Provides helper methods for logging functions.
     /// </summary>
     public static class LogManager
     {
-        /// <summary>
-        /// Whether or not a log4net instance (and thus its config)
-        /// has been loaded.
-        /// </summary>
-        private static bool _loaded;
-
 #if DEBUG
 
         /// <summary>
@@ -66,6 +61,83 @@ namespace Sharparam.SharpBlade.Logging
         private static bool _consoleLoaded;
 
 #endif
+
+        /// <summary>
+        /// Whether or not a log4net instance (and thus its config)
+        /// has been loaded.
+        /// </summary>
+        private static bool _loaded;
+
+        /// <summary>
+        /// Clears old log files from specified log directory.
+        /// </summary>
+        /// <param name="daysOld">Delete log files older than this number of days.</param>
+        /// <param name="logsDir">The directory to check for log files.</param>
+        /// <remarks>This will delete ALL files in the specified directory,
+        /// regardless of file type.</remarks>
+        // ReSharper disable UnusedMember.Global
+        public static void ClearOldLogs(int daysOld = 7, string logsDir = "logs")
+            // ReSharper restore UnusedMember.Global
+        {
+            var log = GetLogger(typeof(LogManager));
+
+            if (!Directory.Exists(logsDir))
+            {
+                log.InfoFormat("Directory {0} not found, no logs to clear", logsDir);
+                return;
+            }
+
+            var now = DateTime.Now;
+            var max = new TimeSpan(daysOld, 0, 0, 0);
+            var count = 0;
+            foreach (var file in from file in Directory.GetFiles(logsDir)
+                                 let modTime = File.GetLastAccessTime(file)
+                                 let age = now.Subtract(modTime)
+                                 where age > max
+                                 select file)
+            {
+                try
+                {
+                    File.Delete(file);
+                    log.InfoFormat("Deleted old log file: {0}", file);
+                    count++;
+                }
+                catch (IOException ex)
+                {
+                    log.WarnFormat("Failed to delete log file: {0} ({1})", file, ex.Message);
+                }
+            }
+
+            log.InfoFormat("Done! Cleared {0} log files.", count);
+        }
+
+        /// <summary>
+        /// Destroys an open console, usually the one created by <see cref="SetupConsole" />.
+        /// </summary>
+        /// <remarks>Method body only compiled on DEBUG.</remarks>
+        // ReSharper disable UnusedMember.Global
+        public static void DestroyConsole() // ReSharper restore UnusedMember.Global
+        {
+#if DEBUG
+            if (_consoleLoaded)
+                Kernel32.NativeMethods.FreeConsole();
+#endif
+        }
+
+        /// <summary>
+        /// Gets a logger object associated with the specified object.
+        /// </summary>
+        /// <param name="sender">The object to get a logger for.</param>
+        /// <returns>An <see cref="ILog" /> that provides logging features.</returns>
+        public static ILog GetLogger(object sender)
+        {
+            if (!_loaded)
+                LoadConfig();
+
+            return
+                log4net.LogManager.GetLogger(
+                    sender.GetType().ToString() == "System.RuntimeType" ? (Type)sender : sender.GetType());
+        }
 
         /// <summary>
         /// Loads a configuration for the log4net library.
@@ -111,21 +183,6 @@ namespace Sharparam.SharpBlade.Logging
         }
 
         /// <summary>
-        /// Gets a logger object associated with the specified object.
-        /// </summary>
-        /// <param name="sender">The object to get a logger for.</param>
-        /// <returns>An <see cref="ILog" /> that provides logging features.</returns>
-        public static ILog GetLogger(object sender)
-        {
-            if (!_loaded)
-                LoadConfig();
-
-            return
-                log4net.LogManager.GetLogger(
-                    sender.GetType().ToString() == "System.RuntimeType" ? (Type)sender : sender.GetType());
-        }
-
-        /// <summary>
         /// Sets up a console for standard output.
         /// </summary>
         /// <remarks>Method body only compiled on DEBUG.</remarks>
@@ -145,62 +202,6 @@ namespace Sharparam.SharpBlade.Logging
             Console.SetOut(stdOut);
             _consoleLoaded = true;
 #endif
-        }
-
-        /// <summary>
-        /// Destroys an open console, usually the one created by <see cref="SetupConsole" />.
-        /// </summary>
-        /// <remarks>Method body only compiled on DEBUG.</remarks>
-        // ReSharper disable UnusedMember.Global
-        public static void DestroyConsole() // ReSharper restore UnusedMember.Global
-        {
-#if DEBUG
-            if (_consoleLoaded)
-                Kernel32.NativeMethods.FreeConsole();
-#endif
-        }
-
-        /// <summary>
-        /// Clears old log files from specified log directory.
-        /// </summary>
-        /// <param name="daysOld">Delete log files older than this number of days.</param>
-        /// <param name="logsDir">The directory to check for log files.</param>
-        /// <remarks>This will delete ALL files in the specified directory,
-        /// regardless of file type.</remarks>
-        // ReSharper disable UnusedMember.Global
-        public static void ClearOldLogs(int daysOld = 7, string logsDir = "logs")
-            // ReSharper restore UnusedMember.Global
-        {
-            var log = GetLogger(typeof(LogManager));
-
-            if (!Directory.Exists(logsDir))
-            {
-                log.InfoFormat("Directory {0} not found, no logs to clear", logsDir);
-                return;
-            }
-
-            var now = DateTime.Now;
-            var max = new TimeSpan(daysOld, 0, 0, 0);
-            var count = 0;
-            foreach (var file in from file in Directory.GetFiles(logsDir)
-                                 let modTime = File.GetLastAccessTime(file)
-                                 let age = now.Subtract(modTime)
-                                 where age > max
-                                 select file)
-            {
-                try
-                {
-                    File.Delete(file);
-                    log.InfoFormat("Deleted old log file: {0}", file);
-                    count++;
-                }
-                catch (IOException ex)
-                {
-                    log.WarnFormat("Failed to delete log file: {0} ({1})", file, ex.Message);
-                }
-            }
-
-            log.InfoFormat("Done! Cleared {0} log files.", count);
         }
     }
 }
