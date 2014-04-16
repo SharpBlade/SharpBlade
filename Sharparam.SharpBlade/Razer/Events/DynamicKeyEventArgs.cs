@@ -1,6 +1,6 @@
-﻿//---------------------------------------------------------------------------------------
+﻿// ---------------------------------------------------------------------------------------
 // <copyright file="DynamicKeyEventArgs.cs" company="SharpBlade">
-//     Copyright (c) 2013-2014 by Adam Hellberg and Brandon Scott.
+//     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
 //     this software and associated documentation files (the "Software"), to deal in
@@ -26,9 +26,10 @@
 //
 //     "Razer" is a trademark of Razer USA Ltd.
 // </copyright>
-//---------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------
 
 using System;
+
 using Sharparam.SharpBlade.Native;
 
 namespace Sharparam.SharpBlade.Razer.Events
@@ -43,7 +44,7 @@ namespace Sharparam.SharpBlade.Razer.Events
         /// The dynamic key that changed.
         /// </summary>
         public readonly RazerAPI.DynamicKeyType KeyType;
-        
+
         /// <summary>
         /// New key state.
         /// </summary>

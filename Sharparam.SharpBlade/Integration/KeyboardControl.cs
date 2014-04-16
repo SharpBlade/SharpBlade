@@ -1,6 +1,6 @@
-﻿//---------------------------------------------------------------------------------------
+﻿// ---------------------------------------------------------------------------------------
 // <copyright file="KeyboardControl.cs" company="SharpBlade">
-//     Copyright (c) 2013-2014 by Adam Hellberg and Brandon Scott.
+//     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
 //     this software and associated documentation files (the "Software"), to deal in
@@ -26,7 +26,7 @@
 //
 //     "Razer" is a trademark of Razer USA Ltd.
 // </copyright>
-//---------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------
 
 using System;
 using System.Globalization;
@@ -86,6 +86,18 @@ namespace Sharparam.SharpBlade.Integration
         }
 
         /// <summary>
+        /// Sends a char event to the active control.
+        /// </summary>
+        /// <param name="character">The character that was typed.</param>
+        internal void SendChar(char character)
+        {
+            if (_winFormControl != null && !_winFormControl.IsDisposed)
+                SendWinFormChar(character);
+            else if (_wpfControl != null)
+                SendWPFChar(character);
+        }
+
+        /// <summary>
         /// Sends a KeyDown event to the active control.
         /// </summary>
         /// <param name="key">The key that was pressed.</param>
@@ -110,15 +122,16 @@ namespace Sharparam.SharpBlade.Integration
         }
 
         /// <summary>
-        /// Sends a char event to the active control.
+        /// Sends WM_CHAR to WinForms control.
         /// </summary>
-        /// <param name="character">The character that was typed.</param>
-        internal void SendChar(char character)
+        /// <param name="character">Character that was typed.</param>
+        private void SendWinFormChar(char character)
         {
-            if (_winFormControl != null && !_winFormControl.IsDisposed)
-                SendWinFormChar(character);
-            else if (_wpfControl != null)
-                SendWPFChar(character);
+            User32.NativeMethods.PostMessage(
+                _winFormControl.Handle,
+                (uint)User32.MessageType.CHAR,
+                (IntPtr)character,
+                IntPtr.Zero);
         }
 
         /// <summary>
@@ -127,7 +140,11 @@ namespace Sharparam.SharpBlade.Integration
         /// <param name="key">Key that was pressed.</param>
         private void SendWinFormKeyDown(User32.VirtualKey key)
         {
-            User32.PostMessage(_winFormControl.Handle, (uint)User32.MessageType.KEYDOWN, (IntPtr)key, IntPtr.Zero);
+            User32.NativeMethods.PostMessage(
+                _winFormControl.Handle,
+                (uint)User32.MessageType.KEYDOWN,
+                (IntPtr)key,
+                IntPtr.Zero);
         }
 
         /// <summary>
@@ -136,16 +153,28 @@ namespace Sharparam.SharpBlade.Integration
         /// <param name="key">Key that was released.</param>
         private void SendWinFormKeyUp(User32.VirtualKey key)
         {
-            User32.PostMessage(_winFormControl.Handle, (uint)User32.MessageType.KEYUP, (IntPtr)key, IntPtr.Zero);
+            User32.NativeMethods.PostMessage(
+                _winFormControl.Handle,
+                (uint)User32.MessageType.KEYUP,
+                (IntPtr)key,
+                IntPtr.Zero);
         }
 
         /// <summary>
-        /// Sends WM_CHAR to WinForms control.
+        /// Sends a TextComposition event to the WPF control.
         /// </summary>
-        /// <param name="character">Character that was typed.</param>
-        private void SendWinFormChar(char character)
+        /// <param name="character">The character that was typed.</param>
+        private void SendWPFChar(char character)
         {
-            User32.PostMessage(_winFormControl.Handle, (uint)User32.MessageType.CHAR, (IntPtr)character, IntPtr.Zero);
+            // Because MS CBA to let us send chars directly
+            var str = character.ToString(CultureInfo.InvariantCulture);
+            _wpfControl.RaiseEvent(
+                new TextCompositionEventArgs(
+                    InputManager.Current.PrimaryKeyboardDevice,
+                    new TextComposition(InputManager.Current, _wpfControl, str))
+                {
+                    RoutedEvent = TextCompositionManager.TextInputEvent
+                });
         }
 
         /// <summary>
@@ -189,23 +218,6 @@ namespace Sharparam.SharpBlade.Integration
                 new KeyEventArgs(Keyboard.PrimaryDevice, PresentationSource.FromVisual(_wpfControl), 1, wpfKey)
                 {
                     RoutedEvent = Keyboard.KeyUpEvent
-                });
-        }
-
-        /// <summary>
-        /// Sends a TextComposition event to the WPF control.
-        /// </summary>
-        /// <param name="character">The character that was typed.</param>
-        private void SendWPFChar(char character)
-        {
-            // Because MS CBA to let us send chars directly
-            var str = character.ToString(CultureInfo.InvariantCulture);
-            _wpfControl.RaiseEvent(
-                new TextCompositionEventArgs(
-                    InputManager.Current.PrimaryKeyboardDevice,
-                    new TextComposition(InputManager.Current, _wpfControl, str))
-                {
-                    RoutedEvent = TextCompositionManager.TextInputEvent
                 });
         }
     }

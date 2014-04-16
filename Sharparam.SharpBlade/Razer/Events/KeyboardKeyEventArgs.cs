@@ -1,6 +1,6 @@
-﻿//---------------------------------------------------------------------------------------
+﻿// ---------------------------------------------------------------------------------------
 // <copyright file="KeyboardKeyEventArgs.cs" company="SharpBlade">
-//     Copyright (c) 2013-2014 by Adam Hellberg and Brandon Scott.
+//     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
 //     this software and associated documentation files (the "Software"), to deal in
@@ -26,9 +26,10 @@
 //
 //     "Razer" is a trademark of Razer USA Ltd.
 // </copyright>
-//---------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------
 
 using System;
+
 using Sharparam.SharpBlade.Extensions;
 using Sharparam.SharpBlade.Native.WinAPI;
 
@@ -39,6 +40,21 @@ namespace Sharparam.SharpBlade.Razer.Events
     /// </summary>
     public class KeyboardKeyEventArgs : EventArgs
     {
+        /// <summary>
+        /// Whether or not the alt key is pressed.
+        /// </summary>
+        public readonly bool AltPressed;
+
+        /// <summary>
+        /// Whether or not the caps lock key is active.
+        /// </summary>
+        public readonly bool CapsLockActive;
+
+        /// <summary>
+        /// Whether or not the control key is pressed.
+        /// </summary>
+        public readonly bool ControlPressed;
+
         /// <summary>
         /// Key that had its state changed.
         /// </summary>
@@ -53,21 +69,6 @@ namespace Sharparam.SharpBlade.Razer.Events
         /// Whether or not the shift key is pressed.
         /// </summary>
         public readonly bool ShiftPressed;
-
-        /// <summary>
-        /// Whether or not the control key is pressed.
-        /// </summary>
-        public readonly bool ControlPressed;
-
-        /// <summary>
-        /// Whether or not the alt key is pressed.
-        /// </summary>
-        public readonly bool AltPressed;
-
-        /// <summary>
-        /// Whether or not the caps lock key is active.
-        /// </summary>
-        public readonly bool CapsLockActive;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyboardKeyEventArgs" /> class.

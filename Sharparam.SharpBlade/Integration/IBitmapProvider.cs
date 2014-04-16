@@ -1,6 +1,6 @@
-﻿//---------------------------------------------------------------------------------------
-// <copyright file="RazerUnstableShutdownException.cs" company="SharpBlade">
-//     Copyright (c) 2013-2014 by Adam Hellberg and Brandon Scott.
+﻿// ---------------------------------------------------------------------------------------
+// <copyright file="IBitmapProvider.cs" company="SharpBlade">
+//     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
 //     this software and associated documentation files (the "Software"), to deal in
@@ -26,21 +26,24 @@
 //
 //     "Razer" is a trademark of Razer USA Ltd.
 // </copyright>
-//---------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------
 
-namespace Sharparam.SharpBlade.Razer.Exceptions
+using System.Drawing;
+
+namespace Sharparam.SharpBlade.Integration
 {
     /// <summary>
-    /// Thrown when the application was not properly shut down on last session.
+    /// An object that is able to provide a Bitmap object.
     /// </summary>
-    public class RazerUnstableShutdownException : RazerException
+    public interface IBitmapProvider
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RazerUnstableShutdownException" /> class.
+        /// Gets an arbitrary <see cref="Bitmap" /> object.
         /// </summary>
-        internal RazerUnstableShutdownException()
-            : base("The application did not properly call RzSBStop() on the last shutdown.")
-        {
-        }
+        /// <remarks>
+        /// This Bitmap should match the dimensions of the Razer Touchpad.
+        /// </remarks>
+        /// <returns>A <see cref="Bitmap" /> object.</returns>
+        Bitmap GetBitmap();
     }
 }

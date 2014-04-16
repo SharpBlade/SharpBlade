@@ -1,6 +1,6 @@
-﻿//---------------------------------------------------------------------------------------
+﻿// ---------------------------------------------------------------------------------------
 // <copyright file="Constants.cs" company="SharpBlade">
-//     Copyright (c) 2013-2014 by Adam Hellberg and Brandon Scott.
+//     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
 //     this software and associated documentation files (the "Software"), to deal in
@@ -26,7 +26,7 @@
 //
 //     "Razer" is a trademark of Razer USA Ltd.
 // </copyright>
-//---------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------
 
 namespace Sharparam.SharpBlade
 {
@@ -47,19 +47,10 @@ namespace Sharparam.SharpBlade
     public static class Constants
     {
         /// <summary>
-        /// True if compiled with DEBUG enabled, false otherwise.
-        /// </summary>
-#if DEBUG
-        public const bool DebugEnabled = true;
-#else
-        public const bool DebugEnabled = false;
-#endif
-
-        /// <summary>
         /// Blank image used for touchpad.
         /// </summary>
         public const string BlankTouchpadImage = @"res\images\tp_blank.png";
-        
+
         /// <summary>
         /// Blank image used for dynamic keys.
         /// </summary>

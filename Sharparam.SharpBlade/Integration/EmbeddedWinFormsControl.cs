@@ -1,6 +1,6 @@
-﻿//---------------------------------------------------------------------------------------
+﻿// ---------------------------------------------------------------------------------------
 // <copyright file="EmbeddedWinFormsControl.cs" company="SharpBlade">
-//     Copyright (c) 2013-2014 by Adam Hellberg and Brandon Scott.
+//     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
 //     this software and associated documentation files (the "Software"), to deal in
@@ -26,7 +26,7 @@
 //
 //     "Razer" is a trademark of Razer USA Ltd.
 // </copyright>
-//---------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------
 
 using System.Drawing;
 using System.Windows.Forms;
@@ -42,14 +42,14 @@ namespace Sharparam.SharpBlade.Integration
     public struct EmbeddedWinFormsControl
     {
         /// <summary>
-        /// The <see cref="WindowsFormsHost" /> object hosting the control object.
-        /// </summary>
-        public readonly WindowsFormsHost Host;
-
-        /// <summary>
         /// The hosted WinForms control.
         /// </summary>
         public readonly Control Control;
+
+        /// <summary>
+        /// The <see cref="WindowsFormsHost" /> object hosting the control object.
+        /// </summary>
+        public readonly WindowsFormsHost Host;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmbeddedWinFormsControl" /> struct.
@@ -67,7 +67,10 @@ namespace Sharparam.SharpBlade.Integration
         /// </summary>
         public Rectangle Bounds
         {
-            get { return new Rectangle((int)Host.Margin.Left, (int)Host.Margin.Top, Control.Width, Control.Height); }
+            get
+            {
+                return new Rectangle((int)Host.Margin.Left, (int)Host.Margin.Top, Control.Width, Control.Height);
+            }
         }
 
         /// <summary>

@@ -1,6 +1,6 @@
-﻿//---------------------------------------------------------------------------------------
+﻿// ---------------------------------------------------------------------------------------
 // <copyright file="RazerDynamicKeyException.cs" company="SharpBlade">
-//     Copyright (c) 2013-2014 by Adam Hellberg and Brandon Scott.
+//     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
 //     this software and associated documentation files (the "Software"), to deal in
@@ -26,7 +26,7 @@
 //
 //     "Razer" is a trademark of Razer USA Ltd.
 // </copyright>
-//---------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------
 
 using System;
 
@@ -35,6 +35,7 @@ namespace Sharparam.SharpBlade.Razer.Exceptions
     /// <summary>
     /// Exception thrown when there is a problem with the dynamic keys.
     /// </summary>
+    [Serializable]
     public class RazerDynamicKeyException : RazerException
     {
         /// <summary>
@@ -42,7 +43,8 @@ namespace Sharparam.SharpBlade.Razer.Exceptions
         /// </summary>
         /// <param name="message">The message associated with the exception.</param>
         /// <param name="inner">Inner exception object.</param>
-        internal RazerDynamicKeyException(string message = null, Exception inner = null) : base(message, inner)
+        internal RazerDynamicKeyException(string message = null, Exception inner = null)
+            : base(message, inner)
         {
         }
     }
