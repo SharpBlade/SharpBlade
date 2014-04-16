@@ -880,55 +880,55 @@ namespace Sharparam.SharpBlade.Razer
                     break;
 
                 case RazerAPI.GestureType.Flick:
-                    {
-                        var direction = (RazerAPI.Direction)z;
-                        OnFlick(parameters, direction);
-                        break;
-                    }
+                {
+                    var direction = (RazerAPI.Direction)z;
+                    OnFlick(parameters, direction);
+                    break;
+                }
 
                 case RazerAPI.GestureType.Zoom:
+                {
+                    ZoomDirection direction;
+                    switch (parameters)
                     {
-                        ZoomDirection direction;
-                        switch (parameters)
-                        {
-                            case 1:
-                                direction = ZoomDirection.In;
-                                break;
+                        case 1:
+                            direction = ZoomDirection.In;
+                            break;
 
-                            case 2:
-                                direction = ZoomDirection.Out;
-                                break;
+                        case 2:
+                            direction = ZoomDirection.Out;
+                            break;
 
-                            default:
-                                direction = ZoomDirection.Invalid;
-                                break;
-                        }
-
-                        OnZoom(direction);
-                        break;
+                        default:
+                            direction = ZoomDirection.Invalid;
+                            break;
                     }
+
+                    OnZoom(direction);
+                    break;
+                }
 
                 case RazerAPI.GestureType.Rotate:
+                {
+                    RotateDirection direction;
+                    switch (parameters)
                     {
-                        RotateDirection direction;
-                        switch (parameters)
-                        {
-                            case 1:
-                                direction = RotateDirection.Clockwise;
-                                break;
+                        case 1:
+                            direction = RotateDirection.Clockwise;
+                            break;
 
-                            case 2:
-                                direction = RotateDirection.CounterClockwise;
-                                break;
+                        case 2:
+                            direction = RotateDirection.CounterClockwise;
+                            break;
 
-                            default:
-                                direction = RotateDirection.Invalid;
-                                break;
-                        }
-
-                        OnRotate(direction);
-                        break;
+                        default:
+                            direction = RotateDirection.Invalid;
+                            break;
                     }
+
+                    OnRotate(direction);
+                    break;
+                }
 
                 case RazerAPI.GestureType.Move:
                     OnMove(x, y);
