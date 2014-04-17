@@ -33,6 +33,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Forms;
@@ -280,6 +281,8 @@ namespace Sharparam.SharpBlade.Razer
         /// <param name="enabled">True to enable gesture, false to disable.</param>
         public void SetGesture(RazerAPI.GestureType gestureType, bool enabled)
         {
+            // TODO: Redesign this method to be more efficient
+            // BUG: There is a bug when the enabled param is false, see further down.
             RazerAPI.GestureType newGesturesType;
             if (gestureType == RazerAPI.GestureType.All)
                 newGesturesType = gestureType;
@@ -324,12 +327,27 @@ namespace Sharparam.SharpBlade.Razer
                     return;
                 }
 
+                // BUG: This will actually NOT disable the requested gesture, instead just enabled the ones
+                // that were already enabled.
+                // TODO: Fix this.
                 newGesturesType = _activeGesturesType.Remove(gestureType);
             }
 
-            var result = RazerAPI.NativeMethods.RzSBEnableGesture(newGesturesType, enabled);
-            if (HRESULT.RZSB_FAILED(result))
-                throw new RazerNativeException("RzSBGestureEnable", result);
+            // TODO: Fix this hacky workaround when Razer fixes their code
+            var values =
+                Enum.GetValues(newGesturesType.GetType())
+                    .Cast<Enum>()
+                    .Where(newGesturesType.HasFlag)
+                    .Cast<RazerAPI.GestureType>();
+
+            HRESULT result;
+
+            foreach (var value in values)
+            {
+                result = RazerAPI.NativeMethods.RzSBEnableGesture(value, enabled);
+                if (HRESULT.RZSB_FAILED(result))
+                    throw new RazerNativeException("RzSBGestureEnable", result);
+            }
 
             result = RazerAPI.NativeMethods.RzSBGestureSetCallback(_gestureCallback);
             if (HRESULT.RZSB_FAILED(result))
@@ -346,6 +364,8 @@ namespace Sharparam.SharpBlade.Razer
         /// <param name="enabled">True to enable forwarding, false to disable.</param>
         public void SetOSGesture(RazerAPI.GestureType gestureType, bool enabled)
         {
+            // TODO: Redesign this method to be more efficient
+            // BUG: There is a bug when the enabled param is false, see further down.
             RazerAPI.GestureType newGesturesType;
             if (gestureType == RazerAPI.GestureType.All)
             {
@@ -382,16 +402,30 @@ namespace Sharparam.SharpBlade.Razer
             {
                 if (!_activeOSGesturesType.Has(gestureType))
                     return;
+
+                // BUG: This will actually NOT disable the requested gesture, instead just enabled the ones
+                // that were already enabled.
+                // TODO: Fix this.
                 newGesturesType = _activeOSGesturesType.Remove(gestureType);
             }
 
-            var result = RazerAPI.NativeMethods.RzSBEnableGesture(newGesturesType, enabled);
-            if (HRESULT.RZSB_FAILED(result))
-                throw new RazerNativeException("RzSBGestureEnable", result);
+            // TODO: Fix this hacky workaround when Razer fixes their code
+            var values =
+                Enum.GetValues(newGesturesType.GetType())
+                    .Cast<Enum>()
+                    .Where(newGesturesType.HasFlag)
+                    .Cast<RazerAPI.GestureType>();
 
-            result = RazerAPI.NativeMethods.RzSBEnableOSGesture(newGesturesType, enabled);
-            if (HRESULT.RZSB_FAILED(result))
-                throw new RazerNativeException("RzSBGestureSetOSNotification", result);
+            foreach (var value in values)
+            {
+                var result = RazerAPI.NativeMethods.RzSBEnableGesture(newGesturesType, enabled);
+                if (HRESULT.RZSB_FAILED(result))
+                    throw new RazerNativeException("RzSBGestureEnable", result);
+
+                result = RazerAPI.NativeMethods.RzSBEnableOSGesture(newGesturesType, enabled);
+                if (HRESULT.RZSB_FAILED(result))
+                    throw new RazerNativeException("RzSBGestureSetOSNotification", result);
+            }
 
             _activeOSGesturesType = newGesturesType;
             _allOSGestureEnabled = _activeGesturesType == RazerAPI.GestureType.All && enabled;
