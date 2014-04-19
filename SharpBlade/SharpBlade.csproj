@@ -115,7 +115,7 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Sharparam.SharpBlade.nuspec" />
+    <None Include="SharpBlade.nuspec" />
   </ItemGroup>
   <PropertyGroup Condition="'$(BUILD_NUMBER)' != ''">
     <AssemblyFilePerformUpdate>True</AssemblyFilePerformUpdate>
