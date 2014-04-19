@@ -47,16 +47,16 @@
 
 If you have any questions, feel free to contact &amp;lt%3ba href=&amp;quot%3bhttp://sharparam.com/&amp;quot%3b&amp;gt%3bSharparam&amp;lt%3b/a&amp;gt%3b or &amp;lt%3ba href=&amp;quot%3bhttp://brandonscott.co.uk/&amp;quot%3b&amp;gt%3bbrandonscott&amp;lt%3b/a&amp;gt%3b.</ProjectSummary>
     <NamespaceSummaries>
-      <NamespaceSummaryItem name="Sharparam.SharpBlade.Extensions" isDocumented="True">Contains classes with extension methods for various non-SharpBlade code.</NamespaceSummaryItem>
-      <NamespaceSummaryItem name="Sharparam.SharpBlade.Helpers" isDocumented="True">Contains helper classes that deal with common operations.</NamespaceSummaryItem>
-      <NamespaceSummaryItem name="Sharparam.SharpBlade.Integration" isDocumented="True">Contains code regarding integration with various frameworks like WinForms and WPF.</NamespaceSummaryItem>
-      <NamespaceSummaryItem name="Sharparam.SharpBlade.Logging" isDocumented="True">Contains code for managing logging functions.</NamespaceSummaryItem>
-      <NamespaceSummaryItem name="Sharparam.SharpBlade.Native" isDocumented="True">All native code and related components are located in the Native namespace.</NamespaceSummaryItem>
-      <NamespaceSummaryItem name="Sharparam.SharpBlade.Native.WinAPI" isDocumented="True">Native code specific to WinAPI.</NamespaceSummaryItem>
-      <NamespaceSummaryItem name="Sharparam.SharpBlade.Razer" isDocumented="True">.NET implementations of Razer code.</NamespaceSummaryItem>
-      <NamespaceSummaryItem name="Sharparam.SharpBlade.Razer.Events" isDocumented="True">Events regarding Razer components.</NamespaceSummaryItem>
-      <NamespaceSummaryItem name="Sharparam.SharpBlade.Razer.Exceptions" isDocumented="True">Exceptions related to Razer components.</NamespaceSummaryItem>
-      <NamespaceSummaryItem name="Sharparam.SharpBlade" isDocumented="True">Main SharpBlade namespace, contains code general enough to not need its own namespace.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="SharpBlade.Extensions" isDocumented="True">Contains classes with extension methods for various non-SharpBlade code.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="SharpBlade.Helpers" isDocumented="True">Contains helper classes that deal with common operations.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="SharpBlade.Integration" isDocumented="True">Contains code regarding integration with various frameworks like WinForms and WPF.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="SharpBlade.Logging" isDocumented="True">Contains code for managing logging functions.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="SharpBlade.Native" isDocumented="True">All native code and related components are located in the Native namespace.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="SharpBlade.Native.WinAPI" isDocumented="True">Native code specific to WinAPI.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="SharpBlade.Razer" isDocumented="True">.NET implementations of Razer code.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="SharpBlade.Razer.Events" isDocumented="True">Events regarding Razer components.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="SharpBlade.Razer.Exceptions" isDocumented="True">Exceptions related to Razer components.</NamespaceSummaryItem>
+      <NamespaceSummaryItem name="SharpBlade" isDocumented="True">Main SharpBlade namespace, contains code general enough to not need its own namespace.</NamespaceSummaryItem>
     </NamespaceSummaries>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in
