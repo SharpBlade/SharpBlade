@@ -1,5 +1,7 @@
-Sharparam.SharpBlade [![TC Status][tcimage]][tcproject] [![Huboard Status][huboardimage]][huboardlink]
-======================================================================================================
+SharpBlade
+==========
+
+[![TC Status][tcimage]][tcproject] [![Huboard Status][huboardimage]][huboardlink]
 
 A C# wrapper/implementation for the SwitchBlade UI API
 ------------------------------------------------------
@@ -36,11 +38,11 @@ Apache log4net Copyright 2004-2011 The Apache Software Foundation (Apache Licens
 Dependencies
 ------------
 
-Sharparam.SharpBlade depends on the SwitchBlade UI SDK (RzSwitchbladeSDK2.dll).
+SharpBlade depends on the SwitchBlade UI SDK (RzSwitchbladeSDK2.dll).
 
 SwitchBlade UI SDK is provided by Razer and [can be obtained from their website][rzdev].
 
-Sharparam.SharpBlade depends on the [log4net][l4n] library (provided).
+SharpBlade depends on the [log4net][l4n] library (provided).
 
 Debugging / Logging
 -------------------
