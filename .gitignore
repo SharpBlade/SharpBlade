@@ -152,3 +152,6 @@ $RECYCLE.BIN/
 
 # Ignore documentation directory
 /docs
+
+# Ignore non-standard SHFB project files
+/SharpBlade.shfbproj_*
