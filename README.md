@@ -44,6 +44,22 @@ SwitchBlade UI SDK is provided by Razer and [can be obtained from their website]
 
 SharpBlade depends on the [log4net][l4n] library (provided).
 
+Building
+--------
+
+It's important to note that this project doesn't build on the "AnyCPU" platform (which is the default
+for C# projects). It builds against x86 to stay compliant with Razer's code which targets the x86
+platform. When building with MSBuild, you'd run something like:
+
+```
+msbuild SharpBlade.sln /p:Configuration=Release;Platform=x86
+```
+
+Make sure that your projects using SharpBlade are also compiled against x86.
+
+SharpBlade does have a configuration mode that compiles it in AnyCPU, but it's untested, to run
+that config, simply replace `Platform=x86` in the above command with `Platform=AnyCPU`.
+
 Debugging / Logging
 -------------------
 
