@@ -41,7 +41,7 @@ namespace SharpBlade.Integration
         /// Gets an arbitrary <see cref="Bitmap" /> object.
         /// </summary>
         /// <remarks>
-        /// This Bitmap should match the dimensions of the Razer RenderTarget.
+        /// This Bitmap should match the dimensions of the target display.
         /// </remarks>
         /// <returns>A <see cref="Bitmap" /> object.</returns>
         Bitmap GetBitmap();
