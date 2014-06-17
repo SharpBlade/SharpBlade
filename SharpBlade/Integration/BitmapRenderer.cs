@@ -40,7 +40,7 @@ namespace SharpBlade.Integration
     /// to get a <see cref="System.Drawing.Bitmap" /> that is then sent to the
     /// <see cref="Touchpad" /> for drawing.
     /// </summary>
-    internal class BitmapRenderer : Renderer
+    internal class BitmapRenderer : Renderer<RenderTarget>
     {
         /// <summary>
         /// The Bitmap provider.
@@ -48,18 +48,18 @@ namespace SharpBlade.Integration
         private readonly IBitmapProvider _provider;
 
         /// <summary>
-        /// Timer to control how often the Touchpad should refresh.
+        /// Timer to control how often the RenderTarget should refresh.
         /// </summary>
         private readonly Timer _timer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BitmapRenderer" /> class.
         /// </summary>
-        /// <param name="touchpad">The <see cref="Touchpad" /> instance this renderer should communicate with.</param>
+        /// <param name="renderTarget">The <see cref="Touchpad" /> instance this renderer should communicate with.</param>
         /// <param name="provider">An object implementing the <see cref="IBitmapProvider" /> interface.</param>
-        /// <param name="interval">How often to refresh the touchpad.</param>
-        internal BitmapRenderer(Touchpad touchpad, IBitmapProvider provider, TimeSpan interval)
-            : base(touchpad)
+        /// <param name="interval">How often to refresh the RenderTarget.</param>
+        internal BitmapRenderer(RenderTarget renderTarget, IBitmapProvider provider, TimeSpan interval)
+            : base(renderTarget)
         {
             _provider = provider;
             _timer = new Timer(interval.TotalMilliseconds);
@@ -85,7 +85,7 @@ namespace SharpBlade.Integration
         /// <param name="e">Event arguments.</param>
         private void TimerTick(object sender, ElapsedEventArgs e)
         {
-            Touchpad.DrawBitmap(_provider.GetBitmap());
+            RenderTarget.DrawBitmap(_provider.GetBitmap());
         }
     }
 }

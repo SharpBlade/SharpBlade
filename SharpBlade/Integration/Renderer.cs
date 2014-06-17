@@ -28,8 +28,6 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-
 using SharpBlade.Razer;
 
 namespace SharpBlade.Integration
@@ -37,20 +35,21 @@ namespace SharpBlade.Integration
     /// <summary>
     /// Helper class to manage rendering a WinForms form or WPF window.
     /// </summary>
-    internal abstract class Renderer : IDisposable
+    /// <typeparam name="T">The type of RenderTarget to render to.</typeparam>
+    internal abstract class Renderer<T> : IRenderer where T : RenderTarget
     {
         /// <summary>
-        /// Local instance of the SwitchBlade touchpad.
+        /// Local instance of the SwitchBlade RenderTarget.
         /// </summary>
-        protected readonly Touchpad Touchpad;
+        protected readonly T RenderTarget;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Renderer" /> class.
+        /// Initializes a new instance of the <see cref="Renderer{T}" /> class.
         /// </summary>
-        /// <param name="touchpad">Touchpad reference.</param>
-        protected Renderer(Touchpad touchpad)
+        /// <param name="renderTarget">RenderTarget reference.</param>
+        protected Renderer(T renderTarget)
         {
-            Touchpad = touchpad;
+            RenderTarget = renderTarget;
         }
 
         /// <summary>
