@@ -41,7 +41,7 @@ namespace SharpBlade.Razer
     /// <summary>
     /// Represents a dynamic key on the SwitchBlade device
     /// </summary>
-    public class DynamicKey : RenderTarget
+    public sealed class DynamicKey : RenderTarget
     {
         /// <summary>
         /// A mapping dictionary to translate a <see cref="RazerAPI.DynamicKeyType" />

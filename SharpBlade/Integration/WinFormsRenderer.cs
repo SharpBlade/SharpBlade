@@ -38,7 +38,7 @@ namespace SharpBlade.Integration
     /// <summary>
     /// Renders WinForms forms.
     /// </summary>
-    internal class WinFormsRenderer : Renderer<Touchpad>
+    internal sealed class WinFormsRenderer : Renderer<Touchpad>
     {
         /// <summary>
         /// WinForms Form to render.

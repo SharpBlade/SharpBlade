@@ -39,7 +39,7 @@ namespace SharpBlade.Integration
     /// <summary>
     /// Renders WPF windows.
     /// </summary>
-    internal class WpfRenderer : Renderer<Touchpad>
+    internal sealed class WpfRenderer : Renderer<Touchpad>
     {
         /// <summary>
         /// WPF Window to render.

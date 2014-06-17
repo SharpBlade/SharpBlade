@@ -38,7 +38,7 @@ namespace SharpBlade.Integration
     /// A renderer to render a native window of any type that
     /// is able to supply a window handle.
     /// </summary>
-    internal class NativeRenderer : Renderer<Touchpad>
+    internal sealed class NativeRenderer : Renderer<Touchpad>
     {
         /// <summary>
         /// Timer to control rendering of window when

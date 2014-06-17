@@ -44,7 +44,7 @@ namespace SharpBlade.Razer
     /// <summary>
     /// Manages everything related to Razer and its devices.
     /// </summary>
-    public class RazerManager : IDisposable
+    public sealed class RazerManager : IDisposable
     {
         /// <summary>
         /// Array of 3-tuples to pair Virtual Keys (1st element) with their ModifierKeys counterpart (3rd element),
