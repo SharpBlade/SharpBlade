@@ -67,6 +67,7 @@
     <Compile Include="Integration\BitmapRenderer.cs" />
     <Compile Include="Integration\EmbeddedWinFormsControl.cs" />
     <Compile Include="Integration\IBitmapProvider.cs" />
+    <Compile Include="Integration\IRenderer.cs" />
     <Compile Include="Integration\KeyboardControl.cs" />
     <Compile Include="Integration\NativeRenderer.cs" />
     <Compile Include="Integration\Renderer.cs" />
@@ -98,7 +99,9 @@
     <Compile Include="Razer\Exceptions\RazerDynamicKeyException.cs" />
     <Compile Include="Razer\Exceptions\RazerException.cs" />
     <Compile Include="Razer\Exceptions\RazerNativeException.cs" />
+    <Compile Include="Razer\IRenderTarget.cs" />
     <Compile Include="Razer\RazerManager.cs" />
+    <Compile Include="Razer\RenderTarget.cs" />
     <Compile Include="Razer\RotateDirection.cs" />
     <Compile Include="Razer\Touchpad.cs" />
     <Compile Include="Razer\ZoomDirection.cs" />

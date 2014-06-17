@@ -29,6 +29,7 @@
 // ---------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 
 using SharpBlade.Helpers;
 using SharpBlade.Logging;
@@ -40,8 +41,27 @@ namespace SharpBlade.Razer
     /// <summary>
     /// Represents a dynamic key on the SwitchBlade device
     /// </summary>
-    public class DynamicKey
+    public class DynamicKey : RenderTarget
     {
+        /// <summary>
+        /// A mapping dictionary to translate a <see cref="RazerAPI.DynamicKeyType" />
+        /// value to <see cref="RazerAPI.TargetDisplay" />.
+        /// </summary>
+        private static readonly Dictionary<RazerAPI.DynamicKeyType, RazerAPI.TargetDisplay> TargetDisplayMapping =
+            new Dictionary<RazerAPI.DynamicKeyType, RazerAPI.TargetDisplay>
+            {
+                { RazerAPI.DynamicKeyType.DK1, RazerAPI.TargetDisplay.DK1 },
+                { RazerAPI.DynamicKeyType.DK2, RazerAPI.TargetDisplay.DK2 },
+                { RazerAPI.DynamicKeyType.DK3, RazerAPI.TargetDisplay.DK3 },
+                { RazerAPI.DynamicKeyType.DK4, RazerAPI.TargetDisplay.DK4 },
+                { RazerAPI.DynamicKeyType.DK5, RazerAPI.TargetDisplay.DK5 },
+                { RazerAPI.DynamicKeyType.DK6, RazerAPI.TargetDisplay.DK6 },
+                { RazerAPI.DynamicKeyType.DK7, RazerAPI.TargetDisplay.DK7 },
+                { RazerAPI.DynamicKeyType.DK8, RazerAPI.TargetDisplay.DK8 },
+                { RazerAPI.DynamicKeyType.DK9, RazerAPI.TargetDisplay.DK9 },
+                { RazerAPI.DynamicKeyType.DK10, RazerAPI.TargetDisplay.DK10 }
+            };
+
         /// <summary>
         /// The log instance associated with this object.
         /// </summary>
@@ -59,6 +79,7 @@ namespace SharpBlade.Razer
             string image,
             string pressedImage = null,
             EventHandler callback = null)
+            : base(TargetDisplayMapping[keyType])
         {
             _log = LogManager.GetLogger(this);
 
@@ -93,6 +114,15 @@ namespace SharpBlade.Razer
         /// Raised when a dynamic key is pressed.
         /// </summary>
         public event EventHandler Pressed;
+
+        /// <summary>
+        /// Gets the current image being displayed on the render target.
+        /// </summary>
+        public override string CurrentImage
+        {
+            get { return UpImage; }
+            protected set { SetImage(value); }
+        }
 
         /// <summary>
         /// Gets the image displayed on this key when in DOWN state.
@@ -162,7 +192,7 @@ namespace SharpBlade.Razer
         /// </summary>
         /// <param name="image">Path to image.</param>
         /// <remarks>This will set the image on both the UP and DOWN states.</remarks>
-        public void SetImage(string image)
+        public override void SetImage(string image)
         {
             SetUpImage(image);
             SetDownImage(image);
@@ -221,6 +251,14 @@ namespace SharpBlade.Razer
             if (State == RazerAPI.DynamicKeyState.Up
                 && (PreviousState == RazerAPI.DynamicKeyState.Down || PreviousState == RazerAPI.DynamicKeyState.None))
                 OnPressed();
+        }
+
+        /// <summary>
+        /// Clears the image currently on the dynamic key.
+        /// </summary>
+        protected override void ClearImage()
+        {
+            SetImage(RazerManager.Instance.DisabledDynamicKeyImagePath);
         }
 
         /// <summary>
