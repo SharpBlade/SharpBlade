@@ -36,10 +36,10 @@ namespace SharpBlade
     /// <remarks>
     /// Please note that most values here expect a certain project structure like so:
     /// <code>
-    /// ${APP_ROOT}\res\
-    /// ${APP_ROOT}\res\images\
-    /// ${APP_ROOT}\res\images\tp_blank.png
-    /// ${APP_ROOT}\res\images\dk_disabled.png
+    /// ${APP_ROOT}\Default\
+    /// ${APP_ROOT}\Default\Images\
+    /// ${APP_ROOT}\Default\Images\tp_blank.png
+    /// ${APP_ROOT}\Default\Images\dk_disabled.png
     /// </code>
     /// Path values in this class should not be used unless your project structure
     /// matches that described above.
