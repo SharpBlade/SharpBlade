@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------------------------------------
-// <copyright file="Constants.cs" company="SharpBlade">
+// <copyright file="IRenderer.cs" company="SharpBlade">
 //     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -28,32 +28,14 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-namespace SharpBlade
+using System;
+
+namespace SharpBlade.Integration
 {
     /// <summary>
-    /// Constant values used by the SharpBlade library.
+    /// Base interface for <see cref="Renderer{T}" />.
     /// </summary>
-    /// <remarks>
-    /// Please note that most values here expect a certain project structure like so:
-    /// <code>
-    /// ${APP_ROOT}\Default\
-    /// ${APP_ROOT}\Default\Images\
-    /// ${APP_ROOT}\Default\Images\tp_blank.png
-    /// ${APP_ROOT}\Default\Images\dk_disabled.png
-    /// </code>
-    /// Path values in this class should not be used unless your project structure
-    /// matches that described above.
-    /// </remarks>
-    public static class Constants
+    internal interface IRenderer : IDisposable
     {
-        /// <summary>
-        /// Blank image used for touchpad.
-        /// </summary>
-        public const string BlankTouchpadImage = @"Default\Images\tp_blank.png";
-
-        /// <summary>
-        /// Blank image used for dynamic keys.
-        /// </summary>
-        public const string DisabledDynamicKeyImage = @"Default\Images\dk_disabled.png";
     }
 }

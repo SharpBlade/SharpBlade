@@ -825,22 +825,23 @@ namespace SharpBlade.Native
             /// <see cref="RzSBStart" /> sets up the connections that allow an application to access the Switchblade hardware device.
             /// This routine returns <see cref="HRESULT.RZSB_OK" /> on success, granting the calling application control of the device.
             /// Subsequent calls to this routine prior to a matching <see cref="RzSBStop" /> call are ignored.
-            /// <see cref="RzSBStart" /> must be called before other Switchblade SDK routines will succeed.
-            /// <see cref="RzSBStart" /> must always be accompanied by an <see cref="RzSBStop" />.
-            /// COM initialization should be called prior to calling <see cref="RzSBStart" />.
+            /// <para><see cref="RzSBStart" /> must be called before other Switchblade SDK routines will succeed.
+            /// <see cref="RzSBStart" /> must always be accompanied by an <see cref="RzSBStop" />.</para>
+            /// <para>COM initialization should be called prior to calling <see cref="RzSBStart" />.
             /// If the application developer intends to use Single-Threaded Apartment model (STA) and call the SDK
             /// functions within the same thread where the COM was initialized, then <c>CoInitialize()</c> should be called
-            /// before <see cref="RzSBStart" />. Note that some MFC controls automatically initializes to STA.
-            /// If the application developer intends to call the SDK functions on different threads,
-            /// then the <c>CoInitializeEx()</c> should be called before <see cref="RzSBStart" />.
-            /// Note: When the <see cref="RzSBStart()" /> is called without the COM being initialized
+            /// before <see cref="RzSBStart" />.</para>
+            /// <para>Note that some MFC controls automatically initializes to STA.</para>
+            /// <para>If the application developer intends to call the SDK functions on different threads,
+            /// then the <c>CoInitializeEx()</c> should be called before <see cref="RzSBStart" />.</para>
+            /// <para>Note: When the <see cref="RzSBStart()" /> is called without the COM being initialized
             /// (e.g. thru calling <c>CoInitializeEx</c>)
             /// the SDK initializes the COM to Multi-Threaded Apartment (MTA) model.
             /// As such, callers must invoke SDK functions from an MTA thread.
             /// Future SDK versions will move these calls into an isolated STA, giving application developers additional
             /// freedom to use COM in any fashion.
             /// However, application developers may already implement their own processing to isolate the SDK
-            /// initialization and calls to avoid the issues for COM in different threading models.
+            /// initialization and calls to avoid the issues for COM in different threading models.</para>
             /// </remarks>
             /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
             [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]

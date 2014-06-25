@@ -34,7 +34,7 @@
     <RootNamespaceContainer>True</RootNamespaceContainer>
     <PresentationStyle>VS2010</PresentationStyle>
     <Preliminary>False</Preliminary>
-    <NamingMethod>Guid</NamingMethod>
+    <NamingMethod>MemberName</NamingMethod>
     <HelpTitle>SharpBlade documentation</HelpTitle>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
     <FooterText>&amp;lt%3ba href=&amp;quot%3bhttps://github.com/SharpBlade/SharpBlade&amp;quot%3b&amp;gt%3bProject Page&amp;lt%3b/a&amp;gt%3b</FooterText>
