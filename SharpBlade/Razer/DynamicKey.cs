@@ -276,7 +276,7 @@ namespace SharpBlade.Razer
             }
             catch (ObjectDisposedException ex)
             {
-                _log.ErrorFormat("OnKeyPressed: ObjectDisposedException: {0}", ex.Message);
+                _log.ErrorFormat("OnPressed: ObjectDisposedException: {0}", ex.Message);
             }
         }
     }
