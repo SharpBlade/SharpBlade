@@ -38,7 +38,7 @@ namespace SharpBlade.Integration
     /// A renderer to render a native window of any type that
     /// is able to supply a window handle.
     /// </summary>
-    internal sealed class NativeRenderer : Renderer<Touchpad>
+    internal sealed class NativeRenderer : Renderer<RenderTarget>
     {
         /// <summary>
         /// Timer to control rendering of window when
@@ -56,10 +56,10 @@ namespace SharpBlade.Integration
         /// Initializes a new instance of the <see cref="NativeRenderer" /> class.
         /// Used for rendering a native window at the specified interval.
         /// </summary>
-        /// <param name="renderTarget">Touchpad reference.</param>
+        /// <param name="renderTarget">Render target reference.</param>
         /// <param name="windowHandle">Native window handle to render.</param>
         /// <param name="interval">The interval to render the window at.</param>
-        internal NativeRenderer(Touchpad renderTarget, IntPtr windowHandle, TimeSpan interval)
+        internal NativeRenderer(RenderTarget renderTarget, IntPtr windowHandle, TimeSpan interval)
             : base(renderTarget)
         {
             _nativeWindow = windowHandle;

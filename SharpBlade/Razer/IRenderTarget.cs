@@ -29,7 +29,10 @@
 // ---------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Windows;
+using System.Windows.Forms;
 
 using SharpBlade.Integration;
 using SharpBlade.Native;
@@ -43,10 +46,35 @@ namespace SharpBlade.Razer
     public interface IRenderTarget
     {
         /// <summary>
+        /// Gets the currently active form, null if no form is set.
+        /// </summary>
+        Form CurrentForm { get; }
+
+        /// <summary>
         /// Gets the path to the image currently shown on the render target,
         /// or null if no image is showing.
         /// </summary>
         string CurrentImage { get; }
+
+        /// <summary>
+        /// Gets the currently rendering Native window, <c>IntPtr.Zero</c> if no window set
+        /// </summary>
+        IntPtr CurrentNativeWindow { get; }
+
+        /// <summary>
+        /// Gets the currently rendering WPF window, null if no window is set.
+        /// </summary>
+        Window CurrentWindow { get; }
+
+        /// <summary>
+        /// Gets the height of this <see cref="IRenderTarget" /> in pixels.
+        /// </summary>
+        int DisplayHeight { get; }
+
+        /// <summary>
+        /// Gets the width of this <see cref="IRenderTarget" /> in pixels.
+        /// </summary>
+        int DisplayWidth { get; }
 
         /// <summary>
         /// Gets the <see cref="RazerAPI.TargetDisplay" /> that content will be
@@ -78,6 +106,26 @@ namespace SharpBlade.Razer
         void DrawBitmap(Bitmap bitmap);
 
         /// <summary>
+        /// Draws the specified form to the target display.
+        /// </summary>
+        /// <param name="form">Form to draw.</param>
+        void DrawForm(Form form);
+
+        /// <summary>
+        /// Draws the specified native window to the target display.
+        /// </summary>
+        /// <param name="windowHandle">The window handle of the window to draw.</param>
+        void DrawNativeWindow(IntPtr windowHandle);
+
+        /// <summary>
+        /// Draws a WPF window to the target display.
+        /// </summary>
+        /// <param name="window">Window object to draw.</param>
+        /// <param name="winFormsComponents">Array of KeyValuePairs containing a WindowsFormsHost as the key and a WinForms control as the value.
+        /// These pairs will be overlaid on the bitmap that is passed to the SwitchBlade device.</param>
+        void DrawWindow(Window window, IEnumerable<EmbeddedWinFormsControl> winFormsComponents = null);
+
+        /// <summary>
         /// Sets an <see cref="IBitmapProvider" /> to provide the target display
         /// with a <see cref="Bitmap" /> object to draw.
         /// Initializes the polling interval to 42ms (circa 24 FPS).
@@ -98,5 +146,31 @@ namespace SharpBlade.Razer
         /// </summary>
         /// <param name="image">Path to image.</param>
         void SetImage(string image);
+
+        /// <summary>
+        /// Sets the form to be rendered to this <see cref="RenderTarget" />.
+        /// </summary>
+        /// <param name="form">The new form to render.</param>
+        /// <param name="method">The method to use for rendering the form.</param>
+        /// <param name="interval">Interval to poll drawing functions at,
+        /// only used if RenderMethod is set to Polling.
+        /// Default value 55ms (circa 18 FPS).</param>
+        void SetForm(Form form, RenderMethod method = RenderMethod.Event);
+
+        /// <summary>
+        /// Sets the native window to be rendered to this touchpad
+        /// Initializes the polling interval to 42ms (circa 24 FPS)
+        /// </summary>
+        /// <param name="windowHandle">the handle for the window to render</param>
+        void SetNativeWindow(IntPtr windowHandle);
+
+        /// <summary>
+        /// Sets the WPF window to be rendered to this <see cref="RenderTarget" />.
+        /// Initializes the polling interval to 42ms (circa 24 FPS)
+        /// if called with RenderMethod set to Polling.
+        /// </summary>
+        /// <param name="window">The new window to render.</param>
+        /// <param name="method">The method to use for rendering the window.</param>
+        void SetWindow(Window window, RenderMethod method = RenderMethod.Event);
     }
 }

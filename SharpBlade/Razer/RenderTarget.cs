@@ -29,10 +29,16 @@
 // ---------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Windows;
+using System.Windows.Forms;
+using System.Windows.Media.Imaging;
 
+using SharpBlade.Helpers;
 using SharpBlade.Integration;
 using SharpBlade.Native;
 using SharpBlade.Razer.Exceptions;
@@ -50,8 +56,10 @@ namespace SharpBlade.Razer
         /// <param name="targetDisplay">
         /// The <see cref="RazerAPI.TargetDisplay" /> to which content will be rendered.
         /// </param>
-        internal RenderTarget(RazerAPI.TargetDisplay targetDisplay)
+        internal RenderTarget(RazerAPI.TargetDisplay targetDisplay, int height, int width)
         {
+            DisplayHeight = height;
+            DisplayWidth = width;
             TargetDisplay = targetDisplay;
         }
 
@@ -66,9 +74,34 @@ namespace SharpBlade.Razer
         }
 
         /// <summary>
+        /// Gets the currently active form, null if no form is set.
+        /// </summary>
+        public Form CurrentForm { get; protected set; }
+
+        /// <summary>
         /// Gets or sets the current image being displayed on the render target.
         /// </summary>
         public abstract string CurrentImage { get; protected set; }
+
+        /// <summary>
+        /// Gets the currently rendering Native window, <c>IntPtr.Zero</c> if no window set
+        /// </summary>
+        public IntPtr CurrentNativeWindow { get; protected set; }
+
+        /// <summary>
+        /// Gets the currently rendering WPF window, null if no window is set.
+        /// </summary>
+        public Window CurrentWindow { get; protected set; }
+
+        /// <summary>
+        /// Gets the height of this <see cref="IRenderTarget" /> in pixels.
+        /// </summary>
+        public int DisplayHeight { get; private set; }
+
+        /// <summary>
+        /// Gets the width of this <see cref="IRenderTarget" /> in pixels.
+        /// </summary>
+        public int DisplayWidth { get; private set; }
 
         /// <summary>
         /// Gets the <see cref="RazerAPI.TargetDisplay" /> that content will be
@@ -151,6 +184,79 @@ namespace SharpBlade.Razer
         }
 
         /// <summary>
+        /// Draws the specified form to this <see cref="RenderTarget" />.
+        /// </summary>
+        /// <param name="form">Form to draw.</param>
+        public void DrawForm(Form form)
+        {
+            var bmp = new Bitmap(DisplayWidth, DisplayHeight);
+            form.DrawToBitmap(bmp, form.Bounds);
+            DrawBitmap(bmp);
+            bmp.Dispose();
+        }
+
+        /// <summary>
+        /// Draws the specified native window to this <see cref="RenderTarget" />.
+        /// </summary>
+        /// <param name="windowHandle">The window handle of the window to draw.</param>
+        public void DrawNativeWindow(IntPtr windowHandle)
+        {
+            var img = ScreenCapture.CaptureWindow(windowHandle);
+            var bitmapToRender = new Bitmap(img, DisplayWidth, DisplayHeight);
+            DrawBitmap(bitmapToRender);
+            bitmapToRender.Dispose();
+            img.Dispose();
+        }
+
+        /// <summary>
+        /// Draws a WPF window to this <see cref="RenderTarget" />.
+        /// </summary>
+        /// <param name="window">Window object to draw.</param>
+        /// <param name="winFormsComponents">Array of KeyValuePairs containing a WindowsFormsHost as the key and a WinForms control as the value.
+        /// These pairs will be overlaid on the bitmap that is passed to the SwitchBlade device.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
+            "CA2202:Do not dispose objects multiple times",
+            Justification = "SO said it's safe to dispose MemoryStream multiple times")]
+        public void DrawWindow(Window window, IEnumerable<EmbeddedWinFormsControl> winFormsComponents = null)
+        {
+            var rtb = new RenderTargetBitmap(
+                DisplayWidth,
+                DisplayHeight,
+                96,
+                96,
+                System.Windows.Media.PixelFormats.Pbgra32);
+
+            rtb.Render(window);
+
+            BitmapEncoder encoder = new BmpBitmapEncoder();
+
+            // CA2202 warning marked here, for reference, complains about possible multiple dispose of MemoryStream stream
+            using (var stream = new MemoryStream())
+            {
+                encoder.Frames.Add(BitmapFrame.Create(rtb));
+                encoder.Save(stream);
+
+                using (var bitmap = new Bitmap(stream))
+                {
+                    if (winFormsComponents != null)
+                    {
+                        using (var graphics = Graphics.FromImage(bitmap))
+                        {
+                            foreach (var component in winFormsComponents)
+                                graphics.DrawImage(component.Draw(), component.Bounds);
+                        }
+                    }
+
+                    DrawBitmap(bitmap);
+                }
+
+                encoder.Frames.Clear();
+            }
+
+            rtb.Clear();
+        }
+
+        /// <summary>
         /// Sets an <see cref="IBitmapProvider" /> to provide the target display
         /// with a <see cref="Bitmap" /> object to draw.
         /// Initializes the polling interval to 42ms (circa 24 FPS).
@@ -180,6 +286,71 @@ namespace SharpBlade.Razer
         public abstract void SetImage(string image);
 
         /// <summary>
+        /// Sets the form to be rendered to this <see cref="RenderTarget" />.
+        /// </summary>
+        /// <param name="form">The new form to render.</param>
+        /// <param name="method">The method to use for rendering the form.</param>
+        /// <param name="interval">Interval to poll drawing functions at,
+        /// only used if RenderMethod is set to Polling.
+        /// Default value 55ms (circa 18 FPS).</param>
+        public void SetForm(Form form, RenderMethod method = RenderMethod.Event, int interval = 55)
+        {
+            Clear();
+
+            CurrentForm = form;
+
+            if (method == RenderMethod.Event)
+                CurrentForm.Paint += FormPaintHandler;
+            else
+                Renderer = new WinFormsRenderer(this, CurrentForm, interval);
+        }
+
+        /// <summary>
+        /// Sets the native window to be rendered to this touchpad
+        /// Initializes the polling interval to 42ms (circa 24 FPS)
+        /// </summary>
+        /// <param name="windowHandle">the handle for the window to render</param>
+        public void SetNativeWindow(IntPtr windowHandle)
+        {
+            Clear();
+
+            CurrentNativeWindow = windowHandle;
+
+            Renderer = new NativeRenderer(this, windowHandle, new TimeSpan(0, 0, 0, 0, 42));
+        }
+
+        /// <summary>
+        /// Sets the WPF window to be rendered to this <see cref="RenderTarget" />.
+        /// Initializes the polling interval to 42ms (circa 24 FPS)
+        /// if called with RenderMethod set to Polling.
+        /// </summary>
+        /// <param name="window">The new window to render.</param>
+        /// <param name="method">The method to use for rendering the window.</param>
+        public void SetWindow(Window window, RenderMethod method = RenderMethod.Event)
+        {
+            SetWindow(window, method, new TimeSpan(0, 0, 0, 0, 42));
+        }
+
+        /// <summary>
+        /// Sets the WPF window to be rendered to this <see cref="RenderTarget" />.
+        /// </summary>
+        /// <param name="window">The new window to render.</param>
+        /// <param name="method">The method to use for rendering the window</param>
+        /// <param name="interval">The interval to poll the window at,
+        /// only used if RenderMethod is Polling.</param>
+        public void SetWindow(Window window, RenderMethod method, TimeSpan interval)
+        {
+            Clear();
+
+            CurrentWindow = window;
+
+            if (method == RenderMethod.Event)
+                CurrentWindow.ContentRendered += WindowContentRenderedHandler;
+            else
+                Renderer = new WpfRenderer(this, CurrentWindow, interval);
+        }
+
+        /// <summary>
         /// Clears anything drawing to the render target.
         /// Also clears the current image if one is set.
         /// </summary>
@@ -194,6 +365,10 @@ namespace SharpBlade.Razer
             // when we are disposing RenderTarget.
             if (!disposing)
                 ClearImage();
+
+            ClearNativeWindow();
+            ClearForm();
+            ClearWindow();
 
             if (Renderer == null)
                 return;
@@ -220,6 +395,61 @@ namespace SharpBlade.Razer
                 Clear(true);
 
             Disposed = true;
+        }
+
+        /// <summary>
+        /// Clears the current form from touchpad
+        /// and stops rendering of it.
+        /// </summary>
+        private void ClearForm()
+        {
+            if (CurrentForm != null && Renderer == null)
+                CurrentForm.Paint -= FormPaintHandler;
+
+            CurrentForm = null;
+        }
+
+        /// <summary>
+        /// Clears the current native window from
+        /// the touchpad and stops rendering of it
+        /// </summary>
+        private void ClearNativeWindow()
+        {
+            CurrentNativeWindow = IntPtr.Zero;
+        }
+
+        /// <summary>
+        /// Clears the current WPF window from
+        /// touchpad and stops rendering of it.
+        /// </summary>
+        private void ClearWindow()
+        {
+            if (CurrentWindow != null && Renderer == null)
+                CurrentWindow.ContentRendered -= WindowContentRenderedHandler;
+
+            CurrentWindow = null;
+        }
+
+        /// <summary>
+        /// Wrapper method to listen for the Paint event on a WinForms Form
+        /// and render to touchpad.
+        /// </summary>
+        /// <param name="sender">Object that raised the event.</param>
+        /// <param name="e">Event arguments.</param>
+        private void FormPaintHandler(object sender, PaintEventArgs e)
+        {
+            DrawForm(CurrentForm);
+        }
+
+        /// <summary>
+        /// Wrapper method to listen for the ContentRendered event on a WPF
+        /// Window and render to touchpad.
+        /// </summary>
+        /// <param name="sender">Object that raised the event.</param>
+        /// <param name="e">Event arguments.</param>
+        private void WindowContentRenderedHandler(object sender, EventArgs e)
+        {
+            DrawWindow(CurrentWindow);
         }
     }
 }
