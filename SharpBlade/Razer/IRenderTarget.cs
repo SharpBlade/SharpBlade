@@ -155,7 +155,7 @@ namespace SharpBlade.Razer
         /// <param name="interval">Interval to poll drawing functions at,
         /// only used if RenderMethod is set to Polling.
         /// Default value 55ms (circa 18 FPS).</param>
-        void SetForm(Form form, RenderMethod method = RenderMethod.Event);
+        void SetForm(Form form, RenderMethod method = RenderMethod.Event, int interval = 55);
 
         /// <summary>
         /// Sets the native window to be rendered to this touchpad
