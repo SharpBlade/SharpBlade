@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------------------------------------
-// <copyright file="AssemblyInfo.cs" company="SharpBlade">
+// <copyright file="RenderMethod.cs" company="SharpBlade">
 //     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -28,43 +28,26 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System.Reflection;
-using System.Runtime.InteropServices;
+namespace SharpBlade.Razer
+{
+    /// <summary>
+    /// Specifies what method to use for
+    /// rendering a form or window.
+    /// </summary>
+    public enum RenderMethod
+    {
+        /// <summary>
+        /// Event-based. Subscribes to the form's/window's
+        /// paint/draw event and performs an update to the SBUI.
+        /// This method is the most resource intensive.
+        /// </summary>
+        Event,
 
-// General Information about an assembly is controlled through the following
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
-[assembly: AssemblyTitle("SharpBlade")]
-[assembly: AssemblyDescription("C# wrapper/implementation of the SwitchBlade UI API from Razer")]
-#if RELEASE
-[assembly: AssemblyConfiguration("Release")]
-#else
-[assembly: AssemblyConfiguration("Debug")]
-#endif
-[assembly: AssemblyCompany("SharpBlade")]
-[assembly: AssemblyProduct("SharpBlade")]
-[assembly: AssemblyCopyright("Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
-
-// Setting ComVisible to false makes the types in this assembly not visible
-// to COM components.  If you need to access a type in this assembly from
-// COM, set the ComVisible attribute to true on that type.
-[assembly: ComVisible(false)]
-
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("2a168fde-01f2-48df-951f-8d521920de05")]
-
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("6.0.0")]
-[assembly: AssemblyFileVersion("6.0.0.0")]
-[assembly: AssemblyInformationalVersion("6.0.0 Stable")]
+        /// <summary>
+        /// Creates a timer and performs drawing update
+        /// at a specified interval.
+        /// Less resource intensive than event-based drawing.
+        /// </summary>
+        Polling
+    }
+}

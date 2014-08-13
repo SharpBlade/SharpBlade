@@ -39,7 +39,7 @@ namespace SharpBlade.Integration
     /// <summary>
     /// Renders WPF windows.
     /// </summary>
-    internal sealed class WpfRenderer : Renderer<Touchpad>
+    internal sealed class WpfRenderer : Renderer<RenderTarget>
     {
         /// <summary>
         /// WPF Window to render.
@@ -57,10 +57,10 @@ namespace SharpBlade.Integration
         /// Initializes a new instance of the <see cref="WpfRenderer" /> class.
         /// For rendering a WPF window at the specified interval.
         /// </summary>
-        /// <param name="renderTarget">Touchpad reference.</param>
+        /// <param name="renderTarget">Render target reference.</param>
         /// <param name="window">WPF window to render.</param>
         /// <param name="interval">The interval to render the window at.</param>
-        internal WpfRenderer(Touchpad renderTarget, Window window, TimeSpan interval)
+        internal WpfRenderer(RenderTarget renderTarget, Window window, TimeSpan interval)
             : base(renderTarget)
         {
             _window = window;

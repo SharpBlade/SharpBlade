@@ -38,7 +38,7 @@ namespace SharpBlade.Integration
     /// <summary>
     /// Renders WinForms forms.
     /// </summary>
-    internal sealed class WinFormsRenderer : Renderer<Touchpad>
+    internal sealed class WinFormsRenderer : Renderer<RenderTarget>
     {
         /// <summary>
         /// WinForms Form to render.
@@ -56,11 +56,11 @@ namespace SharpBlade.Integration
         /// Initializes a new instance of the <see cref="WinFormsRenderer" /> class.
         /// For rendering a WinForms form at the specified interval.
         /// </summary>
-        /// <param name="renderTarget">Touchpad reference.</param>
+        /// <param name="renderTarget">Render target reference.</param>
         /// <param name="form">WinForms form to render.</param>
         /// <param name="interval">The interval to render the form at,
         /// in milliseconds (MAX PRECISION = 55ms).</param>
-        internal WinFormsRenderer(Touchpad renderTarget, Form form, int interval = 55)
+        internal WinFormsRenderer(RenderTarget renderTarget, Form form, int interval = 55)
             : base(renderTarget)
         {
             _form = form;

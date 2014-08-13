@@ -130,6 +130,34 @@ namespace SharpBlade.Razer
                     throw new RazerNativeException("RzSBStart", result);
             }
 
+            _log.Debug("Querying SDK for capabilities struct...");
+
+            RazerAPI.Capabilities caps;
+            result = RazerAPI.NativeMethods.RzSBQueryCapabilities(out caps);
+            if (HRESULT.RZSB_FAILED(result))
+                throw new RazerNativeException("RzSBQueryCapabilities", result);
+
+            Capabilities = caps;
+
+            _log.InfoFormat("SDK start successful! Working against SDK ver {0} ({1})", Capabilities.Version, Capabilities.BEVersion);
+            _log.InfoFormat("Number of surfaces: {0}, number of DKs: {1}", Capabilities.NumSurfaces, Capabilities.NumDynamicKeys);
+
+#if DEBUG
+            _log.DebugFormat(
+                "HW type: {0}, DK size: {1}, DK arr: X={2} Y={3}",
+                Capabilities.HardwareType,
+                Capabilities.DynamicKeySize,
+                Capabilities.DynamicKeyArrangement.X,
+                Capabilities.DynamicKeyArrangement.Y);
+
+            for (ulong i = 0; i < Capabilities.NumSurfaces; i++)
+            {
+                var pf = Capabilities.Pixelformat[i];
+                var sg = Capabilities.Surfacegeometry[i];
+                _log.DebugFormat("Surface #{0}: PixelFormat={1}, SurfaceGeometry: X={2}, Y={3}", i, pf, sg.X, sg.Y);
+            }
+#endif
+
             _log.Info("Setting up dynamic keys");
 
             _log.Debug("Creating new app event callback");
@@ -228,6 +256,11 @@ namespace SharpBlade.Razer
         public string BlankTouchpadImagePath { get; set; }
 
         /// <summary>
+        /// Gets a structure describing the SDK and hardware capabilities of the system.
+        /// </summary>
+        public RazerAPI.Capabilities Capabilities { get; private set; }
+
+        /// <summary>
         /// Gets or sets the image shown on dynamic keys when disabled.
         /// </summary>
         /// <remarks>Defaults to <see cref="Constants.DisabledDynamicKeyImage" /></remarks>
@@ -263,6 +296,40 @@ namespace SharpBlade.Razer
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Enables a specific dynamic key.
+        /// </summary>
+        /// <param name="keyType">The key type to enable.</param>
+        /// <param name="image">Image to display on this key when in the UP state.</param>
+        /// <param name="replace">True to override this key's previous configuration
+        /// if it has already been enabled, otherwise returns current key if already enabled.</param>
+        /// <returns>The dynamic key that was enabled.</returns>
+        public DynamicKey EnableDynamicKey(
+            RazerAPI.DynamicKeyType keyType,
+            string image,
+            bool replace = false)
+        {
+            return EnableDynamicKey(keyType, image, null, replace);
+        }
+
+        /// <summary>
+        /// Enables a specific dynamic key.
+        /// </summary>
+        /// <param name="keyType">The key type to enable.</param>
+        /// <param name="callback">Callback called when this key is pressed.</param>
+        /// <param name="image">Image to display on this key when in the UP state.</param>
+        /// <param name="replace">True to override this key's previous configuration
+        /// if it has already been enabled, otherwise returns current key if already enabled.</param>
+        /// <returns>The dynamic key that was enabled.</returns>
+        public DynamicKey EnableDynamicKey(
+            RazerAPI.DynamicKeyType keyType,
+            EventHandler callback,
+            string image,
+            bool replace = false)
+        {
+            return EnableDynamicKey(keyType, callback, image, null, replace);
         }
 
         /// <summary>

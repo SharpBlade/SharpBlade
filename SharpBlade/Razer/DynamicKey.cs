@@ -79,7 +79,7 @@ namespace SharpBlade.Razer
             string image,
             string pressedImage = null,
             EventHandler callback = null)
-            : base(TargetDisplayMapping[keyType])
+            : base(TargetDisplayMapping[keyType], RazerAPI.DynamicKeyHeight, RazerAPI.DynamicKeyWidth)
         {
             _log = LogManager.GetLogger(this);
 
@@ -276,7 +276,7 @@ namespace SharpBlade.Razer
             }
             catch (ObjectDisposedException ex)
             {
-                _log.ErrorFormat("OnKeyPressed: ObjectDisposedException: {0}", ex.Message);
+                _log.ErrorFormat("OnPressed: ObjectDisposedException: {0}", ex.Message);
             }
         }
     }
