@@ -35,7 +35,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SharpBlade")]
+[assembly: AssemblyTitle("SharpBlade for Razer Switchblade Framework v2.0")]
 [assembly: AssemblyDescription("C# wrapper/implementation of the SwitchBlade UI API from Razer")]
 #if RELEASE
 [assembly: AssemblyConfiguration("Release")]
@@ -69,4 +69,4 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("6.0.0")]
 [assembly: AssemblyFileVersion("6.0.0.0")]
-[assembly: AssemblyInformationalVersion("6.0.0 Stable")]
+[assembly: AssemblyInformationalVersion("6.0.0")]
