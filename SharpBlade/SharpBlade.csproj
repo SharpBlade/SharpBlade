@@ -121,6 +121,7 @@
     <Compile Include="Razer\Exceptions\RazerNativeException.cs" />
     <Compile Include="Razer\IRenderTarget.cs" />
     <Compile Include="Razer\RazerManager.cs" />
+    <Compile Include="Razer\RenderMethod.cs" />
     <Compile Include="Razer\RenderTarget.cs" />
     <Compile Include="Razer\RotateDirection.cs" />
     <Compile Include="Razer\Touchpad.cs" />
