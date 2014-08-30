@@ -56,6 +56,8 @@ namespace SharpBlade.Razer
         /// <param name="targetDisplay">
         /// The <see cref="RazerAPI.TargetDisplay" /> to which content will be rendered.
         /// </param>
+        /// <param name="height">The height (in pixels) of the target display.</param>
+        /// <param name="width">The width (in pixels) of the target display.</param>
         internal RenderTarget(RazerAPI.TargetDisplay targetDisplay, int height, int width)
         {
             DisplayHeight = height;
@@ -74,7 +76,7 @@ namespace SharpBlade.Razer
         }
 
         /// <summary>
-        /// Gets the currently active form, null if no form is set.
+        /// Gets or sets the currently active form, null if no form is set.
         /// </summary>
         public Form CurrentForm { get; protected set; }
 
@@ -84,12 +86,12 @@ namespace SharpBlade.Razer
         public abstract string CurrentImage { get; protected set; }
 
         /// <summary>
-        /// Gets the currently rendering Native window, <c>IntPtr.Zero</c> if no window set
+        /// Gets or sets the currently rendering Native window, <c>IntPtr.Zero</c> if no window set
         /// </summary>
         public IntPtr CurrentNativeWindow { get; protected set; }
 
         /// <summary>
-        /// Gets the currently rendering WPF window, null if no window is set.
+        /// Gets or sets the currently rendering WPF window, null if no window is set.
         /// </summary>
         public Window CurrentWindow { get; protected set; }
 
