@@ -11,9 +11,10 @@
  */
 
 // Disable "missing documentation" warning (CS1591: Missing XML comment for publicly visible type or member)
-#pragma warning disable 1591
 
+#pragma warning disable 1591
 using System;
+using System.CodeDom.Compiler;
 using System.Globalization;
 
 namespace SharpBlade.Native
@@ -21,13 +22,14 @@ namespace SharpBlade.Native
     #region HRESULT
 
     // ReSharper disable InconsistentNaming
+    [GeneratedCode("pinvoke.net", "N/A")]
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 4)]
-    public struct HRESULT : System.IComparable
+    public struct HRESULT : IComparable
     {
         private readonly int m_value;
 
         [Serializable]
-        public class HResultException : System.SystemException
+        public class HResultException : SystemException
         {
             new public HRESULT HResult
             {
@@ -42,7 +44,7 @@ namespace SharpBlade.Native
             }
         }
 
-        public static System.Exception GetExceptionForHR(int hr)
+        public static Exception GetExceptionForHR(int hr)
         {
             return new HResultException(hr);
         }
@@ -204,7 +206,7 @@ namespace SharpBlade.Native
             if (obj is int)
                 return CompareTo((int)obj);
 
-            throw new System.ArgumentException("Arg_MustBeHRESULT");
+            throw new ArgumentException("Arg_MustBeHRESULT");
         }
 
         #endregion IComparable Members
@@ -224,8 +226,8 @@ namespace SharpBlade.Native
 
         // {^{:b+}///\<summary\>\n:b+///:b*{.+}\n:b+///\</summary\>}
         // \1\n\2[Description("\3")]
-        [System.AttributeUsage(System.AttributeTargets.All)]
-        private class DescriptionAttribute : System.Attribute
+        [AttributeUsage(AttributeTargets.All)]
+        private class DescriptionAttribute : Attribute
         {
             public DescriptionAttribute(string description)
             {
