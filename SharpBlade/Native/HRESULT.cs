@@ -22,7 +22,7 @@ namespace SharpBlade.Native
     #region HRESULT
 
     // ReSharper disable InconsistentNaming
-    [GeneratedCode("pinvoke.net", "N/A")]
+    [GeneratedCode("pinvoke.net", "1.0.0.0")]
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 4)]
     public struct HRESULT : IComparable
     {

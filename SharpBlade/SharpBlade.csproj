@@ -56,7 +56,7 @@
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -168,7 +168,7 @@
   <UsingTask TaskName="TeamCityReportStatsValue" AssemblyFile="C:\TeamCity\buildAgent\plugins\dotnetPlugin\bin\JetBrains.BuildServer.MSBuildLoggers.dll" Condition="'$(TEAMCITY_VERSION)' != ''" />
   <Target Name="ReportStyleCopStatsToTC" AfterTargets="StyleCop" Condition="'$(Configuration)' == 'Release' AND '$(TEAMCITY_VERSION)' != '' AND '$(StyleCopEnabled)' != 'false'">
     <Message Text="Reporting StyleCop stats to TeamCity" />
-    <PropertyGroup Condition="'$(StyleCopViolationCount)' != '' AND $(StyleCopViolationCount) > 0">
+    <PropertyGroup Condition="'$(StyleCopViolationCount)' != '' AND $(StyleCopViolationCount) &gt; 0">
       <TCStatus>ERROR</TCStatus>
       <TCStyleCopViolations>$(StyleCopViolationCount)</TCStyleCopViolations>
       <TCStatusText>Violations: $(TCStyleCopViolations)</TCStatusText>

@@ -4,6 +4,7 @@
 // </auto-generated>
 
 using System;
+using System.CodeDom.Compiler;
 using System.Runtime.InteropServices;
 
 namespace SharpBlade.Native.WinAPI
@@ -12,6 +13,7 @@ namespace SharpBlade.Native.WinAPI
     /// Static class containing all functions
     /// provided by the Windows GDI32 library.
     /// </summary>
+    [GeneratedCode("pinvoke.net", "1.0.0.0")]
     public static class GDI32
     {
         /// <summary>
