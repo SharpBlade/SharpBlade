@@ -29,9 +29,12 @@
 // ---------------------------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Drawing.Imaging;
 
+using SharpBlade.Logging;
 using SharpBlade.Native.WinAPI;
 
 namespace SharpBlade.Helpers
@@ -53,16 +56,19 @@ namespace SharpBlade.Helpers
         /// <summary>
         /// Captures a screen shot of the entire desktop, and saves it to a file
         /// </summary>
-        /// <param name="filename">
+        /// <param name="fileName">
         /// Filename to save screenshot to.
         /// </param>
         /// <param name="format">
         /// Image format to save in.
         /// </param>
-        public static void CaptureScreenToFile(string filename, ImageFormat format)
+        public static void CaptureScreenToFile(string fileName, ImageFormat format)
         {
+            Contract.Requires(!string.IsNullOrEmpty(fileName));
+            Contract.Requires(format != null);
+
             var img = CaptureScreen();
-            img.Save(filename, format);
+            img.Save(fileName, format);
         }
 
         /// <summary>
@@ -103,7 +109,12 @@ namespace SharpBlade.Helpers
 
             // clean up
             GDI32.NativeMethods.DeleteDC(hdcDest);
-            User32.NativeMethods.ReleaseDC(handle, hdcSrc);
+            var released = User32.NativeMethods.ReleaseDC(handle, hdcSrc);
+
+            // TODO: This could make for bad performance if the log call is frequent
+            // Or is it safe to assume it won't happen often enough to be a concern?
+            if (released == 0) // DC was not released
+                LogManager.GetLogger(typeof(ScreenCapture)).Error("ReleaseDC returned zero");
 
             // get a .NET image object for it
             Image img = Image.FromHbitmap(bitmapHandle);
@@ -119,16 +130,19 @@ namespace SharpBlade.Helpers
         /// <param name="handle">
         /// Handle of window to capture.
         /// </param>
-        /// <param name="filename">
+        /// <param name="fileName">
         /// Filename to save the captured image to.
         /// </param>
         /// <param name="format">
         /// Image format to save image in.
         /// </param>
-        public static void CaptureWindowToFile(IntPtr handle, string filename, ImageFormat format)
+        public static void CaptureWindowToFile(IntPtr handle, string fileName, ImageFormat format)
         {
+            Contract.Requires(!string.IsNullOrEmpty(fileName));
+            Contract.Requires(format != null);
+
             var img = CaptureWindow(handle);
-            img.Save(filename, format);
+            img.Save(fileName, format);
         }
     }
 }

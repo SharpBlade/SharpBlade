@@ -42,29 +42,54 @@ namespace SharpBlade.Razer.Events
         /// <summary>
         /// App event mode.
         /// </summary>
-        public readonly RazerAPI.AppEventMode Mode;
+        private readonly RazerAPI.AppEventMode _mode;
 
         /// <summary>
         /// Process ID of target process.
         /// </summary>
-        public readonly uint ProcessID;
+        private readonly uint _processId;
 
         /// <summary>
         /// The event type.
         /// </summary>
-        public readonly RazerAPI.AppEventType Type;
+        private readonly RazerAPI.AppEventType _eventType;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AppEventEventArgs" /> class.
         /// </summary>
-        /// <param name="type">App event type.</param>
+        /// <param name="eventType">App event type.</param>
         /// <param name="mode">App event mode associated with this event.</param>
         /// <param name="processId">Process ID associated with event.</param>
-        internal AppEventEventArgs(RazerAPI.AppEventType type, RazerAPI.AppEventMode mode, uint processId)
+        internal AppEventEventArgs(RazerAPI.AppEventType eventType, RazerAPI.AppEventMode mode, uint processId)
         {
-            Type = type;
-            Mode = mode;
-            ProcessID = processId;
+            _eventType = eventType;
+            _mode = mode;
+            _processId = processId;
+        }
+
+        /// <summary>
+        /// Gets the app event mode.
+        /// </summary>
+        public RazerAPI.AppEventMode Mode
+        {
+            get { return _mode; }
+        }
+
+        /// <summary>
+        /// Gets the process ID of target process.
+        /// </summary>
+        [CLSCompliant(false)]
+        public uint ProcessId
+        {
+            get { return _processId; }
+        }
+
+        /// <summary>
+        /// Gets the event type.
+        /// </summary>
+        public RazerAPI.AppEventType EventType
+        {
+            get { return _eventType; }
         }
     }
 }

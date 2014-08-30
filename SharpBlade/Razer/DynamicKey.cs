@@ -30,6 +30,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 
 using SharpBlade.Helpers;
 using SharpBlade.Logging;
@@ -81,10 +82,12 @@ namespace SharpBlade.Razer
             EventHandler callback = null)
             : base(TargetDisplayMapping[keyType], RazerAPI.DynamicKeyHeight, RazerAPI.DynamicKeyWidth)
         {
-            _log = LogManager.GetLogger(this);
+            Contract.Requires(!string.IsNullOrEmpty(image));
+            Contract.Ensures(_log != null);
+            Contract.Ensures(!string.IsNullOrEmpty(UpImage));
+            Contract.Ensures(!string.IsNullOrEmpty(DownImage));
 
-            if (string.IsNullOrEmpty(image))
-                throw new ArgumentException("Can't be null or empty", "image");
+            _log = LogManager.GetLogger(this);
 
             if (string.IsNullOrEmpty(pressedImage))
             {
@@ -95,13 +98,12 @@ namespace SharpBlade.Razer
             _log.Debug("Setting default states");
             State = RazerAPI.DynamicKeyState.None;
             PreviousState = RazerAPI.DynamicKeyState.None;
-            UpImage = image;
-            DownImage = pressedImage;
             KeyType = keyType;
 
+            // Set{Up,Down}Image will also set the relevant properties
             _log.Debug("Setting images");
-            SetUpImage(UpImage);
-            SetDownImage(DownImage);
+            SetUpImage(image);
+            SetDownImage(pressedImage);
 
             if (callback != null)
             {
@@ -166,6 +168,7 @@ namespace SharpBlade.Razer
         /// </summary>
         public void Disable()
         {
+            Contract.Assume(RazerManager.Instance != null);
             SetImage(RazerManager.Instance.DisabledDynamicKeyImagePath);
         }
 
@@ -184,6 +187,8 @@ namespace SharpBlade.Razer
         /// <param name="image">Path to image.</param>
         public void SetDownImage(string image)
         {
+            Contract.Requires(!string.IsNullOrEmpty(image));
+            Contract.Ensures(!string.IsNullOrEmpty(DownImage));
             SetImage(image, RazerAPI.DynamicKeyState.Down);
         }
 
@@ -205,12 +210,15 @@ namespace SharpBlade.Razer
         /// <param name="state">State to display image in.</param>
         public void SetImage(string image, RazerAPI.DynamicKeyState state)
         {
-            if (state != RazerAPI.DynamicKeyState.Up && state != RazerAPI.DynamicKeyState.Down)
-                throw new ArgumentException("State can only be up or down", "state");
+            Contract.Requires(!string.IsNullOrEmpty(image));
+            Contract.Requires(
+                state == RazerAPI.DynamicKeyState.Up || state == RazerAPI.DynamicKeyState.Down,
+                "State can only be up or down.");
+            Contract.Ensures(!string.IsNullOrEmpty(UpImage) || !string.IsNullOrEmpty(DownImage));
 
             _log.DebugFormat("Setting {0} on {1} to {2}", state, KeyType, image);
 
-            var result = RazerAPI.NativeMethods.RzSBSetImageDynamicKey(KeyType, state, IO.GetAbsolutePath(image));
+            var result = RazerAPI.NativeMethods.RzSBSetImageDynamicKey(KeyType, state, GenericMethods.GetAbsolutePath(image));
             if (!HRESULT.RZSB_SUCCESS(result))
                 throw new RazerNativeException("RzSBSetImageDynamicKey", result);
 
@@ -227,6 +235,9 @@ namespace SharpBlade.Razer
         /// <param name="pressedImage">Path to the image displayed when this key is in the "DOWN" state.</param>
         public void SetImages(string image, string pressedImage)
         {
+            Contract.Requires(!string.IsNullOrEmpty(image) && !string.IsNullOrEmpty(pressedImage));
+            Contract.Ensures(!string.IsNullOrEmpty(UpImage) && !string.IsNullOrEmpty(DownImage));
+
             SetUpImage(image);
             SetDownImage(pressedImage);
         }
@@ -237,6 +248,8 @@ namespace SharpBlade.Razer
         /// <param name="image">Path to image.</param>
         public void SetUpImage(string image)
         {
+            Contract.Requires(!string.IsNullOrEmpty(image));
+            Contract.Ensures(!string.IsNullOrEmpty(UpImage));
             SetImage(image, RazerAPI.DynamicKeyState.Up);
         }
 
@@ -258,7 +271,19 @@ namespace SharpBlade.Razer
         /// </summary>
         protected override void ClearImage()
         {
+            Contract.Assume(RazerManager.Instance != null);
             SetImage(RazerManager.Instance.DisabledDynamicKeyImagePath);
+        }
+
+        /// <summary>
+        /// The contract invariant method for <see cref="DynamicKey" />.
+        /// </summary>
+        [ContractInvariantMethod]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(_log != null);
+            Contract.Invariant(!string.IsNullOrEmpty(UpImage));
+            Contract.Invariant(!string.IsNullOrEmpty(DownImage));
         }
 
         /// <summary>

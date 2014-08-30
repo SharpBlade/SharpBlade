@@ -42,29 +42,55 @@ namespace SharpBlade.Razer.Events
         /// <summary>
         /// Data of each type.
         /// </summary>
-        public readonly UIntPtr Data;
+        private readonly UIntPtr _data;
 
         /// <summary>
         /// Modifiers applied during press.
         /// </summary>
-        public readonly IntPtr Modifiers;
+        private readonly IntPtr _modifiers;
 
         /// <summary>
         /// The type of event (KeyUp, Char, KeyDown).
         /// </summary>
-        public readonly uint Type;
+        private readonly uint _eventType;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyboardRawEventArgs" /> class.
         /// </summary>
-        /// <param name="type">Keyboard event type.</param>
+        /// <param name="eventType">Keyboard event type.</param>
         /// <param name="data">Data associated with the event.</param>
         /// <param name="modifiers">Active modifiers.</param>
-        internal KeyboardRawEventArgs(uint type, UIntPtr data, IntPtr modifiers)
+        internal KeyboardRawEventArgs(uint eventType, UIntPtr data, IntPtr modifiers)
         {
-            Type = type;
-            Data = data;
-            Modifiers = modifiers;
+            _eventType = eventType;
+            _data = data;
+            _modifiers = modifiers;
+        }
+
+        /// <summary>
+        /// Gets the data associated with the keyboard event.
+        /// </summary>
+        [CLSCompliant(false)]
+        public UIntPtr Data
+        {
+            get { return _data; }
+        }
+
+        /// <summary>
+        /// Gets the modifiers applied during key press.
+        /// </summary>
+        public IntPtr Modifiers
+        {
+            get { return _modifiers; }
+        }
+
+        /// <summary>
+        /// Gets the type of event (KeyUp, Char, KeyDown).
+        /// </summary>
+        [CLSCompliant(false)]
+        public uint EventType
+        {
+            get { return _eventType; }
         }
     }
 }

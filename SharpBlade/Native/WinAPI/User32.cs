@@ -14,6 +14,7 @@ namespace SharpBlade.Native.WinAPI
     /// provided by the Windows User32 library.
     /// </summary>
     [GeneratedCode("pinvoke.net", "1.0.0.0")]
+    [CLSCompliant(false)]
     public static class User32
     {
         /// <summary>

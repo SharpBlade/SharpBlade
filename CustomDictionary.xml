@@ -1,7 +1,15 @@
-<Dictionary>
+<?xml version="1.0" encoding="utf-8"?>
+<Dictionary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="CustomDictionary.xsd">
     <Words>
         <Recognized>
-            <Word>Razer</word>
+            <Word>callback</Word>
+            <Word>Counterclockwise</Word>
+            <Word>Razer</Word>
+            <Word>RazerAPI</Word>
+            <Word>Touchpoint</Word>
         </Recognized>
+        <DiscreteExceptions>
+            <Term>setup</Term>
+        </DiscreteExceptions>
     </Words>
 </Dictionary>

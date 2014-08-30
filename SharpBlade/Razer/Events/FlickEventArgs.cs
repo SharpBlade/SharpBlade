@@ -43,12 +43,12 @@ namespace SharpBlade.Razer.Events
         /// <summary>
         /// Direction of the flick.
         /// </summary>
-        public readonly RazerAPI.Direction Direction;
+        private readonly RazerAPI.Direction _direction;
 
         /// <summary>
         /// Number of touch points.
         /// </summary>
-        public readonly uint TouchpointCount;
+        private readonly uint _touchpointCount;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FlickEventArgs" /> class.
@@ -57,8 +57,25 @@ namespace SharpBlade.Razer.Events
         /// <param name="direction">Direction of the flick.</param>
         internal FlickEventArgs(uint touchpointCount, RazerAPI.Direction direction)
         {
-            TouchpointCount = touchpointCount;
-            Direction = direction;
+            _touchpointCount = touchpointCount;
+            _direction = direction;
+        }
+
+        /// <summary>
+        /// Gets the direction of the flick.
+        /// </summary>
+        public RazerAPI.Direction Direction
+        {
+            get { return _direction; }
+        }
+
+        /// <summary>
+        /// Gets the number of touch points.
+        /// </summary>
+        [CLSCompliant(false)]
+        public uint TouchpointCount
+        {
+            get { return _touchpointCount; }
         }
     }
 }

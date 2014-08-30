@@ -43,12 +43,12 @@ namespace SharpBlade.Razer.Events
         /// <summary>
         /// The dynamic key that changed.
         /// </summary>
-        public readonly RazerAPI.DynamicKeyType KeyType;
+        private readonly RazerAPI.DynamicKeyType _keyType;
 
         /// <summary>
         /// New key state.
         /// </summary>
-        public readonly RazerAPI.DynamicKeyState State;
+        private readonly RazerAPI.DynamicKeyState _state;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicKeyEventArgs" /> class.
@@ -57,8 +57,24 @@ namespace SharpBlade.Razer.Events
         /// <param name="state">The state of the key.</param>
         internal DynamicKeyEventArgs(RazerAPI.DynamicKeyType keyType, RazerAPI.DynamicKeyState state)
         {
-            KeyType = keyType;
-            State = state;
+            _keyType = keyType;
+            _state = state;
+        }
+
+        /// <summary>
+        /// Gets the dynamic key that changed.
+        /// </summary>
+        public RazerAPI.DynamicKeyType KeyType
+        {
+            get { return _keyType; }
+        }
+
+        /// <summary>
+        /// Gets the new key state.
+        /// </summary>
+        public RazerAPI.DynamicKeyState State
+        {
+            get { return _state; }
         }
     }
 }

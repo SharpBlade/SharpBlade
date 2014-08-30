@@ -29,6 +29,8 @@
 // ---------------------------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.Contracts;
+using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -63,12 +65,12 @@ namespace SharpBlade.Razer
         /// <summary>
         /// App event callback that is used as parameter in <see cref="RazerAPI.NativeMethods.RzSBAppEventSetCallback" />.
         /// </summary>
-        private static RazerAPI.AppEventCallbackDelegate _appEventCallback;
+        private static RazerAPI.AppEventCallback _appEventCallback;
 
         /// <summary>
         /// Dynamic key callback that is used as parameter in <see cref="RazerAPI.NativeMethods.RzSBDynamicKeySetCallback" />.
         /// </summary>
-        private static RazerAPI.DynamicKeyCallbackFunctionDelegate _dynamicKeyCallback;
+        private static RazerAPI.DynamicKeyCallbackFunction _dynamicKeyCallback;
 
         /// <summary>
         /// RazerManager instance for singleton.
@@ -78,7 +80,7 @@ namespace SharpBlade.Razer
         /// <summary>
         /// Keyboard callback that is used as parameter in <see cref="RazerAPI.NativeMethods.RzSBKeyboardCaptureSetCallback" />.
         /// </summary>
-        private static RazerAPI.KeyboardCallbackFunctionDelegate _keyboardCallback;
+        private static RazerAPI.KeyboardCallbackFunction _keyboardCallback;
 
         // ReSharper restore PrivateFieldCanBeConvertedToLocalVariable
 
@@ -111,6 +113,12 @@ namespace SharpBlade.Razer
         /// </remarks>
         private RazerManager()
         {
+            Contract.Ensures(_log != null);
+            Contract.Ensures(_dynamicKeys != null);
+            Contract.Ensures(Touchpad != null);
+            Contract.Ensures(!string.IsNullOrEmpty(BlankTouchpadImagePath));
+            Contract.Ensures(!string.IsNullOrEmpty(DisabledDynamicKeyImagePath));
+
             _log = LogManager.GetLogger(this);
 
             _log.Info("RazerManager is initializing");
@@ -283,6 +291,7 @@ namespace SharpBlade.Razer
         public void DisableDynamicKey(RazerAPI.DynamicKeyType keyType)
         {
             var index = (int)keyType - 1;
+            Contract.Assume(index < _dynamicKeys.Length);
             var dk = _dynamicKeys[index];
             if (dk != null)
                 dk.Disable();
@@ -311,6 +320,7 @@ namespace SharpBlade.Razer
             string image,
             bool replace = false)
         {
+            Contract.Requires(!string.IsNullOrEmpty(image));
             return EnableDynamicKey(keyType, image, null, replace);
         }
 
@@ -329,6 +339,7 @@ namespace SharpBlade.Razer
             string image,
             bool replace = false)
         {
+            Contract.Requires(!string.IsNullOrEmpty(image));
             return EnableDynamicKey(keyType, callback, image, null, replace);
         }
 
@@ -337,17 +348,18 @@ namespace SharpBlade.Razer
         /// </summary>
         /// <param name="keyType">The key type to enable.</param>
         /// <param name="image">Image to display on this key when in the UP state.</param>
-        /// <param name="presssedImage">Image to display on this key when in the DOWN state.</param>
+        /// <param name="pressedImage">Image to display on this key when in the DOWN state.</param>
         /// <param name="replace">True to override this key's previous configuration
         /// if it has already been enabled, otherwise returns current key if already enabled.</param>
         /// <returns>The dynamic key that was enabled.</returns>
         public DynamicKey EnableDynamicKey(
             RazerAPI.DynamicKeyType keyType,
             string image,
-            string presssedImage = null,
+            string pressedImage = null,
             bool replace = false)
         {
-            return EnableDynamicKey(keyType, null, image, presssedImage, replace);
+            Contract.Requires(!string.IsNullOrEmpty(image));
+            return EnableDynamicKey(keyType, null, image, pressedImage, replace);
         }
 
         /// <summary>
@@ -367,7 +379,10 @@ namespace SharpBlade.Razer
             string pressedImage = null,
             bool replace = false)
         {
+            Contract.Requires(!string.IsNullOrEmpty(image));
+
             var index = (int)keyType - 1;
+            Contract.Assume(index < _dynamicKeys.Length);
             if (_dynamicKeys[index] != null && !replace)
             {
                 _log.Info("Dynamic key already enabled and replace is false.");
@@ -386,7 +401,7 @@ namespace SharpBlade.Razer
             {
                 _log.ErrorFormat("Failed to enable dynamic key {0}: {1}", keyType, ex.Hresult);
                 throw new RazerDynamicKeyException(
-                    string.Format("Failed to enable dynamic key {0} due to a native call exception.", keyType),
+                    string.Format(CultureInfo.InvariantCulture, "Failed to enable dynamic key {0} due to a native call exception.", keyType),
                     ex);
             }
 
@@ -400,7 +415,9 @@ namespace SharpBlade.Razer
         /// <returns><see cref="DynamicKey" /> object representing the specified key type.</returns>
         public DynamicKey GetDynamicKey(RazerAPI.DynamicKeyType keyType)
         {
-            return _dynamicKeys[(int)keyType - 1];
+            var index = (int)keyType - 1;
+            Contract.Assume(index < _dynamicKeys.Length);
+            return _dynamicKeys[index];
         }
 
         /// <summary>
@@ -440,7 +457,7 @@ namespace SharpBlade.Razer
         /// <param name="control">The control to forward input to.</param>
         /// <param name="releaseOnEnter">If true, keyboard capture will cease when the enter key is pressed,
         /// otherwise, <see cref="SetKeyboardCapture" /> has to be called explicitly with false as the argument.</param>
-        public void StartWPFControlKeyboardCapture(System.Windows.Controls.Control control, bool releaseOnEnter = true)
+        public void StartWpfControlKeyboardCapture(System.Windows.Controls.Control control, bool releaseOnEnter = true)
         {
             SetKeyboardCapture(true);
             _keyboardControl = new KeyboardControl(control, releaseOnEnter);
@@ -497,6 +514,8 @@ namespace SharpBlade.Razer
                 _log.DebugFormat("Unsupported AppEventType: {0}", type);
                 return Result;
             }
+
+            Contract.Assume(Enum.IsDefined(typeof(RazerAPI.AppEventMode), appMode));
 
             OnAppEvent(type, (RazerAPI.AppEventMode)appMode, processId);
 
@@ -571,7 +590,7 @@ namespace SharpBlade.Razer
                     if (_keyboardControl != null)
                         _keyboardControl.SendKeyDown(key);
                 }
-                else if (msgType == User32.MessageType.KEYUP)
+                else
                 {
                     OnKeyboardKeyUp(key, modifierKeys);
                     if (_keyboardControl != null)
@@ -584,6 +603,18 @@ namespace SharpBlade.Razer
             }
 
             return HRESULT.RZSB_OK;
+        }
+
+        /// <summary>
+        /// The contract invariant method for <see cref="RazerManager" />.
+        /// </summary>
+        [ContractInvariantMethod]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(_log != null);
+            Contract.Invariant(_dynamicKeys != null);
+            Contract.Invariant(!string.IsNullOrEmpty(BlankTouchpadImagePath));
+            Contract.Invariant(!string.IsNullOrEmpty(DisabledDynamicKeyImagePath));
         }
 
         /// <summary>

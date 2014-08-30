@@ -41,7 +41,7 @@ namespace SharpBlade.Razer.Events
         /// <summary>
         /// The direction of the rotation.
         /// </summary>
-        public readonly RotateDirection Direction;
+        private readonly RotateDirection _direction;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RotateEventArgs" /> class.
@@ -49,7 +49,15 @@ namespace SharpBlade.Razer.Events
         /// <param name="direction">Direction of the rotation.</param>
         internal RotateEventArgs(RotateDirection direction)
         {
-            Direction = direction;
+            _direction = direction;
+        }
+
+        /// <summary>
+        /// Gets the direction of the rotation.
+        /// </summary>
+        public RotateDirection Direction
+        {
+            get { return _direction; }
         }
     }
 }

@@ -24,6 +24,8 @@
  */
 
 using System;
+using System.CodeDom.Compiler;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace SharpBlade.Native
@@ -35,6 +37,7 @@ namespace SharpBlade.Native
     /// <remarks>
     /// Native functions from <c>SwitchBladeSDK32.dll</c>, all functions are <c>__cdecl</c> calls.
     /// </remarks>
+    [GeneratedCode("Razer API header files", "2.0.0.0")]
     public static class RazerAPI
     {
         #region Constants
@@ -130,10 +133,10 @@ namespace SharpBlade.Native
         /// </summary>
         /// <param name="appEventType">The type of app event.</param>
         /// <param name="dwAppMode">The app mode-</param>
-        /// <param name="dwProcessID">The process ID.</param>
+        /// <param name="dwProcessId">The process ID.</param>
         /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate HRESULT AppEventCallbackDelegate(AppEventType appEventType, uint dwAppMode, uint dwProcessID);
+        internal delegate HRESULT AppEventCallback(AppEventType appEventType, uint dwAppMode, uint dwProcessId);
 
         /// <summary>
         /// Function delegate for dynamic key callbacks.
@@ -142,7 +145,7 @@ namespace SharpBlade.Native
         /// <param name="dynamicKeyState">The new state of the key.</param>
         /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate HRESULT DynamicKeyCallbackFunctionDelegate(
+        internal delegate HRESULT DynamicKeyCallbackFunction(
             DynamicKeyType dynamicKeyType,
             DynamicKeyState dynamicKeyState);
 
@@ -154,7 +157,7 @@ namespace SharpBlade.Native
         /// <param name="lParam">Indicates key modifiers (CTRL, ALT, SHIFT).</param>
         /// <returns><see cref="HRESULT" /> object indicating success or failure</returns>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate HRESULT KeyboardCallbackFunctionDelegate(uint uMsg, UIntPtr wParam, IntPtr lParam);
+        internal delegate HRESULT KeyboardCallbackFunction(uint uMsg, UIntPtr wParam, IntPtr lParam);
 
         /// <summary>
         /// Function delegate for touchpad gesture events.
@@ -166,7 +169,7 @@ namespace SharpBlade.Native
         /// <param name="wZPos">Z position where gesture happened.</param>
         /// <returns><see cref="HRESULT" /> object indicating success or failure</returns>
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-        public delegate HRESULT TouchpadGestureCallbackFunctionDelegate(
+        internal delegate HRESULT TouchpadGestureCallbackFunction(
             GestureType gestureType,
             uint dwParameters,
             ushort wXPos,
@@ -180,6 +183,8 @@ namespace SharpBlade.Native
         /// <summary>
         /// Mode that app is running in.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1008:EnumsShouldHaveZeroValue")]
+        [SuppressMessage("Microsoft.Design", "CA1027:MarkEnumsWithFlags")]
         public enum AppEventMode
         {
             /// <summary>
@@ -377,6 +382,8 @@ namespace SharpBlade.Native
         /// Gesture types supported by the device.
         /// </summary>
         [Flags]
+        [CLSCompliant(false)]
+        [SuppressMessage("Microsoft.Usage", "CA2217:DoNotMarkEnumsWithFlags")]
         public enum GestureType : uint
         {
             /// <summary>
@@ -470,6 +477,7 @@ namespace SharpBlade.Native
         /// <summary>
         /// Target displays available on SwitchBlade device.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1008:EnumsShouldHaveZeroValue")]
         public enum TargetDisplay
         {
             /// <summary>
@@ -535,21 +543,23 @@ namespace SharpBlade.Native
         /// <summary>
         /// Checks if the gesture type value denotes a single gesture.
         /// </summary>
-        /// <param name="a">Gesture type value to check.</param>
+        /// <param name="gesture">Gesture type value to check.</param>
         /// <returns>True if this is a single gesture, false if multiple.</returns>
-        public static bool SingleGesture(uint a)
+        [CLSCompliant(false)]
+        public static bool SingleGesture(uint gesture)
         {
-            return 0 == ((a - a) & a);
+            return 0 == ((gesture - gesture) & gesture);
         }
 
         /// <summary>
         /// Checks that the specified gesture type value is valid.
         /// </summary>
-        /// <param name="a">Gesture type value to check.</param>
+        /// <param name="gesture">Gesture type value to check.</param>
         /// <returns>True if valid gesture, false otherwise.</returns>
-        public static bool ValidGesture(uint a)
+        [CLSCompliant(false)]
+        public static bool ValidGesture(uint gesture)
         {
-            return (a & (uint)GestureType.All) != 0;
+            return (gesture & (uint)GestureType.All) != 0;
         }
 
         #endregion Macros
@@ -565,11 +575,13 @@ namespace SharpBlade.Native
             /// <summary>
             /// Version of SDK/hardware.
             /// </summary>
+            [CLSCompliant(false)]
             public ulong Version;
 
             /// <summary>
             /// BEVersion returned from capabilities function.
             /// </summary>
+            [CLSCompliant(false)]
             public ulong BEVersion;
 
             /// <summary>
@@ -580,6 +592,7 @@ namespace SharpBlade.Native
             /// <summary>
             /// Number of surfaces available.
             /// </summary>
+            [CLSCompliant(false)]
             public ulong NumSurfaces;
 
             /// <summary>
@@ -594,6 +607,7 @@ namespace SharpBlade.Native
             /// </summary>
             /// <remarks>Contains <see cref="NumSurfaces" /> entries.</remarks>
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = MaxSupportedSurfaces)]
+            [CLSCompliant(false)]
             public uint[] Pixelformat;
 
             /// <summary>
@@ -674,7 +688,7 @@ namespace SharpBlade.Native
             /// </param>
             /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
             [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-            internal static extern HRESULT RzSBAppEventSetCallback([In] AppEventCallbackDelegate callback);
+            internal static extern HRESULT RzSBAppEventSetCallback([In] AppEventCallback callback);
 
             /// <summary>
             /// Enables or disables the keyboard capture functionality.
@@ -699,7 +713,7 @@ namespace SharpBlade.Native
             /// </param>
             /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
             [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-            internal static extern HRESULT RzSBDynamicKeySetCallback([In] DynamicKeyCallbackFunctionDelegate callback);
+            internal static extern HRESULT RzSBDynamicKeySetCallback([In] DynamicKeyCallbackFunction callback);
 
             /// <summary>
             /// Enables or disables gesture events.
@@ -736,7 +750,7 @@ namespace SharpBlade.Native
             /// </param>
             /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
             [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-            internal static extern HRESULT RzSBGestureSetCallback([In] TouchpadGestureCallbackFunctionDelegate callback);
+            internal static extern HRESULT RzSBGestureSetCallback([In] TouchpadGestureCallbackFunction callback);
 
             /// <summary>
             /// Sets the callback function for dynamic key events. [sic]
@@ -747,7 +761,7 @@ namespace SharpBlade.Native
             /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
             [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
             internal static extern HRESULT RzSBKeyboardCaptureSetCallback(
-                [In] KeyboardCallbackFunctionDelegate callback);
+                [In] KeyboardCallbackFunction callback);
 
             /// <summary>
             /// Collects information about the SDK and the hardware supported.

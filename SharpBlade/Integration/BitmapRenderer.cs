@@ -85,7 +85,7 @@ namespace SharpBlade.Integration
         /// <param name="e">Event arguments.</param>
         private void TimerTick(object sender, ElapsedEventArgs e)
         {
-            RenderTarget.DrawBitmap(_provider.GetBitmap());
+            RenderTarget.DrawBitmap(_provider.Bitmap);
         }
     }
 }
