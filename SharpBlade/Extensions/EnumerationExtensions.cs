@@ -29,6 +29,8 @@
 // ---------------------------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.Contracts;
+using System.Globalization;
 
 namespace SharpBlade.Extensions
 {
@@ -49,16 +51,18 @@ namespace SharpBlade.Extensions
         /// in <c>check</c>, false otherwise.</returns>
         public static bool Has<T>(this Enum value, T check)
         {
+            Contract.Requires(value != null);
+
             var type = value.GetType();
 
             // determine the values
             var parsed = new Value(check, type);
 
             if (parsed.Signed.HasValue)
-                return (Convert.ToInt64(value) & (long)parsed.Signed) == (long)parsed.Signed;
+                return (Convert.ToInt64(value, CultureInfo.InvariantCulture) & (long)parsed.Signed) == (long)parsed.Signed;
 
             if (parsed.Unsigned.HasValue)
-                return (Convert.ToUInt64(value) & (ulong)parsed.Unsigned) == (ulong)parsed.Unsigned;
+                return (Convert.ToUInt64(value, CultureInfo.InvariantCulture) & (ulong)parsed.Unsigned) == (ulong)parsed.Unsigned;
 
             return false;
         }
@@ -73,15 +77,17 @@ namespace SharpBlade.Extensions
         /// value(s) in the parameter append included.</returns>
         public static T Include<T>(this Enum value, T append)
         {
+            Contract.Requires(value != null);
+
             var type = value.GetType();
 
             // determine the values
             object result = value;
             var parsed = new Value(append, type);
             if (parsed.Signed.HasValue)
-                result = Convert.ToInt64(value) | (long)parsed.Signed;
+                result = Convert.ToInt64(value, CultureInfo.InvariantCulture) | (long)parsed.Signed;
             else if (parsed.Unsigned.HasValue)
-                result = Convert.ToUInt64(value) | (ulong)parsed.Unsigned;
+                result = Convert.ToUInt64(value, CultureInfo.InvariantCulture) | (ulong)parsed.Unsigned;
 
             // return the final value
             return (T)Enum.Parse(type, result.ToString());
@@ -97,6 +103,7 @@ namespace SharpBlade.Extensions
         /// in <c>value</c>, false otherwise.</returns>
         public static bool Missing<T>(this Enum obj, T value)
         {
+            Contract.Requires(obj != null);
             return !Has(obj, value);
         }
 
@@ -105,20 +112,22 @@ namespace SharpBlade.Extensions
         /// </summary>
         /// <typeparam name="T">The type of the value(s) being removed.</typeparam>
         /// <param name="value">The <see cref="Enum" /> to remove values from.</param>
-        /// <param name="remove">The value(s) to remove from the enumeration.</param>
+        /// <param name="toRemove">The value(s) to remove from the enumeration.</param>
         /// <returns>A new enumeration of the specified type with the value(s)
         /// supplied in <c>remove</c> removed.</returns>
-        public static T Remove<T>(this Enum value, T remove)
+        public static T Remove<T>(this Enum value, T toRemove)
         {
+            Contract.Requires(value != null);
+
             Type type = value.GetType();
 
             // determine the values
             object result = value;
-            var parsed = new Value(remove, type);
+            var parsed = new Value(toRemove, type);
             if (parsed.Signed.HasValue)
-                result = Convert.ToInt64(value) & ~(long)parsed.Signed;
+                result = Convert.ToInt64(value, CultureInfo.InvariantCulture) & ~(long)parsed.Signed;
             else if (parsed.Unsigned.HasValue)
-                result = Convert.ToUInt64(value) & ~(ulong)parsed.Unsigned;
+                result = Convert.ToUInt64(value, CultureInfo.InvariantCulture) & ~(ulong)parsed.Unsigned;
 
             // return the final value
             return (T)Enum.Parse(type, result.ToString());
@@ -174,9 +183,9 @@ namespace SharpBlade.Extensions
                 // if this is an unsigned long then the only
                 // value that can hold it would be a ulong
                 if (compare == CachedUint32 || compare == CachedUInt64)
-                    Unsigned = Convert.ToUInt64(value);
+                    Unsigned = Convert.ToUInt64(value, CultureInfo.InvariantCulture);
                 else // otherwise, a long should cover anything else
-                    Signed = Convert.ToInt64(value);
+                    Signed = Convert.ToInt64(value, CultureInfo.InvariantCulture);
             }
         }
 

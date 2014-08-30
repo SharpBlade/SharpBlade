@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------------------------------------
-// <copyright file="IO.cs" company="SharpBlade">
+// <copyright file="ThreadingMethods.cs" company="SharpBlade">
 //     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -28,23 +28,26 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System.IO;
+using System.Diagnostics.Contracts;
+using System.Threading;
 
 namespace SharpBlade.Helpers
 {
     /// <summary>
-    /// Helper functions for IO operations.
+    /// Helper functions for threading operations.
     /// </summary>
-    public static class IO
+    public static class ThreadingMethods
     {
         /// <summary>
-        /// Gets the absolute path to the specified file.
+        /// Changes the name of the currently executing thread.
         /// </summary>
-        /// <param name="path">(Relative) path to resolve.</param>
-        /// <returns>The absolute path to the specified relative path on the file system.</returns>
-        public static string GetAbsolutePath(string path)
+        /// <param name="name">Name to give the current thread.</param>
+        /// <remarks>Will do nothing if a name has already been set for the thread.</remarks>
+        public static void SetCurrentThreadName(string name)
         {
-            return Path.Combine(Directory.GetCurrentDirectory(), path);
+            Contract.Requires(!string.IsNullOrEmpty(name));
+            if (string.IsNullOrEmpty(Thread.CurrentThread.Name))
+                Thread.CurrentThread.Name = name;
         }
     }
 }

@@ -29,6 +29,7 @@
 // ---------------------------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.Contracts;
 using System.Linq;
 
 using SharpBlade.Helpers;
@@ -47,7 +48,7 @@ namespace SharpBlade.Razer
         /// <summary>
         /// Gesture callback that is used as parameter in <see cref="RazerAPI.NativeMethods.RzSBGestureSetCallback" />.
         /// </summary>
-        private static RazerAPI.TouchpadGestureCallbackFunctionDelegate _gestureCallback;
+        private static RazerAPI.TouchpadGestureCallbackFunction _gestureCallback;
 
         /// <summary>
         /// Instance of Touchpad for the singleton.
@@ -64,6 +65,8 @@ namespace SharpBlade.Razer
         /// </summary>
         private Touchpad() : base(RazerAPI.TargetDisplay.Widget, RazerAPI.TouchpadHeight, RazerAPI.TouchpadWidth)
         {
+            Contract.Ensures(_log != null);
+
             CurrentNativeWindow = IntPtr.Zero;
             _log = LogManager.GetLogger(this);
             _log.Info("Setting disabled image");
@@ -147,6 +150,7 @@ namespace SharpBlade.Razer
         {
             get
             {
+                Contract.Ensures(Contract.Result<Touchpad>() != null);
                 return _instance ?? (_instance = new Touchpad());
             }
         }
@@ -157,6 +161,7 @@ namespace SharpBlade.Razer
         /// Disables a gesture from being handled by the touchpad.
         /// </summary>
         /// <param name="gestureType">Gesture to disable.</param>
+        [CLSCompliant(false)]
         public void DisableGesture(RazerAPI.GestureType gestureType)
         {
             SetGesture(gestureType, false);
@@ -166,6 +171,7 @@ namespace SharpBlade.Razer
         /// Disables forwarding of a gesture.
         /// </summary>
         /// <param name="gestureType">Gesture to disable.</param>
+        [CLSCompliant(false)]
         public void DisableOSGesture(RazerAPI.GestureType gestureType)
         {
             SetOSGesture(gestureType, false);
@@ -175,6 +181,7 @@ namespace SharpBlade.Razer
         /// Enables a gesture to be handled by the touchpad.
         /// </summary>
         /// <param name="gestureType">Gesture to enable.</param>
+        [CLSCompliant(false)]
         public void EnableGesture(RazerAPI.GestureType gestureType)
         {
             SetGesture(gestureType, true);
@@ -184,6 +191,7 @@ namespace SharpBlade.Razer
         /// Enables a gesture to be forwarded to the host operating system.
         /// </summary>
         /// <param name="gestureType">Gesture to forward.</param>
+        [CLSCompliant(false)]
         public void EnableOSGesture(RazerAPI.GestureType gestureType)
         {
             SetOSGesture(gestureType, true);
@@ -194,6 +202,7 @@ namespace SharpBlade.Razer
         /// </summary>
         /// <param name="gestureType">The gesture type to set.</param>
         /// <param name="enabled">True to enable gesture, false to disable.</param>
+        [CLSCompliant(false)]
         public void SetGesture(RazerAPI.GestureType gestureType, bool enabled)
         {
             _log.DebugFormat("SetGesture is {0} gestures: {1}", enabled ? "enabling" : "disabling", gestureType);
@@ -224,6 +233,7 @@ namespace SharpBlade.Razer
         /// </summary>
         /// <param name="gestureType">Gesture to set.</param>
         /// <param name="enabled">True to enable forwarding, false to disable.</param>
+        [CLSCompliant(false)]
         public void SetOSGesture(RazerAPI.GestureType gestureType, bool enabled)
         {
             _log.DebugFormat("SetOSGesture is {0} gestures: {1}", enabled ? "enabling" : "disabling", gestureType);
@@ -259,7 +269,7 @@ namespace SharpBlade.Razer
         {
             Clear();
 
-            image = IO.GetAbsolutePath(image);
+            image = GenericMethods.GetAbsolutePath(image);
 
             var result = RazerAPI.NativeMethods.RzSBSetImageTouchpad(image);
             if (HRESULT.RZSB_FAILED(result))
@@ -275,7 +285,7 @@ namespace SharpBlade.Razer
         {
             var result =
                 RazerAPI.NativeMethods.RzSBSetImageTouchpad(
-                    IO.GetAbsolutePath(RazerManager.Instance.BlankTouchpadImagePath));
+                    GenericMethods.GetAbsolutePath(RazerManager.Instance.BlankTouchpadImagePath));
             if (HRESULT.RZSB_FAILED(result))
                 throw new RazerNativeException("RzSBSetImageTouchpad", result);
 
@@ -447,6 +457,7 @@ namespace SharpBlade.Razer
 
                 case RazerAPI.GestureType.Flick:
                 {
+                    Contract.Assume(Enum.IsDefined(typeof(RazerAPI.Direction), z));
                     var direction = (RazerAPI.Direction)z;
                     OnFlick(parameters, direction);
                     break;
@@ -484,7 +495,7 @@ namespace SharpBlade.Razer
                             break;
 
                         case 2:
-                            direction = RotateDirection.CounterClockwise;
+                            direction = RotateDirection.Counterclockwise;
                             break;
 
                         default:
@@ -517,5 +528,14 @@ namespace SharpBlade.Razer
         }
 
         #endregion Native Handlers
+
+        /// <summary>
+        /// The contract invariant method for <see cref="Touchpad" />.
+        /// </summary>
+        [ContractInvariantMethod]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(_log != null);
+        }
     }
 }

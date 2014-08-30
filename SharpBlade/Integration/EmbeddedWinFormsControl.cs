@@ -28,7 +28,9 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
+using System.Diagnostics.Contracts;
 using System.Drawing;
+using System.Security.RightsManagement;
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 
@@ -44,12 +46,12 @@ namespace SharpBlade.Integration
         /// <summary>
         /// The hosted WinForms control.
         /// </summary>
-        public readonly Control Control;
+        private readonly Control _control;
 
         /// <summary>
         /// The <see cref="WindowsFormsHost" /> object hosting the control object.
         /// </summary>
-        public readonly WindowsFormsHost Host;
+        private readonly WindowsFormsHost _host;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmbeddedWinFormsControl" /> struct.
@@ -58,8 +60,11 @@ namespace SharpBlade.Integration
         /// <param name="control">The WinForms control contained in the host.</param>
         public EmbeddedWinFormsControl(WindowsFormsHost host, Control control)
         {
-            Host = host;
-            Control = control;
+            Contract.Requires(host != null);
+            Contract.Requires(control != null);
+
+            _host = host;
+            _control = control;
         }
 
         /// <summary>
@@ -69,20 +74,98 @@ namespace SharpBlade.Integration
         {
             get
             {
-                return new Rectangle((int)Host.Margin.Left, (int)Host.Margin.Top, Control.Width, Control.Height);
+                return new Rectangle((int)_host.Margin.Left, (int)_host.Margin.Top, _control.Width, _control.Height);
             }
+        }
+
+        /// <summary>
+        /// Gets the hosted WinForms control.
+        /// </summary>
+        public Control Control
+        {
+            get { return _control; }
+        }
+
+        /// <summary>
+        /// Gets the <see cref="WindowsFormsHost" /> object hosting the control object.
+        /// </summary>
+        public WindowsFormsHost Host
+        {
+            get { return _host; }
+        }
+
+        /// <summary>
+        /// Compares two <see cref="EmbeddedWinFormsControl" /> structures for equality.
+        /// </summary>
+        /// <param name="left">The left operand.</param>
+        /// <param name="right">The right operand.</param>
+        /// <returns>True if the structures are equal, false otherwise.</returns>
+        public static bool operator ==(EmbeddedWinFormsControl left, EmbeddedWinFormsControl right)
+        {
+            return Equals(left.Control, right.Control) && Equals(left.Host, right.Host);
+        }
+
+        /// <summary>
+        /// Compares two <see cref="EmbeddedWinFormsControl" /> structures for inequality.
+        /// </summary>
+        /// <param name="left">The left operand.</param>
+        /// <param name="right">The right operand.</param>
+        /// <returns>True if the structures are not equal, false otherwise.</returns>
+        public static bool operator !=(EmbeddedWinFormsControl left, EmbeddedWinFormsControl right)
+        {
+            return !(left == right);
         }
 
         /// <summary>
         /// Draws the structure to a bitmap.
         /// </summary>
         /// <returns>Bitmap with the control structure rendered.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
+            Justification = "Disposing bitmap does not make sense as it's being returned to the caller")]
         public Bitmap Draw()
         {
             var rect = Bounds;
+
+            // CA2000 warning was here.
             var bitmap = new Bitmap(rect.Width, rect.Height);
-            Control.DrawToBitmap(bitmap, Control.Bounds);
+            _control.DrawToBitmap(bitmap, _control.Bounds);
             return bitmap;
+        }
+
+        /// <summary>
+        /// Indicates whether this instance and a specified object are equal.
+        /// </summary>
+        /// <param name="obj">Another object to compare to.</param>
+        /// <returns>
+        /// True if <paramref name="obj"/> and this instance are the same type and represent the same value; otherwise, false.
+        /// </returns>
+        public override bool Equals(object obj)
+        {
+            return obj is EmbeddedWinFormsControl && this == (EmbeddedWinFormsControl)obj;
+        }
+
+        /// <summary>
+        /// Returns the hash code for this instance.
+        /// </summary>
+        /// <returns>
+        /// A 32-bit signed integer that is the hash code for this instance.
+        /// </returns>
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (_control.GetHashCode() * 397) ^ _host.GetHashCode();
+            }
+        }
+
+        /// <summary>
+        /// The contract invariant method for <see cref="EmbeddedWinFormsControl" />.
+        /// </summary>
+        [ContractInvariantMethod]
+        private void ObjectInvariant()
+        {
+            Contract.Invariant(_host != null);
+            Contract.Invariant(_control != null);
         }
     }
 }

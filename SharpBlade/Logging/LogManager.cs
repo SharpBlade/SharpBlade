@@ -31,6 +31,7 @@
 #if DEBUG
 
 using System;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -44,8 +45,8 @@ using Microsoft.Win32.SafeHandles;
 using SharpBlade.Native.WinAPI;
 
 #else
-
 using System;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -81,25 +82,29 @@ namespace SharpBlade.Logging
         /// Clears old log files from specified log directory.
         /// </summary>
         /// <param name="daysOld">Delete log files older than this number of days.</param>
-        /// <param name="logsDir">The directory to check for log files.</param>
+        /// <param name="directory">The directory to check for log files.</param>
         /// <remarks>This will delete ALL files in the specified directory,
         /// regardless of file type.</remarks>
         // ReSharper disable UnusedMember.Global
-        public static void ClearOldLogs(int daysOld = 7, string logsDir = "logs")
+        public static void ClearOldLogs(int daysOld = 7, string directory = "logs")
             // ReSharper restore UnusedMember.Global
         {
+            Contract.Requires(!string.IsNullOrEmpty(directory));
+
             var log = GetLogger(typeof(LogManager));
 
-            if (!Directory.Exists(logsDir))
+            Contract.Assert(log != null);
+
+            if (!Directory.Exists(directory))
             {
-                log.InfoFormat("Directory {0} not found, no logs to clear", logsDir);
+                log.InfoFormat("Directory {0} not found, no logs to clear", directory);
                 return;
             }
 
             var now = DateTime.Now;
             var max = new TimeSpan(daysOld, 0, 0, 0);
             var count = 0;
-            foreach (var file in from file in Directory.GetFiles(logsDir)
+            foreach (var file in from file in Directory.GetFiles(directory)
                                  let modTime = File.GetLastAccessTime(file)
                                  let age = now.Subtract(modTime)
                                  where age > max
@@ -107,6 +112,7 @@ namespace SharpBlade.Logging
             {
                 try
                 {
+                    Contract.Assume(!string.IsNullOrEmpty(file));
                     File.Delete(file);
                     log.InfoFormat("Deleted old log file: {0}", file);
                     count++;
@@ -140,12 +146,18 @@ namespace SharpBlade.Logging
         /// <returns>An <see cref="ILog" /> that provides logging features.</returns>
         public static ILog GetLogger(object sender)
         {
+            Contract.Requires(sender != null);
+            Contract.Ensures(Contract.Result<ILog>() != null);
+
             if (!_loaded)
                 LoadConfig();
 
-            return
-                log4net.LogManager.GetLogger(
-                    sender.GetType().ToString() == "System.RuntimeType" ? (Type)sender : sender.GetType());
+            var type = sender.GetType().ToString() == "System.RuntimeType" ? (Type)sender : sender.GetType();
+            var logger = log4net.LogManager.GetLogger(type);
+
+            Contract.Assume(logger != null);
+
+            return logger;
         }
 
         /// <summary>

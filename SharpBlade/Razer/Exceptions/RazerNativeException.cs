@@ -29,6 +29,9 @@
 // ---------------------------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
+using System.Globalization;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 
@@ -40,17 +43,19 @@ namespace SharpBlade.Razer.Exceptions
     /// Exception for failures in native code provided by Razer.
     /// </summary>
     [Serializable]
+    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
+        Justification = "This is a special exception type.")]
     public class RazerNativeException : RazerException
     {
         /// <summary>
         /// The name of the native function that failed.
         /// </summary>
-        public readonly string Function;
+        private readonly string _function;
 
         /// <summary>
         /// <see cref="HRESULT" /> obtained from calling the native function.
         /// </summary>
-        public readonly HRESULT Hresult;
+        private readonly HRESULT _hresult;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RazerNativeException" /> class.
@@ -60,13 +65,14 @@ namespace SharpBlade.Razer.Exceptions
         internal RazerNativeException(string function, HRESULT hresult)
             : base(
                 string.Format(
+                    CultureInfo.InvariantCulture,
                     "Call to native RazerAPI function {0} failed with error message: {1}",
                     function,
-                    Native.Helpers.GetErrorMessage(hresult)),
-                Native.Helpers.GetWin32Exception(hresult))
+                    HelperMethods.GetErrorMessage(hresult)),
+                HelperMethods.GetWin32Exception(hresult))
         {
-            Function = function;
-            Hresult = hresult;
+            _function = function;
+            _hresult = hresult;
         }
 
         /// <summary>
@@ -78,8 +84,29 @@ namespace SharpBlade.Razer.Exceptions
         protected RazerNativeException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
-            Function = info.GetString("Function");
-            Hresult = info.GetInt32("Hresult");
+            Contract.Requires(info != null);
+
+            _function = info.GetString("Function");
+            _hresult = info.GetInt32("Hresult");
+        }
+
+        /// <summary>
+        /// Gets the name of the native function that failed.
+        /// </summary>
+        public string Function
+        {
+            get { return _function; }
+        }
+
+        /// <summary>
+        /// Gets the <see cref="HRESULT" /> obtained from calling the native function.
+        /// </summary>
+        [CLSCompliant(false)]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Hresult",
+            Justification = "This name is derived from native code, so there's not much to do about it.")]
+        public HRESULT Hresult
+        {
+            get { return _hresult; }
         }
 
         /// <summary>
@@ -92,7 +119,7 @@ namespace SharpBlade.Razer.Exceptions
         {
             base.GetObjectData(info, context);
 
-            info.AddValue("Function", Function);
+            info.AddValue("Function", _function);
             info.AddValue("Hresult", (int)Hresult);
         }
     }

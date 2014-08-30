@@ -169,11 +169,13 @@ namespace SharpBlade.Native
 
         public bool Succeeded { get { return m_value >= 0; } }
 
+        [CLSCompliant(false)]
         public static bool FAILED(int hr)
         {
             return hr < 0;
         }
 
+        [CLSCompliant(false)]
         public static bool SUCCEEDED(int hr)
         {
             return hr >= 0;

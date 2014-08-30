@@ -30,6 +30,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -191,10 +192,11 @@ namespace SharpBlade.Razer
         /// <param name="form">Form to draw.</param>
         public void DrawForm(Form form)
         {
-            var bmp = new Bitmap(DisplayWidth, DisplayHeight);
-            form.DrawToBitmap(bmp, form.Bounds);
-            DrawBitmap(bmp);
-            bmp.Dispose();
+            using (var bmp = new Bitmap(DisplayWidth, DisplayHeight))
+            {
+                form.DrawToBitmap(bmp, form.Bounds);
+                DrawBitmap(bmp);
+            }
         }
 
         /// <summary>
@@ -203,11 +205,9 @@ namespace SharpBlade.Razer
         /// <param name="windowHandle">The window handle of the window to draw.</param>
         public void DrawNativeWindow(IntPtr windowHandle)
         {
-            var img = ScreenCapture.CaptureWindow(windowHandle);
-            var bitmapToRender = new Bitmap(img, DisplayWidth, DisplayHeight);
-            DrawBitmap(bitmapToRender);
-            bitmapToRender.Dispose();
-            img.Dispose();
+            using (var img = ScreenCapture.CaptureWindow(windowHandle))
+                using (var bitmapToRender = new Bitmap(img, DisplayWidth, DisplayHeight))
+                    DrawBitmap(bitmapToRender);
         }
 
         /// <summary>
@@ -235,6 +235,8 @@ namespace SharpBlade.Razer
             // CA2202 warning marked here, for reference, complains about possible multiple dispose of MemoryStream stream
             using (var stream = new MemoryStream())
             {
+                Contract.Assume(encoder.Frames != null);
+
                 encoder.Frames.Add(BitmapFrame.Create(rtb));
                 encoder.Save(stream);
 
@@ -242,6 +244,9 @@ namespace SharpBlade.Razer
                 {
                     if (winFormsComponents != null)
                     {
+                        // This is safe to assume because above we are creating the bitmap
+                        // with PixelFormat Pbgra32
+                        Contract.Assume((bitmap.PixelFormat & PixelFormat.Indexed) == 0);
                         using (var graphics = Graphics.FromImage(bitmap))
                         {
                             foreach (var component in winFormsComponents)
@@ -251,6 +256,8 @@ namespace SharpBlade.Razer
 
                     DrawBitmap(bitmap);
                 }
+
+                Contract.Assume(encoder.Frames != null);
 
                 encoder.Frames.Clear();
             }

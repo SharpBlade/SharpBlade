@@ -43,7 +43,6 @@ namespace SharpBlade.Integration
         /// <remarks>
         /// This Bitmap should match the dimensions of the target display.
         /// </remarks>
-        /// <returns>A <see cref="Bitmap" /> object.</returns>
-        Bitmap GetBitmap();
+        Bitmap Bitmap { get; }
     }
 }

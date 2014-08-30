@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------------------------------------
-// <copyright file="Threading.cs" company="SharpBlade">
+// <copyright file="GenericMethods.cs" company="SharpBlade">
 //     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -28,24 +28,33 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System.Threading;
+using System.Diagnostics.Contracts;
+using System.IO;
 
 namespace SharpBlade.Helpers
 {
     /// <summary>
-    /// Helper functions for threading operations.
+    /// Helper functions for generic operations.
     /// </summary>
-    public static class Threading
+    public static class GenericMethods
     {
         /// <summary>
-        /// Changes the name of the currently executing thread.
+        /// Gets the absolute path to the specified file.
         /// </summary>
-        /// <param name="name">Name to give the current thread.</param>
-        /// <remarks>Will do nothing if a name has already been set for the thread.</remarks>
-        public static void SetCurrentThreadName(string name)
+        /// <param name="path">(Relative) path to resolve.</param>
+        /// <returns>The absolute path to the specified relative path on the file system.</returns>
+        public static string GetAbsolutePath(string path)
         {
-            if (string.IsNullOrEmpty(Thread.CurrentThread.Name))
-                Thread.CurrentThread.Name = name;
+            Contract.Requires(path != null);
+            Contract.Ensures(!string.IsNullOrEmpty(Contract.Result<string>()));
+
+            var currentDirectory = Directory.GetCurrentDirectory();
+            Contract.Assume(!string.IsNullOrEmpty(currentDirectory));
+
+            var combined = Path.Combine(currentDirectory, path);
+            Contract.Assume(!string.IsNullOrEmpty(combined));
+
+            return combined;
         }
     }
 }

@@ -29,6 +29,8 @@
 // ---------------------------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 
 namespace SharpBlade.Razer.Exceptions
 {
@@ -36,6 +38,8 @@ namespace SharpBlade.Razer.Exceptions
     /// Exception thrown when there is a problem with the dynamic keys.
     /// </summary>
     [Serializable]
+    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
+        Justification = "A parameter-less constructor already exists thanks to the default values in existing ctor.")]
     public class RazerDynamicKeyException : RazerException
     {
         /// <summary>
@@ -43,8 +47,23 @@ namespace SharpBlade.Razer.Exceptions
         /// </summary>
         /// <param name="message">The message associated with the exception.</param>
         /// <param name="inner">Inner exception object.</param>
+        [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
+            Justification = "This exception type is never instantiated outside of internal SharpBlade code.")]
         internal RazerDynamicKeyException(string message = null, Exception inner = null)
             : base(message, inner)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RazerDynamicKeyException" /> class
+        /// from serialization data.
+        /// </summary>
+        /// <param name="info">Serialization info object.</param>
+        /// <param name="context">Streaming context.</param>
+        [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
+            Justification = "This exception type is never instantiated outside of internal SharpBlade code.")]
+        internal RazerDynamicKeyException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
         }
     }

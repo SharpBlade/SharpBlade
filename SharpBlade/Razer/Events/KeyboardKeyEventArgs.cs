@@ -43,32 +43,32 @@ namespace SharpBlade.Razer.Events
         /// <summary>
         /// Whether or not the alt key is pressed.
         /// </summary>
-        public readonly bool AltPressed;
+        private readonly bool _altPressed;
 
         /// <summary>
         /// Whether or not the caps lock key is active.
         /// </summary>
-        public readonly bool CapsLockActive;
+        private readonly bool _capsLockActive;
 
         /// <summary>
         /// Whether or not the control key is pressed.
         /// </summary>
-        public readonly bool ControlPressed;
+        private readonly bool _controlPressed;
 
         /// <summary>
         /// Key that had its state changed.
         /// </summary>
-        public readonly User32.VirtualKey Key;
+        private readonly User32.VirtualKey _key;
 
         /// <summary>
         /// Modifiers pressed.
         /// </summary>
-        public readonly ModifierKeys Modifiers;
+        private readonly ModifierKeys _modifiers;
 
         /// <summary>
         /// Whether or not the shift key is pressed.
         /// </summary>
-        public readonly bool ShiftPressed;
+        private readonly bool _shiftPressed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyboardKeyEventArgs" /> class.
@@ -77,13 +77,62 @@ namespace SharpBlade.Razer.Events
         /// <param name="modifiers">Modifiers active during key press.</param>
         internal KeyboardKeyEventArgs(User32.VirtualKey key, ModifierKeys modifiers)
         {
-            Key = key;
-            Modifiers = modifiers;
+            _key = key;
+            _modifiers = modifiers;
 
-            ShiftPressed = Modifiers.Has(ModifierKeys.Shift);
-            ControlPressed = Modifiers.Has(ModifierKeys.Control);
-            AltPressed = Modifiers.Has(ModifierKeys.Alt);
-            CapsLockActive = Modifiers.Has(ModifierKeys.CapsLock);
+            _shiftPressed = _modifiers.Has(ModifierKeys.Shift);
+            _controlPressed = _modifiers.Has(ModifierKeys.Control);
+            _altPressed = _modifiers.Has(ModifierKeys.Alt);
+            _capsLockActive = _modifiers.Has(ModifierKeys.CapsLock);
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether or not the alt key is pressed.
+        /// </summary>
+        public bool AltPressed
+        {
+            get { return _altPressed; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether or not the caps lock key is active.
+        /// </summary>
+        public bool CapsLockActive
+        {
+            get { return _capsLockActive; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether or not the control key is pressed.
+        /// </summary>
+        public bool ControlPressed
+        {
+            get { return _controlPressed; }
+        }
+
+        /// <summary>
+        /// Gets the key that had its state changed.
+        /// </summary>
+        [CLSCompliant(false)]
+        public User32.VirtualKey Key
+        {
+            get { return _key; }
+        }
+
+        /// <summary>
+        /// Gets the modifiers that were pressed.
+        /// </summary>
+        public ModifierKeys Modifiers
+        {
+            get { return _modifiers; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether or not the shift key is pressed.
+        /// </summary>
+        public bool ShiftPressed
+        {
+            get { return _shiftPressed; }
         }
     }
 }
