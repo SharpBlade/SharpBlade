@@ -168,13 +168,12 @@
   <UsingTask TaskName="TeamCityReportStatsValue" AssemblyFile="C:\TeamCity\buildAgent\plugins\dotnetPlugin\bin\JetBrains.BuildServer.MSBuildLoggers.dll" Condition="'$(TEAMCITY_VERSION)' != ''" />
   <Target Name="ReportStyleCopStatsToTC" AfterTargets="StyleCop" Condition="'$(Configuration)' == 'Release' AND '$(TEAMCITY_VERSION)' != '' AND '$(StyleCopEnabled)' != 'false'">
     <Message Text="Reporting StyleCop stats to TeamCity" />
-    <!-- DEBUG LINE --> <Message Text="StyleCopViolations == $(StyleCopViolations)" /> <!-- DEBUG LINE -->
-    <PropertyGroup Condition="'$(StyleCopViolations)' != '' AND $(StyleCopViolations) &gt; 0">
+    <PropertyGroup Condition="'$(StyleCopViolationCount)' != '' AND $(StyleCopViolationCount) > 0">
       <TCStatus>ERROR</TCStatus>
-      <TCStyleCopViolations>$(StyleCopViolations)</TCStyleCopViolations>
+      <TCStyleCopViolations>$(StyleCopViolationCount)</TCStyleCopViolations>
       <TCStatusText>Violations: $(TCStyleCopViolations)</TCStatusText>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(StyleCopViolations)' == '' OR $(StyleCopViolations) == 0">
+    <PropertyGroup Condition="'$(StyleCopViolationCount)' == '' OR $(StyleCopViolationCount) == 0">
       <TCStatus>SUCCESS</TCStatus>
       <TCStatusText>{build.status.text}; Violations: 0</TCStatusText>
       <TCStyleCopViolations>0</TCStyleCopViolations>
