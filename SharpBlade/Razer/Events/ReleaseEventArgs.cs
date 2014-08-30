@@ -29,6 +29,7 @@
 // ---------------------------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SharpBlade.Razer.Events
 {
@@ -41,17 +42,17 @@ namespace SharpBlade.Razer.Events
         /// <summary>
         /// Number of touch points.
         /// </summary>
-        public readonly uint TouchpointCount;
+        private readonly uint _touchpointCount;
 
         /// <summary>
         /// X-coordinate of the touch point.
         /// </summary>
-        public readonly ushort X;
+        private readonly ushort _x;
 
         /// <summary>
         /// Y-coordinate of the touch point.
         /// </summary>
-        public readonly ushort Y;
+        private readonly ushort _y;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReleaseEventArgs" /> class.
@@ -61,9 +62,40 @@ namespace SharpBlade.Razer.Events
         /// <param name="y">Y position of release.</param>
         internal ReleaseEventArgs(uint touchpointCount, ushort x, ushort y)
         {
-            TouchpointCount = touchpointCount;
-            X = x;
-            Y = y;
+            _touchpointCount = touchpointCount;
+            _x = x;
+            _y = y;
+        }
+
+        /// <summary>
+        /// Gets the number of touch points.
+        /// </summary>
+        [CLSCompliant(false)]
+        public uint TouchpointCount
+        {
+            get { return _touchpointCount; }
+        }
+
+        /// <summary>
+        /// Gets the X-coordinate of the touch point.
+        /// </summary>
+        [CLSCompliant(false)]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "X",
+            Justification = "The naming is acceptable for this simple property.")]
+        public ushort X
+        {
+            get { return _x; }
+        }
+
+        /// <summary>
+        /// Gets the Y-coordinate of the touch point.
+        /// </summary>
+        [CLSCompliant(false)]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Y",
+            Justification = "The naming is acceptable for this simple property.")]
+        public ushort Y
+        {
+            get { return _y; }
         }
     }
 }

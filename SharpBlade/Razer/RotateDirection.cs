@@ -43,7 +43,7 @@ namespace SharpBlade.Razer
         /// <summary>
         /// Counter-clockwise rotation.
         /// </summary>
-        CounterClockwise,
+        Counterclockwise,
 
         /// <summary>
         /// Invalid rotation.

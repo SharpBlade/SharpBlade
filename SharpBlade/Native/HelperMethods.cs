@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------------------------------------
-// <copyright file="Helpers.cs" company="SharpBlade">
+// <copyright file="HelperMethods.cs" company="SharpBlade">
 //     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -29,6 +29,7 @@
 // ---------------------------------------------------------------------------------------
 
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace SharpBlade.Native
@@ -36,8 +37,41 @@ namespace SharpBlade.Native
     /// <summary>
     /// Provides helper methods for working with native code.
     /// </summary>
-    public static class Helpers
+    public static class HelperMethods
     {
+        /// <summary>
+        /// Gets the last error code that was set by native code.
+        /// </summary>
+        public static int LastError
+        {
+            get
+            {
+                return Marshal.GetLastWin32Error();
+            }
+        }
+
+        /// <summary>
+        /// Gets the message associated with the last error.
+        /// </summary>
+        public static string LastErrorMessage
+        {
+            get
+            {
+                return GetErrorMessage(LastError);
+            }
+        }
+
+        /// <summary>
+        /// Gets a Win32Exception object for the last error code.
+        /// </summary>
+        public static Win32Exception LastWin32Exception
+        {
+            get
+            {
+                return GetWin32Exception(LastError);
+            }
+        }
+
         /// <summary>
         /// Gets the message associated with the specified error code.
         /// </summary>
@@ -49,42 +83,17 @@ namespace SharpBlade.Native
         }
 
         /// <summary>
-        /// Gets the last error code that was set by native code.
-        /// </summary>
-        /// <returns>The error code.</returns>
-        public static int GetLastError()
-        {
-            return Marshal.GetLastWin32Error();
-        }
-
-        /// <summary>
         /// Gets the last error code and its associated info that was set by native code.
         /// </summary>
         /// <param name="message">Will be set to the message associated with the error code.</param>
         /// <returns>The error code.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "0#",
+            Justification = "This method is difficult to do in another way without making it too complex.")]
         public static int GetLastErrorInfo(out string message)
         {
-            var err = GetLastError();
+            var err = LastError;
             message = GetWin32Exception(err).Message;
             return err;
-        }
-
-        /// <summary>
-        /// Gets the message associated with the last error.
-        /// </summary>
-        /// <returns>The message associated with the code of the last error.</returns>
-        public static string GetLastErrorMessage()
-        {
-            return GetErrorMessage(GetLastError());
-        }
-
-        /// <summary>
-        /// Gets a Win32Exception object for the last error code.
-        /// </summary>
-        /// <returns>An exception object with more detailed information about the last error.</returns>
-        public static Win32Exception GetLastWin32Exception()
-        {
-            return GetWin32Exception(GetLastError());
         }
 
         /// <summary>

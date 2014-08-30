@@ -42,7 +42,7 @@ namespace SharpBlade.Razer.Events
         /// <summary>
         /// Character pressed.
         /// </summary>
-        public readonly char Character;
+        private readonly char _character;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyboardCharEventArgs" /> class.
@@ -50,7 +50,15 @@ namespace SharpBlade.Razer.Events
         /// <param name="character">Character that was typed.</param>
         internal KeyboardCharEventArgs(char character)
         {
-            Character = character;
+            _character = character;
+        }
+
+        /// <summary>
+        /// Gets the character that was pressed.
+        /// </summary>
+        public char Character
+        {
+            get { return _character; }
         }
     }
 }

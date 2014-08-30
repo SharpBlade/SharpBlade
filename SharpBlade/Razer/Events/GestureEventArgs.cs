@@ -29,6 +29,7 @@
 // ---------------------------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 using SharpBlade.Native;
 
@@ -42,27 +43,27 @@ namespace SharpBlade.Razer.Events
         /// <summary>
         /// The type of gesture.
         /// </summary>
-        public readonly RazerAPI.GestureType GestureType;
+        private readonly RazerAPI.GestureType _gestureType;
 
         /// <summary>
         /// Gesture-specific parameter.
         /// </summary>
-        public readonly uint Parameter;
+        private readonly uint _parameter;
 
         /// <summary>
         /// Gesture X-position.
         /// </summary>
-        public readonly ushort X;
+        private readonly ushort _x;
 
         /// <summary>
         /// Gesture Y-position.
         /// </summary>
-        public readonly ushort Y;
+        private readonly ushort _y;
 
         /// <summary>
         /// Gesture Z-position.
         /// </summary>
-        public readonly ushort Z;
+        private readonly ushort _z;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GestureEventArgs" /> class.
@@ -74,11 +75,62 @@ namespace SharpBlade.Razer.Events
         /// <param name="z">Z position of gesture.</param>
         internal GestureEventArgs(RazerAPI.GestureType gestureType, uint parameter, ushort x, ushort y, ushort z)
         {
-            GestureType = gestureType;
-            Parameter = parameter;
-            X = x;
-            Y = y;
-            Z = z;
+            _gestureType = gestureType;
+            _parameter = parameter;
+            _x = x;
+            _y = y;
+            _z = z;
+        }
+
+        /// <summary>
+        /// Gets the type of gesture.
+        /// </summary>
+        [CLSCompliant(false)]
+        public RazerAPI.GestureType GestureType
+        {
+            get { return _gestureType; }
+        }
+
+        /// <summary>
+        /// Gets the gesture-specific parameter.
+        /// </summary>
+        [CLSCompliant(false)]
+        public uint Parameter
+        {
+            get { return _parameter; }
+        }
+
+        /// <summary>
+        /// Gets the X position of the gesture.
+        /// </summary>
+        [CLSCompliant(false)]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "X",
+            Justification = "The naming is acceptable for this simple property.")]
+        public ushort X
+        {
+            get { return _x; }
+        }
+
+        /// <summary>
+        /// Gets the Y position of the gesture.
+        /// </summary>
+        [CLSCompliant(false)]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Y",
+            Justification = "The naming is acceptable for this simple property.")]
+        public ushort Y
+        {
+            get { return _y; }
+        }
+
+        /// <summary>
+        /// Gets the Z position of the gesture.
+        /// </summary>
+        [CLSCompliant(false)]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Z",
+            Justification = "The naming is acceptable for this simple property.")]
+        public ushort Z
+        {
+            get { return _z; }
         }
     }
 }

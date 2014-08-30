@@ -29,6 +29,7 @@
 // ---------------------------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SharpBlade.Razer.Events
 {
@@ -41,12 +42,12 @@ namespace SharpBlade.Razer.Events
         /// <summary>
         /// X-coordinate of the touch point.
         /// </summary>
-        public readonly ushort X;
+        private readonly ushort _x;
 
         /// <summary>
         /// Y-coordinate of the touch point.
         /// </summary>
-        public readonly ushort Y;
+        private readonly ushort _y;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TapEventArgs" /> class.
@@ -55,8 +56,30 @@ namespace SharpBlade.Razer.Events
         /// <param name="y">Y position of tap.</param>
         internal TapEventArgs(ushort x, ushort y)
         {
-            X = x;
-            Y = y;
+            _x = x;
+            _y = y;
+        }
+
+        /// <summary>
+        /// Gets the X-coordinate of the touch point.
+        /// </summary>
+        [CLSCompliant(false)]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "X",
+            Justification = "The naming is acceptable for this simple property.")]
+        public ushort X
+        {
+            get { return _x; }
+        }
+
+        /// <summary>
+        /// Gets the Y-coordinate of the touch point.
+        /// </summary>
+        [CLSCompliant(false)]
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Y",
+            Justification = "The naming is acceptable for this simple property.")]
+        public ushort Y
+        {
+            get { return _y; }
         }
     }
 }

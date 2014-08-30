@@ -29,6 +29,7 @@
 // ---------------------------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
 namespace SharpBlade.Razer.Exceptions
@@ -37,6 +38,8 @@ namespace SharpBlade.Razer.Exceptions
     /// Exception for Razer related issues.
     /// </summary>
     [Serializable]
+    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
+        Justification = "A parameter-less constructor already exists thanks to the default values in existing ctor.")]
     public class RazerException : Exception
     {
         /// <summary>
@@ -44,6 +47,8 @@ namespace SharpBlade.Razer.Exceptions
         /// </summary>
         /// <param name="message">Message associated with the exception.</param>
         /// <param name="innerException">Inner exception object.</param>
+        [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
+            Justification = "This exception is never instantiated outside of internal SharpBlade code.")]
         internal RazerException(string message = null, Exception innerException = null)
             : base(message, innerException)
         {

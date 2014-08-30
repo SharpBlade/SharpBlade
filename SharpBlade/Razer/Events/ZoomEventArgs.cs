@@ -41,7 +41,7 @@ namespace SharpBlade.Razer.Events
         /// <summary>
         /// The direction of the zoom.
         /// </summary>
-        public readonly ZoomDirection Direction;
+        private readonly ZoomDirection _direction;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ZoomEventArgs" /> class.
@@ -49,7 +49,15 @@ namespace SharpBlade.Razer.Events
         /// <param name="direction">Direction of the zoom.</param>
         internal ZoomEventArgs(ZoomDirection direction)
         {
-            Direction = direction;
+            _direction = direction;
+        }
+
+        /// <summary>
+        /// Gets the direction of the zoom.
+        /// </summary>
+        public ZoomDirection Direction
+        {
+            get { return _direction; }
         }
     }
 }

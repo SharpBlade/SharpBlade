@@ -29,6 +29,7 @@
 // ---------------------------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Input;
@@ -166,6 +167,8 @@ namespace SharpBlade.Integration
         /// <param name="character">The character that was typed.</param>
         private void SendWPFChar(char character)
         {
+            Contract.Assume(InputManager.Current != null);
+
             // Because MS CBA to let us send chars directly
             var str = character.ToString(CultureInfo.InvariantCulture);
             _wpfControl.RaiseEvent(

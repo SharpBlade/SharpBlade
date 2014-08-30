@@ -29,6 +29,7 @@
 // ---------------------------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 
 using SharpBlade.Razer;
@@ -60,6 +61,8 @@ namespace SharpBlade.Integration
         /// <param name="form">WinForms form to render.</param>
         /// <param name="interval">The interval to render the form at,
         /// in milliseconds (MAX PRECISION = 55ms).</param>
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
+            Justification = "It makes no sense to dispose _winformTimer.")]
         internal WinFormsRenderer(RenderTarget renderTarget, Form form, int interval = 55)
             : base(renderTarget)
         {
