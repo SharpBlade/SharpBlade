@@ -294,7 +294,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="SharpBlade.nuspec" />
-    <None Include="SharpBlade.snk" />
   </ItemGroup>
   <PropertyGroup Condition="'$(BUILD_NUMBER)' != ''">
     <AssemblyFilePerformUpdate>True</AssemblyFilePerformUpdate>
