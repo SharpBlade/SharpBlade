@@ -569,77 +569,97 @@ namespace SharpBlade.Native
         /// <summary>
         /// Specifies the capabilities of this SwitchBlade device.
         /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Explicit)]
         public struct Capabilities
         {
+            // DWORD: 4 bytes
             /// <summary>
             /// Version of SDK/hardware.
             /// </summary>
             [CLSCompliant(false)]
-            public ulong Version;
+            [FieldOffset(0)]
+            public uint Version;
 
+            // DWORD: 4 bytes
             /// <summary>
             /// BEVersion returned from capabilities function.
             /// </summary>
             [CLSCompliant(false)]
-            public ulong BEVersion;
+            [FieldOffset(4)]
+            public uint BEVersion;
 
+            // C++ enum default size 4 bytes
             /// <summary>
             /// Type of device.
             /// </summary>
+            [FieldOffset(8)]
             public HardwareType HardwareType;
 
+            // DWORD: 4 bytes
             /// <summary>
             /// Number of surfaces available.
             /// </summary>
             [CLSCompliant(false)]
-            public ulong NumSurfaces;
+            [FieldOffset(12)]
+            public uint NumSurfaces;
 
+            // Win32 POINT 2*LONG: 4*2 = 8 bytes, sizeconst 2 gives 16 bytes
             /// <summary>
             /// Surface geometry for each surface.
             /// </summary>
             /// <remarks>Contains <see cref="NumSurfaces" /> entries.</remarks>
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = MaxSupportedSurfaces)]
+            [FieldOffset(16)]
             public Point[] Surfacegeometry;
 
+            // DWORD array, 4 bytes per DWORD, sizeconst 2 gives 4*2 = 8 bytes
             /// <summary>
             /// Pixel format of each surface.
             /// </summary>
             /// <remarks>Contains <see cref="NumSurfaces" /> entries.</remarks>
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = MaxSupportedSurfaces)]
             [CLSCompliant(false)]
+            [FieldOffset(32)]
             public uint[] Pixelformat;
 
+            // BYTE: 1 byte
             /// <summary>
             /// Number of dynamic keys available on device.
             /// </summary>
+            [FieldOffset(40)]
             public byte NumDynamicKeys;
 
+            // Win32 POINT has 2 LONG = 2*4 = 8 bytes
             /// <summary>
             /// Arrangement of the dynamic keys.
             /// </summary>
+            [FieldOffset(44)]
             public Point DynamicKeyArrangement;
 
+            // Win32 POINT has 2 LONG = 2*4 = 8 bytes
             /// <summary>
             /// Size of each dynamic key.
             /// </summary>
+            [FieldOffset(52)]
             public Point DynamicKeySize;
         }
 
         /// <summary>
         /// Specifies a specific point on the touchpad.
         /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Explicit)]
         public struct Point
         {
             /// <summary>
             /// X position on the touchpad.
             /// </summary>
+            [FieldOffset(0)]
             public int X;
 
             /// <summary>
             /// Y position on the touchpad.
             /// </summary>
+            [FieldOffset(4)]
             public int Y;
         }
 
