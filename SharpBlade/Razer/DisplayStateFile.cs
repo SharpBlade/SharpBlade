@@ -97,7 +97,7 @@ namespace SharpBlade.Razer
             // Razer's code for generating rzdisplaystate files breaks when there's a dot involved.
             _appCompatible = !_app.Contains('.');
 
-            _file = Path.ChangeExtension(_app, "rzdisplaystate");
+            _file = _app + ".rzdisplaystate";
 
             Contract.Assume(!string.IsNullOrEmpty(_file));
 
