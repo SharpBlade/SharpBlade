@@ -29,7 +29,6 @@
 // ---------------------------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
@@ -112,8 +111,6 @@ namespace SharpBlade.Razer
         /// The constructor will disable all OS gestures, to enable them, use the Touchpad property
         /// and call the EnableOSGesture() method to enable gestures wanted.
         /// </remarks>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
-            Justification = "The set actions on the properties on FSW are highly unlikely to throw exceptions.")]
         private RazerManager()
         {
             Contract.Ensures(_log != null);
@@ -205,7 +202,7 @@ namespace SharpBlade.Razer
             _dynamicKeys = new DynamicKey[RazerAPI.DynamicKeysCount];
 
             _log.Debug("Initializing the RzDisplayState file manager");
-            DisplayStateFileManager = new DisplayStateFileManager();
+            DisplayStateFile = new DisplayStateFile();
         }
 
         /// <summary>
@@ -281,9 +278,9 @@ namespace SharpBlade.Razer
         public string DisabledDynamicKeyImagePath { get; set; }
 
         /// <summary>
-        /// The <see cref="Razer.DisplayStateFileManager" /> instance associated with this <see cref="RazerManager" />.
+        /// Gets the <see cref="DisplayStateFile" /> instance associated with this <see cref="RazerManager" />.
         /// </summary>
-        public DisplayStateFileManager DisplayStateFileManager { get; private set; }
+        public DisplayStateFile DisplayStateFile { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether keyboard capture is enabled or not.
@@ -503,9 +500,9 @@ namespace SharpBlade.Razer
                     Touchpad = null;
                 }
 
-                if (DisplayStateFileManager != null)
+                if (DisplayStateFile != null)
                 {
-                    DisplayStateFileManager.Dispose();
+                    DisplayStateFile.Dispose();
                 }
             }
 
