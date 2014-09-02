@@ -29,11 +29,9 @@
 // ---------------------------------------------------------------------------------------
 
 using System;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -88,28 +86,6 @@ namespace SharpBlade.Razer
         // ReSharper restore PrivateFieldCanBeConvertedToLocalVariable
 
         /// <summary>
-        /// The name of the app running on the device.
-        /// </summary>
-        private readonly string _appName;
-
-        /// <summary>
-        /// A value indicating whether the app's name is compatible with Razer's
-        /// display state file generation.
-        /// </summary>
-        private readonly bool _appNameCompatible;
-
-        /// <summary>
-        /// The (expected) file name of the <c>RzDisplayState</c> file.
-        /// </summary>
-        private readonly string _displayStateFileName;
-
-        /// <summary>
-        /// The <see cref="FileSystemWatcher" /> keeping track of the <c>rzdisplaystate</c>
-        /// file generation.
-        /// </summary>
-        private readonly FileSystemWatcher _displayStateWatcher;
-
-        /// <summary>
         /// Contains all active and enabled dynamic key objects.
         /// </summary>
         private readonly DynamicKey[] _dynamicKeys;
@@ -145,8 +121,6 @@ namespace SharpBlade.Razer
             Contract.Ensures(Touchpad != null);
             Contract.Ensures(!string.IsNullOrEmpty(BlankTouchpadImagePath));
             Contract.Ensures(!string.IsNullOrEmpty(DisabledDynamicKeyImagePath));
-            Contract.Ensures(_displayStateWatcher != null);
-            Contract.Ensures(!string.IsNullOrEmpty(_displayStateFileName));
 
             _log = LogManager.GetLogger(this);
 
@@ -230,42 +204,8 @@ namespace SharpBlade.Razer
 
             _dynamicKeys = new DynamicKey[RazerAPI.DynamicKeysCount];
 
-            _log.Debug("Initializing rzdisplaystate FileSystemWatcher");
-            
-            // Find the file name of the application
-            // This seems to be the most reliable way
-            // See http://stackoverflow.com/questions/616584/how-do-i-get-the-name-of-the-current-executable-in-c
-            var executable = Process.GetCurrentProcess().MainModule.FileName.Replace(".vshost", string.Empty);
-            _appName = Path.GetFileNameWithoutExtension(executable);
-
-            Contract.Assume(!string.IsNullOrEmpty(_appName));
-
-            // Razer's code for generating rzdisplaystate files breaks when there's a dot involved.
-            _appNameCompatible = !_appName.Contains('.');
-
-            _displayStateFileName = Path.ChangeExtension(_appName, "rzdisplaystate");
-
-            Contract.Assume(!string.IsNullOrEmpty(_displayStateFileName));
-
-            _log.InfoFormat(
-                "SharpBlade is serving {0}:{1} (RzDisplayState compatible: {2})!",
-                _appName,
-                _displayStateFileName,
-                _appNameCompatible ? "YES" : "NO");
-
-            _displayStateWatcher = new FileSystemWatcher(Directory.GetCurrentDirectory(), _appName)
-            {
-                NotifyFilter =
-                    NotifyFilters.Attributes | NotifyFilters.CreationTime
-                    | NotifyFilters.LastAccess | NotifyFilters.LastWrite
-                    | NotifyFilters.Size,
-                IncludeSubdirectories = false
-            };
-
-            Contract.Assert(_displayStateWatcher != null);
-
-            _displayStateWatcher.Changed += (o, e) => FixDisplayStateFile();
-            _displayStateWatcher.Created += (o, e) => FixDisplayStateFile();
+            _log.Debug("Initializing the RzDisplayState file manager");
+            DisplayStateFileManager = new DisplayStateFileManager();
         }
 
         /// <summary>
@@ -341,68 +281,9 @@ namespace SharpBlade.Razer
         public string DisabledDynamicKeyImagePath { get; set; }
 
         /// <summary>
-        /// Gets a value indicating whether the app is compatible with Razer's
-        /// display state file generation.
+        /// The <see cref="Razer.DisplayStateFileManager" /> instance associated with this <see cref="RazerManager" />.
         /// </summary>
-        /// <remarks>
-        /// If <c>false</c>, the SharpBlade workaround should be enabled by setting
-        /// the value of <see cref="DisplayStateMonitoring" /> to <c>true</c>.
-        /// </remarks>
-        /// <example>
-        /// // This will enable the SharpBlade workaround if the app is not compatible with Razer's code.
-        /// RazerManager.Instance.DisplayStateMonitoring = !RazerManager.Instance.DisplayStateCompatibleApp;
-        /// </example>
-        public bool DisplayStateCompatibleApp
-        {
-            get { return _appNameCompatible; }
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether SharpBlade should monitor for changes
-        /// to the <c>RzDisplayState</c> file and rename it in case it's improperly named
-        /// by Razer's SDK.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// This is only really needed when the app's executable file contains a dot in
-        /// its file name (For example Foo.Bar.exe). SharpBlade will monitor for changes to
-        /// files named like the app but without any extension and rename them with an
-        /// <c>rzdisplaystate</c> file extension, which makes it possible for the SBUI SDK
-        /// to use them as thumbnails on the device.
-        /// </para>
-        /// <para>
-        /// Use the value from <see cref="DisplayStateCompatibleApp" /> to determine whether
-        /// the workaround is needed.
-        /// </para>
-        /// </remarks>
-        public bool DisplayStateMonitoring
-        {
-            get
-            {
-                return _displayStateWatcher.EnableRaisingEvents;
-            }
-
-            set
-            {
-                if (_appNameCompatible)
-                {
-                    _log.Warn("Tried to enable RzDisplayState monitoring on app that is already compatible, aborting.");
-                    _displayStateWatcher.EnableRaisingEvents = false; // Safety
-                    return;
-                }
-
-                _displayStateWatcher.EnableRaisingEvents = value;
-
-                // Run an initial check if checking was enabled
-                if (value)
-                {
-                    _log.Info("SharpBlade is now monitoring for invalid RzDisplayState generation.");
-                    FixDisplayStateFile();
-                }
-                else
-                    _log.Info("SharpBlade is no longer monitoring for invalid RzDisplayState generation.");
-            }
-        }
+        public DisplayStateFileManager DisplayStateFileManager { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether keyboard capture is enabled or not.
@@ -622,10 +503,9 @@ namespace SharpBlade.Razer
                     Touchpad = null;
                 }
 
-                if (_displayStateWatcher != null)
+                if (DisplayStateFileManager != null)
                 {
-                    _displayStateWatcher.EnableRaisingEvents = false;
-                    _displayStateWatcher.Dispose();
+                    DisplayStateFileManager.Dispose();
                 }
             }
 
@@ -633,28 +513,6 @@ namespace SharpBlade.Razer
             Stop();
 
             _disposed = true;
-        }
-
-        /// <summary>
-        /// Checks for the presence of an improperly named <c>RzDisplayState</c> file
-        /// and renames it with the proper <c>.rzdisplaystate</c> file extension.
-        /// </summary>
-        private void FixDisplayStateFile()
-        {
-            if (!File.Exists(_appName))
-                return;
-
-            try
-            {
-                if (File.Exists(_displayStateFileName))
-                    File.Delete(_displayStateFileName);
-
-                File.Move(_appName, _displayStateFileName);
-            }
-            catch (IOException ex)
-            {
-                _log.ErrorFormat("Failed to fix RzDisplayState file, IOException: {0}", ex.Message);
-            }
         }
 
         /// <summary>
@@ -773,8 +631,6 @@ namespace SharpBlade.Razer
             Contract.Invariant(_dynamicKeys != null);
             Contract.Invariant(!string.IsNullOrEmpty(BlankTouchpadImagePath));
             Contract.Invariant(!string.IsNullOrEmpty(DisabledDynamicKeyImagePath));
-            Contract.Invariant(_displayStateWatcher != null);
-            Contract.Invariant(!string.IsNullOrEmpty(_displayStateFileName));
         }
 
         /// <summary>
