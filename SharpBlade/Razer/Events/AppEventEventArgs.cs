@@ -40,48 +40,49 @@ namespace SharpBlade.Razer.Events
     public class AppEventEventArgs : EventArgs
     {
         /// <summary>
-        /// App event mode.
-        /// </summary>
-        private readonly RazerAPI.AppEventMode _mode;
-
-        /// <summary>
-        /// Process ID of target process.
-        /// </summary>
-        private readonly uint _processId;
-
-        /// <summary>
         /// The event type.
         /// </summary>
         private readonly RazerAPI.AppEventType _eventType;
 
         /// <summary>
+        /// The first DWORD parameter passed to the callback function.
+        /// </summary>
+        private readonly uint _firstParam;
+
+        /// <summary>
+        /// The second DWORD parameter passed to the callback function.
+        /// </summary>
+        private readonly uint _secondParam;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="AppEventEventArgs" /> class.
         /// </summary>
         /// <param name="eventType">App event type.</param>
-        /// <param name="mode">App event mode associated with this event.</param>
-        /// <param name="processId">Process ID associated with event.</param>
-        internal AppEventEventArgs(RazerAPI.AppEventType eventType, RazerAPI.AppEventMode mode, uint processId)
+        /// <param name="firstParam">App event mode associated with this event.</param>
+        /// <param name="secondParam">Process ID associated with event.</param>
+        internal AppEventEventArgs(RazerAPI.AppEventType eventType, uint firstParam, uint secondParam)
         {
             _eventType = eventType;
-            _mode = mode;
-            _processId = processId;
+            _firstParam = firstParam;
+            _secondParam = secondParam;
         }
 
         /// <summary>
-        /// Gets the app event mode.
-        /// </summary>
-        public RazerAPI.AppEventMode Mode
-        {
-            get { return _mode; }
-        }
-
-        /// <summary>
-        /// Gets the process ID of target process.
+        /// Gets the first DWORD (<c>uint</c>) parameter passed to the app event callback.
         /// </summary>
         [CLSCompliant(false)]
-        public uint ProcessId
+        public uint FirstParameter
         {
-            get { return _processId; }
+            get { return _firstParam; }
+        }
+
+        /// <summary>
+        /// Gets the second DWORD (<c>uint</c>) parameter passed to the app event callback.
+        /// </summary>
+        [CLSCompliant(false)]
+        public uint SecondParameter
+        {
+            get { return _secondParam; }
         }
 
         /// <summary>
