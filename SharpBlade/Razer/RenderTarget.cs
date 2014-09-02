@@ -349,6 +349,8 @@ namespace SharpBlade.Razer
         /// only used if RenderMethod is Polling.</param>
         public void SetWindow(Window window, RenderMethod method, TimeSpan interval)
         {
+            Contract.Requires(window != null);
+
             Clear();
 
             CurrentWindow = window;
