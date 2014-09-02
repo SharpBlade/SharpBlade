@@ -181,24 +181,6 @@ namespace SharpBlade.Native
         #region Enumerations
 
         /// <summary>
-        /// Mode that app is running in.
-        /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1008:EnumsShouldHaveZeroValue")]
-        [SuppressMessage("Microsoft.Design", "CA1027:MarkEnumsWithFlags")]
-        public enum AppEventMode
-        {
-            /// <summary>
-            /// Running in applet mode.
-            /// </summary>
-            Applet = 0x02,
-
-            /// <summary>
-            /// Running normally.
-            /// </summary>
-            Normal = 0x04
-        }
-
-        /// <summary>
         /// App event types used by Razer's AppEvent callback system.
         /// </summary>
         public enum AppEventType

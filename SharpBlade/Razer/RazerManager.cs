@@ -516,10 +516,10 @@ namespace SharpBlade.Razer
         /// Handles app event sent from Razer SDK.
         /// </summary>
         /// <param name="type">App event type.</param>
-        /// <param name="appMode">Mode associated with app event.</param>
-        /// <param name="processId">Process ID for event.</param>
+        /// <param name="firstParam">The first DWORD parameter.</param>
+        /// <param name="secondParam">The second DWORD parameter.</param>
         /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
-        private HRESULT HandleAppEvent(RazerAPI.AppEventType type, uint appMode, uint processId)
+        private HRESULT HandleAppEvent(RazerAPI.AppEventType type, uint firstParam, uint secondParam)
         {
             const int Result = HRESULT.RZSB_OK;
             if (type == RazerAPI.AppEventType.Invalid || type == RazerAPI.AppEventType.None)
@@ -528,9 +528,7 @@ namespace SharpBlade.Razer
                 return Result;
             }
 
-            Contract.Assume(Enum.IsDefined(typeof(RazerAPI.AppEventMode), appMode));
-
-            OnAppEvent(type, (RazerAPI.AppEventMode)appMode, processId);
+            OnAppEvent(type, firstParam, secondParam);
 
             return Result;
         }
@@ -634,13 +632,13 @@ namespace SharpBlade.Razer
         /// Raises app event to subscribers.
         /// </summary>
         /// <param name="type">App event type.</param>
-        /// <param name="mode">Mode associated with the app event.</param>
-        /// <param name="processId">The process ID.</param>
-        private void OnAppEvent(RazerAPI.AppEventType type, RazerAPI.AppEventMode mode, uint processId)
+        /// <param name="firstParam">The first DWORD parameter.</param>
+        /// <param name="secondParam">The second DWORD parameter.</param>
+        private void OnAppEvent(RazerAPI.AppEventType type, uint firstParam, uint secondParam)
         {
             var func = AppEvent;
             if (func != null)
-                func(this, new AppEventEventArgs(type, mode, processId));
+                func(this, new AppEventEventArgs(type, firstParam, secondParam));
         }
 
         /// <summary>
