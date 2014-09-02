@@ -201,6 +201,9 @@ namespace SharpBlade.Razer
             _log.Debug("Initializing dynamic key arrays");
 
             _dynamicKeys = new DynamicKey[RazerAPI.DynamicKeysCount];
+
+            _log.Debug("Initializing the RzDisplayState file manager");
+            DisplayStateFile = new DisplayStateFile();
         }
 
         /// <summary>
@@ -274,6 +277,11 @@ namespace SharpBlade.Razer
         /// </summary>
         /// <remarks>Defaults to <see cref="Constants.DisabledDynamicKeyImage" /></remarks>
         public string DisabledDynamicKeyImagePath { get; set; }
+
+        /// <summary>
+        /// Gets the <see cref="DisplayStateFile" /> instance associated with this <see cref="RazerManager" />.
+        /// </summary>
+        public DisplayStateFile DisplayStateFile { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether keyboard capture is enabled or not.
@@ -491,6 +499,11 @@ namespace SharpBlade.Razer
                 {
                     Touchpad.Dispose();
                     Touchpad = null;
+                }
+
+                if (DisplayStateFile != null)
+                {
+                    DisplayStateFile.Dispose();
                 }
             }
 
