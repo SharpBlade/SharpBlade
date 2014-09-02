@@ -152,9 +152,10 @@ namespace SharpBlade.Razer
 
 #if DEBUG
             _log.DebugFormat(
-                "HW type: {0}, DK size: {1}, DK arr: X={2} Y={3}",
+                "HW type: {0}, DK size: {1}x{2}, DK arr: X={3} Y={4}",
                 Capabilities.HardwareType,
-                Capabilities.DynamicKeySize,
+                Capabilities.DynamicKeySize.X,
+                Capabilities.DynamicKeySize.Y,
                 Capabilities.DynamicKeyArrangement.X,
                 Capabilities.DynamicKeyArrangement.Y);
 

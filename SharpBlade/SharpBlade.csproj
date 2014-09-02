@@ -288,7 +288,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <CodeAnalysisDictionary Include="$(SolutionDir)CustomDictionary.xml">
+    <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
       <Link>CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
     <None Include="packages.config">
