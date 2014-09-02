@@ -31,6 +31,7 @@
 using System;
 using System.Diagnostics.Contracts;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -93,6 +94,12 @@ namespace SharpBlade.Razer
         /// Log object for the <see cref="RazerManager" />.
         /// </summary>
         private readonly log4net.ILog _log;
+
+        /// <summary>
+        /// The <see cref="FileSystemWatcher" /> keeping track of the <c>rzdisplaystate</c>
+        /// file generation.
+        /// </summary>
+        private FileSystemWatcher _displayStateWatcher;
 
         /// <summary>
         /// Indicates whether the <see cref="RazerManager" /> has been disposed.
@@ -200,6 +207,16 @@ namespace SharpBlade.Razer
             _log.Debug("Initializing dynamic key arrays");
 
             _dynamicKeys = new DynamicKey[RazerAPI.DynamicKeysCount];
+
+            _log.Debug("Initializing rzdisplaystate FileSystemWatcher");
+            
+            _displayStateWatcher = new FileSystemWatcher()
+            {
+                NotifyFilter =
+                    NotifyFilters.Attributes | NotifyFilters.CreationTime
+                    | NotifyFilters.LastAccess | NotifyFilters.LastWrite
+                    | NotifyFilters.Size
+            };
         }
 
         /// <summary>
@@ -273,6 +290,31 @@ namespace SharpBlade.Razer
         /// </summary>
         /// <remarks>Defaults to <see cref="Constants.DisabledDynamicKeyImage" /></remarks>
         public string DisabledDynamicKeyImagePath { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether SharpBlade should monitor for changes
+        /// to the <c>RzDisplayState</c> file and rename it in case it's improperly named
+        /// by Razer's SDK.
+        /// </summary>
+        /// <remarks>
+        /// This is only really needed when the app's executable file contains a dot in
+        /// its file name (For example Foo.Bar.exe). SharpBlade will monitor for changes to
+        /// files named like the app but without any extension and rename them with an
+        /// <c>rzdisplaystate</c> file extension, which makes it possible for the SBUI SDK
+        /// to use them as thumbnails on the device.
+        /// </remarks>
+        public bool DisplayStateMonitoring
+        {
+            get
+            {
+                return _displayStateWatcher.EnableRaisingEvents;
+            }
+
+            set
+            {
+                _displayStateWatcher.EnableRaisingEvents = value;
+            }
+        }
 
         /// <summary>
         /// Gets a value indicating whether keyboard capture is enabled or not.
