@@ -58,8 +58,8 @@ namespace SharpBlade.Razer.Events
         /// Initializes a new instance of the <see cref="AppEventEventArgs" /> class.
         /// </summary>
         /// <param name="eventType">App event type.</param>
-        /// <param name="mode">App event mode associated with this event.</param>
-        /// <param name="processId">Process ID associated with event.</param>
+        /// <param name="firstParam">App event mode associated with this event.</param>
+        /// <param name="secondParam">Process ID associated with event.</param>
         internal AppEventEventArgs(RazerAPI.AppEventType eventType, uint firstParam, uint secondParam)
         {
             _eventType = eventType;
@@ -68,15 +68,16 @@ namespace SharpBlade.Razer.Events
         }
 
         /// <summary>
-        /// Gets the first DWORD (uint) parameter passed to the app event callback.
+        /// Gets the first DWORD (<c>uint</c>) parameter passed to the app event callback.
         /// </summary>
+        [CLSCompliant(false)]
         public uint FirstParameter
         {
             get { return _firstParam; }
         }
 
         /// <summary>
-        /// Gets the second DWORD (uint) parameter passed to the app event callback.
+        /// Gets the second DWORD (<c>uint</c>) parameter passed to the app event callback.
         /// </summary>
         [CLSCompliant(false)]
         public uint SecondParameter

@@ -180,6 +180,7 @@ namespace SharpBlade.Native
 
         #region Enumerations
 
+        /// <summary>
         /// App event types used by Razer's AppEvent callback system.
         /// </summary>
         public enum AppEventType

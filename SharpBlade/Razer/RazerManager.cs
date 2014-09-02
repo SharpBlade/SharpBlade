@@ -503,10 +503,10 @@ namespace SharpBlade.Razer
         /// Handles app event sent from Razer SDK.
         /// </summary>
         /// <param name="type">App event type.</param>
-        /// <param name="dwParam1">The first DWORD parameter.</param>
-        /// <param name="dwParam2">The second DWORD parameter.</param>
+        /// <param name="firstParam">The first DWORD parameter.</param>
+        /// <param name="secondParam">The second DWORD parameter.</param>
         /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
-        private HRESULT HandleAppEvent(RazerAPI.AppEventType type, uint dwParam1, uint dwParam2)
+        private HRESULT HandleAppEvent(RazerAPI.AppEventType type, uint firstParam, uint secondParam)
         {
             const int Result = HRESULT.RZSB_OK;
             if (type == RazerAPI.AppEventType.Invalid || type == RazerAPI.AppEventType.None)
@@ -515,7 +515,7 @@ namespace SharpBlade.Razer
                 return Result;
             }
 
-            OnAppEvent(type, dwParam1, dwParam2);
+            OnAppEvent(type, firstParam, secondParam);
 
             return Result;
         }
