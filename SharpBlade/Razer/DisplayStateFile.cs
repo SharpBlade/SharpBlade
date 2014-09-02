@@ -221,7 +221,7 @@ namespace SharpBlade.Razer
                 if (File.Exists(_file))
                     File.Delete(_file);
 
-                File.Move(_app, _file);
+                File.Copy(_app, _file);
             }
             catch (IOException ex)
             {
