@@ -49,6 +49,10 @@ namespace SharpBlade.Razer
         /// </summary>
         private readonly string _app;
 
+        /// <summary>
+        /// A value indicating whether the app is compatible with Razer's
+        /// existing code for generating <c>RzDisplayState</c> files.
+        /// </summary>
         private readonly bool _appCompatible;
 
         /// <summary>
@@ -180,6 +184,18 @@ namespace SharpBlade.Razer
         {
             _watcher.EnableRaisingEvents = false;
             _watcher.Dispose();
+        }
+
+        /// <summary>
+        /// Force running the workaround regardless of compatibility.
+        /// </summary>
+        /// <remarks>
+        /// This may have unintended side-effects when run in an app that
+        /// is already compatible with Razer's existing generation code.
+        /// </remarks>
+        public void Fix()
+        {
+            FixDisplayStateFile();
         }
 
         /// <summary>
