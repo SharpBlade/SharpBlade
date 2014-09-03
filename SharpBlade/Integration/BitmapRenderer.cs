@@ -31,8 +31,6 @@
 using System;
 using System.Timers;
 
-using SharpBlade.Razer;
-
 namespace SharpBlade.Integration
 {
     /// <summary>

@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------------------------------------
-// <copyright file="Renderer.cs" company="SharpBlade">
+// <copyright file="ZoomDirection.cs" company="SharpBlade">
 //     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -28,31 +28,26 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-namespace SharpBlade.Integration
+namespace SharpBlade
 {
     /// <summary>
-    /// Helper class to manage rendering a WinForms form or WPF window.
+    /// Direction of zoom.
     /// </summary>
-    /// <typeparam name="T">The type of RenderTarget to render to.</typeparam>
-    internal abstract class Renderer<T> : IRenderer where T : RenderTarget
+    public enum ZoomDirection
     {
         /// <summary>
-        /// Local instance of the SwitchBlade RenderTarget.
+        /// Zoom in.
         /// </summary>
-        protected readonly T RenderTarget;
+        In,
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Renderer{T}" /> class.
+        /// Zoom out.
         /// </summary>
-        /// <param name="renderTarget">RenderTarget reference.</param>
-        protected Renderer(T renderTarget)
-        {
-            RenderTarget = renderTarget;
-        }
+        Out,
 
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// Invalid zoom direction.
         /// </summary>
-        public abstract void Dispose();
+        Invalid
     }
 }

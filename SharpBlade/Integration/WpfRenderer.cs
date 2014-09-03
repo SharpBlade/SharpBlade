@@ -32,8 +32,6 @@ using System;
 using System.Windows;
 using System.Windows.Threading;
 
-using SharpBlade.Razer;
-
 namespace SharpBlade.Integration
 {
     /// <summary>

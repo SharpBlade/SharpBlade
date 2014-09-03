@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------------------------------------
-// <copyright file="Renderer.cs" company="SharpBlade">
+// <copyright file="RenderMethod.cs" company="SharpBlade">
 //     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -28,31 +28,26 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-namespace SharpBlade.Integration
+namespace SharpBlade
 {
     /// <summary>
-    /// Helper class to manage rendering a WinForms form or WPF window.
+    /// Specifies what method to use for
+    /// rendering a form or window.
     /// </summary>
-    /// <typeparam name="T">The type of RenderTarget to render to.</typeparam>
-    internal abstract class Renderer<T> : IRenderer where T : RenderTarget
+    public enum RenderMethod
     {
         /// <summary>
-        /// Local instance of the SwitchBlade RenderTarget.
+        /// Event-based. Subscribes to the form's/window's
+        /// paint/draw event and performs an update to the SBUI.
+        /// This method is the most resource intensive.
         /// </summary>
-        protected readonly T RenderTarget;
+        Event,
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Renderer{T}" /> class.
+        /// Creates a timer and performs drawing update
+        /// at a specified interval.
+        /// Less resource intensive than event-based drawing.
         /// </summary>
-        /// <param name="renderTarget">RenderTarget reference.</param>
-        protected Renderer(T renderTarget)
-        {
-            RenderTarget = renderTarget;
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public abstract void Dispose();
+        Polling
     }
 }

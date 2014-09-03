@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------------------------------------
-// <copyright file="Renderer.cs" company="SharpBlade">
+// <copyright file="SwitchbladeException.cs" company="SharpBlade">
 //     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -28,31 +28,41 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-namespace SharpBlade.Integration
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
+
+namespace SharpBlade
 {
     /// <summary>
-    /// Helper class to manage rendering a WinForms form or WPF window.
+    /// Exception for SharpBlade and Switchblade related issues.
     /// </summary>
-    /// <typeparam name="T">The type of RenderTarget to render to.</typeparam>
-    internal abstract class Renderer<T> : IRenderer where T : RenderTarget
+    [Serializable]
+    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
+        Justification = "A parameter-less constructor already exists thanks to the default values in existing ctor.")]
+    public class SwitchbladeException : Exception
     {
         /// <summary>
-        /// Local instance of the SwitchBlade RenderTarget.
+        /// Initializes a new instance of the <see cref="SwitchbladeException" /> class.
         /// </summary>
-        protected readonly T RenderTarget;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Renderer{T}" /> class.
-        /// </summary>
-        /// <param name="renderTarget">RenderTarget reference.</param>
-        protected Renderer(T renderTarget)
+        /// <param name="message">Message associated with the exception.</param>
+        /// <param name="innerException">Inner exception object.</param>
+        [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
+            Justification = "This exception is never instantiated outside of internal SharpBlade code.")]
+        internal SwitchbladeException(string message = null, Exception innerException = null)
+            : base(message, innerException)
         {
-            RenderTarget = renderTarget;
         }
 
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// Initializes a new instance of the <see cref="SwitchbladeException" /> class
+        /// from serialization data.
         /// </summary>
-        public abstract void Dispose();
+        /// <param name="info">Serialization info object.</param>
+        /// <param name="context">Streaming context.</param>
+        protected SwitchbladeException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
     }
 }

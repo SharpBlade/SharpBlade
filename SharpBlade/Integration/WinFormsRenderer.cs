@@ -32,8 +32,6 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 
-using SharpBlade.Razer;
-
 namespace SharpBlade.Integration
 {
     /// <summary>
