@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------------------------------------
-// <copyright file="GenericMethods.cs" company="SharpBlade">
+// <copyright file="Renderer.cs" company="SharpBlade">
 //     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -28,25 +28,15 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System.IO;
-
-namespace SharpBlade.Helpers
+namespace SharpBlade.Rendering
 {
     /// <summary>
-    /// Helper functions for generic operations.
+    /// Helper class to manage rendering complex structures to a render target.
+    /// This inherits from <see cref="Renderer{T}" /> with <see cref="RenderTarget" />
+    /// set as the type as a way to provide a default Renderer class for common
+    /// implementations.
     /// </summary>
-    public static class GenericMethods
+    public abstract class Renderer : Renderer<IRenderTarget>
     {
-        /// <summary>
-        /// Gets the absolute path to the specified file.
-        /// </summary>
-        /// <param name="path">(Relative) path to resolve.</param>
-        /// <returns>The absolute path to the specified relative path on the file system.</returns>
-        public static string GetAbsolutePath(string path)
-        {
-            var currentDirectory = Directory.GetCurrentDirectory();
-            var combined = Path.Combine(currentDirectory, path);
-            return combined;
-        }
     }
 }

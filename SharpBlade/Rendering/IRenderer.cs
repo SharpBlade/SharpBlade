@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------------------------------------
-// <copyright file="Renderer.cs" company="SharpBlade">
+// <copyright file="IRenderer.cs" company="SharpBlade">
 //     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -28,31 +28,54 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-namespace SharpBlade.Integration
+using System;
+
+namespace SharpBlade.Rendering
 {
     /// <summary>
-    /// Helper class to manage rendering a WinForms form or WPF window.
+    /// Base interface for <see cref="Renderer{T}" />.
     /// </summary>
-    /// <typeparam name="T">The type of RenderTarget to render to.</typeparam>
-    internal abstract class Renderer<T> : IRenderer where T : RenderTarget
+    public interface IRenderer : IDisposable
     {
         /// <summary>
-        /// Local instance of the SwitchBlade RenderTarget.
+        /// Gets a value indicating whether this renderer is currently
+        /// in an active state (redrawing based on a timer or event).
         /// </summary>
-        protected readonly T RenderTarget;
+        bool Active { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Renderer{T}" /> class.
+        /// Gets or sets the interval (in milliseconds) used for the redraw timer.
         /// </summary>
-        /// <param name="renderTarget">RenderTarget reference.</param>
-        protected Renderer(T renderTarget)
-        {
-            RenderTarget = renderTarget;
-        }
+        int Interval { get; set; }
 
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// Force a redraw of the object associated with this
+        /// <see cref="IRenderer" /> to the render target.
         /// </summary>
-        public abstract void Dispose();
+        void Draw();
+
+        /// <summary>
+        /// Starts continuous rendering to the render target.
+        /// </summary>
+        void Start();
+
+        /// <summary>
+        /// Stops an ongoing continuous render operation.
+        /// </summary>
+        void Stop();
+    }
+
+    /// <summary>
+    /// Base interface for <see cref="Renderer{T}" />
+    /// specifying interface stuff specific for render targets.
+    /// </summary>
+    /// <typeparam name="T">The type of target to render to.</typeparam>
+    public interface IRenderer<out T> : IRenderer where T : class, IRenderTarget
+    {
+        /// <summary>
+        /// Gets the <typeparamref name="T" /> which this <see cref="IRenderer{T}" />
+        /// is rendering to.
+        /// </summary>
+        T Target { get; }
     }
 }

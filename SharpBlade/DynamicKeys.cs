@@ -29,7 +29,6 @@
 // ---------------------------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.Contracts;
 using System.Globalization;
 
 using SharpBlade.Events;
@@ -70,9 +69,6 @@ namespace SharpBlade
         /// </summary>
         private DynamicKeys()
         {
-            Contract.Ensures(_log != null);
-            Contract.Ensures(_keys != null);
-
             _log = LogManager.GetLogger(this);
 
             _log.Info("Setting up dynamic keys");
@@ -101,7 +97,6 @@ namespace SharpBlade
         {
             get
             {
-                Contract.Ensures(Contract.Result<DynamicKeys>() != null);
                 return _instance ?? (_instance = new DynamicKeys());
             }
         }
@@ -129,7 +124,6 @@ namespace SharpBlade
         public void DisableDynamicKey(DynamicKeyType keyType)
         {
             var index = (int)keyType - 1;
-            Contract.Assume(index < _keys.Length);
             var dk = _keys[index];
             if (dk != null)
                 dk.Disable();
@@ -146,7 +140,6 @@ namespace SharpBlade
         /// <returns>The dynamic key that was enabled.</returns>
         public DynamicKey EnableDynamicKey(DynamicKeyType keyType, string image, bool replace = false)
         {
-            Contract.Requires(!string.IsNullOrEmpty(image));
             return EnableDynamicKey(keyType, image, null, replace);
         }
 
@@ -165,7 +158,6 @@ namespace SharpBlade
             string image,
             bool replace = false)
         {
-            Contract.Requires(!string.IsNullOrEmpty(image));
             return EnableDynamicKey(keyType, callback, image, null, replace);
         }
 
@@ -184,7 +176,6 @@ namespace SharpBlade
             string pressedImage = null,
             bool replace = false)
         {
-            Contract.Requires(!string.IsNullOrEmpty(image));
             return EnableDynamicKey(keyType, null, image, pressedImage, replace);
         }
 
@@ -205,10 +196,7 @@ namespace SharpBlade
             string pressedImage = null,
             bool replace = false)
         {
-            Contract.Requires(!string.IsNullOrEmpty(image));
-
             var index = (int)keyType - 1;
-            Contract.Assume(index < _keys.Length);
             if (_keys[index] != null && !replace)
             {
                 _log.Info("Dynamic key already enabled and replace is false.");
@@ -244,9 +232,7 @@ namespace SharpBlade
         /// <returns><see cref="DynamicKey" /> object representing the specified key type.</returns>
         public DynamicKey GetDynamicKey(DynamicKeyType keyType)
         {
-            var index = (int)keyType - 1;
-            Contract.Assume(index < _keys.Length);
-            return _keys[index];
+            return _keys[(int)keyType - 1];
         }
 
         /// <summary>
@@ -276,16 +262,6 @@ namespace SharpBlade
             dk.UpdateState(state);
 
             return Result;
-        }
-
-        /// <summary>
-        /// The contract invariant method for <see cref="DynamicKeys" />.
-        /// </summary>
-        [ContractInvariantMethod]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_log != null);
-            Contract.Invariant(_keys != null);
         }
 
         /// <summary>

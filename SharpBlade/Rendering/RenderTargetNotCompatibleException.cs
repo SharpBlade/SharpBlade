@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------------------------------------
-// <copyright file="WpfRenderer.cs" company="SharpBlade">
+// <copyright file="RenderTargetNotCompatibleException.cs" company="SharpBlade">
 //     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -29,65 +29,41 @@
 // ---------------------------------------------------------------------------------------
 
 using System;
-using System.Windows;
-using System.Windows.Threading;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 
-namespace SharpBlade.Integration
+namespace SharpBlade.Rendering
 {
     /// <summary>
-    /// Renders WPF windows.
+    /// Thrown when an attempt is made to call <see cref="RenderTarget.Set{T}" />
+    /// with a <see cref="Renderer{T}" /> that is not compatible.
     /// </summary>
-    internal sealed class WpfRenderer : Renderer<RenderTarget>
+    [Serializable]
+    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
+        Justification = "ctor() and ctor(string) is already implemented via default params.")]
+    public class RenderTargetNotCompatibleException : SwitchbladeException
     {
         /// <summary>
-        /// WPF Window to render.
-        /// Null if no WPF Window assigned.
+        /// Initializes a new instance of the <see cref="RenderTargetNotCompatibleException" /> class.
         /// </summary>
-        private readonly Window _window;
-
-        /// <summary>
-        /// Timer to control rendering of window when
-        /// poll mode is in use.
-        /// </summary>
-        private readonly DispatcherTimer _wpfTimer;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WpfRenderer" /> class.
-        /// For rendering a WPF window at the specified interval.
-        /// </summary>
-        /// <param name="renderTarget">Render target reference.</param>
-        /// <param name="window">WPF window to render.</param>
-        /// <param name="interval">The interval to render the window at.</param>
-        internal WpfRenderer(RenderTarget renderTarget, Window window, TimeSpan interval)
-            : base(renderTarget)
+        /// <param name="message">Message associated with the exception.</param>
+        /// <param name="innerException">Inner exception object.</param>
+        [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
+            Justification = "This exception is never instantiated outside of internal SharpBlade code.")]
+        internal RenderTargetNotCompatibleException(string message = null, Exception innerException = null)
+            : base(message, innerException)
         {
-            _window = window;
-
-            _wpfTimer = new DispatcherTimer(
-                interval,
-                DispatcherPriority.Render,
-                WpfTimerTick,
-                Dispatcher.CurrentDispatcher);
-            _wpfTimer.Start();
         }
 
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// Initializes a new instance of the <see cref="RenderTargetNotCompatibleException" /> class
+        /// from serialization data.
         /// </summary>
-        public override void Dispose()
+        /// <param name="info">Serialization info object.</param>
+        /// <param name="context">Streaming context.</param>
+        protected RenderTargetNotCompatibleException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
-            if (_wpfTimer != null)
-                _wpfTimer.Stop();
-        }
-
-        /// <summary>
-        /// Callback for the tick event on the WPF render timer.
-        /// </summary>
-        /// <param name="sender">The object that raised the event.</param>
-        /// <param name="e">Event arguments.</param>
-        private void WpfTimerTick(object sender, EventArgs e)
-        {
-            RenderTarget.DrawWindow(_window);
         }
     }
 }

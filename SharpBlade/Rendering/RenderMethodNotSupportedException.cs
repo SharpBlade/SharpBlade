@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------------------------------------
-// <copyright file="IBitmapProvider.cs" company="SharpBlade">
+// <copyright file="RenderMethodNotSupportedException.cs" company="SharpBlade">
 //     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -28,21 +28,40 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System.Drawing;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 
-namespace SharpBlade.Integration
+namespace SharpBlade.Rendering
 {
     /// <summary>
-    /// An object that is able to provide a Bitmap object.
+    /// Exception thrown when a <see cref="Renderer{T}" /> is initialized
+    /// with an unsupported render method.
     /// </summary>
-    public interface IBitmapProvider
+    [Serializable]
+    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
+        Justification = "ctor() and ctor(string) is already there via default params.")]
+    public class RenderMethodNotSupportedException : SwitchbladeException
     {
         /// <summary>
-        /// Gets an arbitrary <see cref="Bitmap" /> object.
+        /// Initializes a new instance of the <see cref="RenderMethodNotSupportedException" /> class.
         /// </summary>
-        /// <remarks>
-        /// This Bitmap should match the dimensions of the target display.
-        /// </remarks>
-        Bitmap Bitmap { get; }
+        /// <param name="message">Message associated with the exception.</param>
+        /// <param name="inner">Inner exception object.</param>
+        public RenderMethodNotSupportedException(string message = null, Exception inner = null)
+            : base(message, inner)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RenderMethodNotSupportedException" /> class
+        /// from serialization data.
+        /// </summary>
+        /// <param name="info">Serialization info object.</param>
+        /// <param name="context">Streaming context.</param>
+        protected RenderMethodNotSupportedException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
     }
 }

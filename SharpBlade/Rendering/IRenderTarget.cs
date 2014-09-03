@@ -35,37 +35,21 @@ using System.Windows;
 using System.Windows.Forms;
 
 using SharpBlade.Integration;
-using SharpBlade.Native;
 using SharpBlade.Razer;
 
-namespace SharpBlade
+namespace SharpBlade.Rendering
 {
     /// <summary>
     /// A class implementing methods to draw bitmaps and images
     /// to a supported target display.
     /// </summary>
-    public interface IRenderTarget
+    public interface IRenderTarget : IDisposable
     {
-        /// <summary>
-        /// Gets the currently active form, null if no form is set.
-        /// </summary>
-        Form CurrentForm { get; }
-
         /// <summary>
         /// Gets the path to the image currently shown on the render target,
         /// or null if no image is showing.
         /// </summary>
         string CurrentImage { get; }
-
-        /// <summary>
-        /// Gets the currently rendering Native window, <c>IntPtr.Zero</c> if no window set
-        /// </summary>
-        IntPtr CurrentNativeWindow { get; }
-
-        /// <summary>
-        /// Gets the currently rendering WPF window, null if no window is set.
-        /// </summary>
-        Window CurrentWindow { get; }
 
         /// <summary>
         /// Gets the height of this <see cref="IRenderTarget" /> in pixels.
@@ -94,6 +78,12 @@ namespace SharpBlade
         void Clear();
 
         /// <summary>
+        /// Draws a static image to the target display.
+        /// </summary>
+        /// <param name="image">Path to the image file.</param>
+        void Draw(string image);
+
+        /// <summary>
         /// Draws a bitmap to the target display.
         /// </summary>
         /// <param name="bitmap">The bitmap object to draw.</param>
@@ -104,19 +94,19 @@ namespace SharpBlade
         /// for dynamic keys, it's specified by <see cref="Razer.Constants.DynamicKeyWidth" /> and
         /// <see cref="Razer.Constants.DynamicKeyHeight" />.
         /// </remarks>
-        void DrawBitmap(Bitmap bitmap);
+        void Draw(Bitmap bitmap);
 
         /// <summary>
         /// Draws the specified form to the target display.
         /// </summary>
         /// <param name="form">Form to draw.</param>
-        void DrawForm(Form form);
+        void Draw(Form form);
 
         /// <summary>
         /// Draws the specified native window to the target display.
         /// </summary>
         /// <param name="windowHandle">The window handle of the window to draw.</param>
-        void DrawNativeWindow(IntPtr windowHandle);
+        void Draw(IntPtr windowHandle);
 
         /// <summary>
         /// Draws a WPF window to the target display.
@@ -124,54 +114,50 @@ namespace SharpBlade
         /// <param name="window">Window object to draw.</param>
         /// <param name="winFormsComponents">Array of KeyValuePairs containing a WindowsFormsHost as the key and a WinForms control as the value.
         /// These pairs will be overlaid on the bitmap that is passed to the SwitchBlade device.</param>
-        void DrawWindow(Window window, IEnumerable<EmbeddedWinFormsControl> winFormsComponents = null);
+        void Draw(Window window, IEnumerable<EmbeddedWinFormsControl> winFormsComponents = null);
 
         /// <summary>
-        /// Sets an <see cref="IBitmapProvider" /> to provide the target display
-        /// with a <see cref="Bitmap" /> object to draw.
-        /// Initializes the polling interval to 42ms (circa 24 FPS).
-        /// </summary>
-        /// <param name="provider">An object implementing the <see cref="IBitmapProvider" /> interface.</param>
-        void SetBitmapProvider(IBitmapProvider provider);
-
-        /// <summary>
-        /// Sets an <see cref="IBitmapProvider" /> to provide the target display
+        /// Sets an <see cref="IBitmapProvider" /> to provide this <see cref="IRenderTarget" />
         /// with a <see cref="Bitmap" /> object to draw.
         /// </summary>
         /// <param name="provider">An object implementing the <see cref="IBitmapProvider" /> interface.</param>
-        /// <param name="interval">How often to query the object for a bitmap and draw it.</param>
-        void SetBitmapProvider(IBitmapProvider provider, TimeSpan interval);
+        /// <param name="interval">The interval at which to query the provider
+        /// for a new <see cref="Bitmap" /> and draw it.</param>
+        void Set(IBitmapProvider provider, int interval = 42);
+
+        /// <summary>
+        /// Sets a form to be rendered to this <see cref="IRenderTarget" />.
+        /// </summary>
+        /// <param name="form">The form to render.</param>
+        /// <param name="method">The method to use for rendering the form.</param>
+        /// <param name="interval">Interval (in milliseconds) at which to render the form
+        /// (only used when <paramref name="method" /> is set to <see cref="RenderMethod.Polling" />.</param>
+        void Set(Form form, RenderMethod method = RenderMethod.Polling, int interval = 42);
+
+        /// <summary>
+        /// Sets a WPF window to be rendered to this <see cref="IRenderTarget" />.
+        /// </summary>
+        /// <param name="window">The window to render.</param>
+        /// <param name="method">The method to use for rendering the window.</param>
+        /// <param name="interval">Interval (in milliseconds) at which to render the window
+        /// (only used when <paramref name="method" /> is set to <see cref="RenderMethod.Polling" />.</param>
+        void Set(Window window, RenderMethod method = RenderMethod.Polling, int interval = 42);
 
         /// <summary>
         /// Set a static image to be displayed on the target display.
         /// </summary>
         /// <param name="image">Path to image.</param>
-        void SetImage(string image);
+        /// <param name="interval">The interval (in milliseconds) at which to refresh the image.</param>
+        void Set(string image, int interval = 42);
 
         /// <summary>
-        /// Sets the form to be rendered to this <see cref="RenderTarget" />.
+        /// Sets the <see cref="Renderer{T}" /> to be used for this <see cref="IRenderTarget" /> and
+        /// calls its <see cref="Renderer{T}.Start" /> method.
         /// </summary>
-        /// <param name="form">The new form to render.</param>
-        /// <param name="method">The method to use for rendering the form.</param>
-        /// <param name="interval">Interval to poll drawing functions at,
-        /// only used if RenderMethod is set to Polling.
-        /// Default value 55ms (circa 18 FPS).</param>
-        void SetForm(Form form, RenderMethod method = RenderMethod.Event, int interval = 55);
-
-        /// <summary>
-        /// Sets the native window to be rendered to this touchpad
-        /// Initializes the polling interval to 42ms (circa 24 FPS)
-        /// </summary>
-        /// <param name="windowHandle">the handle for the window to render</param>
-        void SetNativeWindow(IntPtr windowHandle);
-
-        /// <summary>
-        /// Sets the WPF window to be rendered to this <see cref="RenderTarget" />.
-        /// Initializes the polling interval to 42ms (circa 24 FPS)
-        /// if called with RenderMethod set to Polling.
-        /// </summary>
-        /// <param name="window">The new window to render.</param>
-        /// <param name="method">The method to use for rendering the window.</param>
-        void SetWindow(Window window, RenderMethod method = RenderMethod.Event);
+        /// <typeparam name="T">
+        /// The type of <see cref="RenderTarget" /> that the renderer is compatible with.
+        /// </typeparam>
+        /// <param name="renderer">An instance of the <see cref="Renderer{T}" /> class.</param>
+        void Set<T>(Renderer<T> renderer) where T : class, IRenderTarget;
     }
 }

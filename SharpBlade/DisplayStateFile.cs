@@ -31,7 +31,6 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 
@@ -79,9 +78,6 @@ namespace SharpBlade
             Justification = "The set actions on the properties on FSW are highly unlikely to throw exceptions.")]
         internal DisplayStateFile()
         {
-            Contract.Ensures(_watcher != null);
-            Contract.Ensures(!string.IsNullOrEmpty(_file));
-
             _log = LogManager.GetLogger(this);
 
             _log.Debug("Initializing rzdisplaystate FileSystemWatcher");
@@ -92,14 +88,10 @@ namespace SharpBlade
             var executable = Process.GetCurrentProcess().MainModule.FileName.Replace(".vshost", string.Empty);
             _app = Path.GetFileNameWithoutExtension(executable);
 
-            Contract.Assume(!string.IsNullOrEmpty(_app));
-
             // Razer's code for generating rzdisplaystate files breaks when there's a dot involved.
             _appCompatible = !_app.Contains('.');
 
             _file = _app + ".rzdisplaystate";
-
-            Contract.Assert(!string.IsNullOrEmpty(_file));
 
             _log.InfoFormat(
                 "Serving {0}:{1} (RzDisplayState compatible: {2})!",
@@ -115,8 +107,6 @@ namespace SharpBlade
                     | NotifyFilters.Size,
                 IncludeSubdirectories = false
             };
-
-            Contract.Assert(_watcher != null);
 
             _watcher.Changed += (o, e) => FixDisplayStateFile();
             _watcher.Created += (o, e) => FixDisplayStateFile();
@@ -236,17 +226,6 @@ namespace SharpBlade
             {
                 _log.ErrorFormat("Failed to fix RzDisplayState file, IOException: {0}", ex.Message);
             }
-        }
-
-        /// <summary>
-        /// The invariant method for <see cref="DisplayStateFile" />.
-        /// </summary>
-        [ContractInvariantMethod]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_log != null);
-            Contract.Invariant(_watcher != null);
-            Contract.Invariant(!string.IsNullOrEmpty(_file));
         }
     }
 }

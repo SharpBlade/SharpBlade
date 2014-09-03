@@ -29,8 +29,6 @@
 // ---------------------------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Drawing.Imaging;
 
@@ -64,9 +62,6 @@ namespace SharpBlade.Helpers
         /// </param>
         public static void CaptureScreenToFile(string fileName, ImageFormat format)
         {
-            Contract.Requires(!string.IsNullOrEmpty(fileName));
-            Contract.Requires(format != null);
-
             var img = CaptureScreen();
             img.Save(fileName, format);
         }
@@ -138,9 +133,6 @@ namespace SharpBlade.Helpers
         /// </param>
         public static void CaptureWindowToFile(IntPtr handle, string fileName, ImageFormat format)
         {
-            Contract.Requires(!string.IsNullOrEmpty(fileName));
-            Contract.Requires(format != null);
-
             var img = CaptureWindow(handle);
             img.Save(fileName, format);
         }

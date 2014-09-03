@@ -65,6 +65,7 @@
       <AnalyzerSettings>
         <CollectionProperty Name="Hungarian">
           <Value>be</Value>
+          <Value>up</Value>
         </CollectionProperty>
       </AnalyzerSettings>
     </Analyzer>

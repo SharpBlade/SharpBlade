@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------------------------------------
-// <copyright file="IRenderer.cs" company="SharpBlade">
+// <copyright file="IBitmapProvider.cs" company="SharpBlade">
 //     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -28,14 +28,21 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
+using System.Drawing;
 
-namespace SharpBlade.Integration
+namespace SharpBlade.Rendering
 {
     /// <summary>
-    /// Base interface for <see cref="Renderer{T}" />.
+    /// An object that is able to provide a Bitmap object.
     /// </summary>
-    internal interface IRenderer : IDisposable
+    public interface IBitmapProvider
     {
+        /// <summary>
+        /// Gets an arbitrary <see cref="Bitmap" /> object.
+        /// </summary>
+        /// <remarks>
+        /// This Bitmap should match the dimensions of the target display.
+        /// </remarks>
+        Bitmap Bitmap { get; }
     }
 }

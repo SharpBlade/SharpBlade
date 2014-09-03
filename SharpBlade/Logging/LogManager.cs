@@ -31,7 +31,6 @@
 #if DEBUG
 
 using System;
-using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -46,7 +45,6 @@ using SharpBlade.Native.WinAPI;
 
 #else
 using System;
-using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -89,11 +87,7 @@ namespace SharpBlade.Logging
         public static void ClearOldLogs(int daysOld = 7, string directory = "logs")
             // ReSharper restore UnusedMember.Global
         {
-            Contract.Requires(!string.IsNullOrEmpty(directory));
-
             var log = GetLogger(typeof(LogManager));
-
-            Contract.Assert(log != null);
 
             if (!Directory.Exists(directory))
             {
@@ -112,7 +106,6 @@ namespace SharpBlade.Logging
             {
                 try
                 {
-                    Contract.Assume(!string.IsNullOrEmpty(file));
                     File.Delete(file);
                     log.InfoFormat("Deleted old log file: {0}", file);
                     count++;
@@ -146,16 +139,14 @@ namespace SharpBlade.Logging
         /// <returns>An <see cref="ILog" /> that provides logging features.</returns>
         public static ILog GetLogger(object sender)
         {
-            Contract.Requires(sender != null);
-            Contract.Ensures(Contract.Result<ILog>() != null);
+            if (sender == null)
+                throw new ArgumentNullException("sender");
 
             if (!_loaded)
                 LoadConfig();
 
             var type = sender.GetType().ToString() == "System.RuntimeType" ? (Type)sender : sender.GetType();
             var logger = log4net.LogManager.GetLogger(type);
-
-            Contract.Assume(logger != null);
 
             return logger;
         }

@@ -29,7 +29,6 @@
 // ---------------------------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -39,6 +38,7 @@ using SharpBlade.Logging;
 using SharpBlade.Native;
 using SharpBlade.Native.WinAPI;
 using SharpBlade.Razer;
+using SharpBlade.Rendering;
 
 namespace SharpBlade
 {
@@ -102,12 +102,6 @@ namespace SharpBlade
         /// </remarks>
         private Switchblade()
         {
-            Contract.Ensures(_log != null);
-            Contract.Ensures(Touchpad != null);
-            Contract.Ensures(DisplayStateFile != null);
-            Contract.Ensures(!string.IsNullOrEmpty(BlankTouchpadImagePath));
-            Contract.Ensures(!string.IsNullOrEmpty(DisabledDynamicKeyImagePath));
-
             _log = LogManager.GetLogger(this);
 
             _log.Info("Switchblade is initializing");
@@ -166,8 +160,6 @@ namespace SharpBlade
             _log.Info("Setting up touchpad");
             Touchpad = Touchpad.Instance;
 
-            Contract.Assert(Touchpad != null);
-
             Touchpad.DisableOSGesture(GestureTypes.All);
 
             _log.Info("Setting up keyboard");
@@ -185,7 +177,6 @@ namespace SharpBlade
 
             _log.Debug("Initializing the RzDisplayState file manager");
             DisplayStateFile = new DisplayStateFile();
-            Contract.Assert(DisplayStateFile != null);
         }
 
         /// <summary>
@@ -436,19 +427,6 @@ namespace SharpBlade
             }
 
             return HRESULT.RZSB_OK;
-        }
-
-        /// <summary>
-        /// The contract invariant method for <see cref="Switchblade" />.
-        /// </summary>
-        [ContractInvariantMethod]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_log != null);
-            Contract.Invariant(!string.IsNullOrEmpty(BlankTouchpadImagePath));
-            Contract.Invariant(!string.IsNullOrEmpty(DisabledDynamicKeyImagePath));
-            Contract.Invariant(Touchpad != null);
-            Contract.Invariant(DisplayStateFile != null);
         }
 
         /// <summary>

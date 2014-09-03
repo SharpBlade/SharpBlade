@@ -28,7 +28,6 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System.Diagnostics.Contracts;
 using System.Threading;
 
 namespace SharpBlade.Helpers
@@ -45,7 +44,6 @@ namespace SharpBlade.Helpers
         /// <remarks>Will do nothing if a name has already been set for the thread.</remarks>
         public static void SetCurrentThreadName(string name)
         {
-            Contract.Requires(!string.IsNullOrEmpty(name));
             if (string.IsNullOrEmpty(Thread.CurrentThread.Name))
                 Thread.CurrentThread.Name = name;
         }

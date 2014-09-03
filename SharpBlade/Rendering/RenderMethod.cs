@@ -28,7 +28,7 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-namespace SharpBlade
+namespace SharpBlade.Rendering
 {
     /// <summary>
     /// Specifies what method to use for

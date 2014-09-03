@@ -28,9 +28,7 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System.Diagnostics.Contracts;
 using System.Drawing;
-using System.Security.RightsManagement;
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 
@@ -60,9 +58,6 @@ namespace SharpBlade.Integration
         /// <param name="control">The WinForms control contained in the host.</param>
         public EmbeddedWinFormsControl(WindowsFormsHost host, Control control)
         {
-            Contract.Requires(host != null);
-            Contract.Requires(control != null);
-
             _host = host;
             _control = control;
         }
@@ -156,16 +151,6 @@ namespace SharpBlade.Integration
             {
                 return (_control.GetHashCode() * 397) ^ _host.GetHashCode();
             }
-        }
-
-        /// <summary>
-        /// The contract invariant method for <see cref="EmbeddedWinFormsControl" />.
-        /// </summary>
-        [ContractInvariantMethod]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_host != null);
-            Contract.Invariant(_control != null);
         }
     }
 }

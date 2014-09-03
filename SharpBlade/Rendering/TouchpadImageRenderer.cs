@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------------------------------------
-// <copyright file="BitmapRenderer.cs" company="SharpBlade">
+// <copyright file="TouchpadImageRenderer.cs" company="SharpBlade">
 //     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -28,62 +28,46 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-using System.Timers;
+using SharpBlade.Native;
+using SharpBlade.Razer;
 
-namespace SharpBlade.Integration
+namespace SharpBlade.Rendering
 {
     /// <summary>
-    /// A renderer that queries an object implementing <see cref="IBitmapProvider" />
-    /// to get a <see cref="System.Drawing.Bitmap" /> that is then sent to the
-    /// <see cref="Touchpad" /> for drawing.
+    /// Renders a static file to the touchpad.
     /// </summary>
-    internal class BitmapRenderer : Renderer<RenderTarget>
+    public sealed class TouchpadImageRenderer : ImageRenderer
     {
         /// <summary>
-        /// The Bitmap provider.
+        /// Initializes a new instance of the <see cref="TouchpadImageRenderer" /> class.
         /// </summary>
-        private readonly IBitmapProvider _provider;
-
-        /// <summary>
-        /// Timer to control how often the RenderTarget should refresh.
-        /// </summary>
-        private readonly Timer _timer;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BitmapRenderer" /> class.
-        /// </summary>
-        /// <param name="renderTarget">The <see cref="Touchpad" /> instance this renderer should communicate with.</param>
-        /// <param name="provider">An object implementing the <see cref="IBitmapProvider" /> interface.</param>
-        /// <param name="interval">How often to refresh the RenderTarget.</param>
-        internal BitmapRenderer(RenderTarget renderTarget, IBitmapProvider provider, TimeSpan interval)
-            : base(renderTarget)
+        /// <param name="up">Path to the image to render.</param>
+        /// <param name="interval">The interval at which to refresh the image.</param>
+        public TouchpadImageRenderer(string up, int interval = 42)
+            : base(up, interval)
         {
-            _provider = provider;
-            _timer = new Timer(interval.TotalMilliseconds);
-            _timer.Elapsed += TimerTick;
-            _timer.Start();
         }
 
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// Draws a static image file to the touchpad.
         /// </summary>
-        public override void Dispose()
+        /// <param name="image">Path to the image file.</param>
+        /// <exception cref="NativeCallException">
+        /// Thrown if the call to set the image fails.
+        /// </exception>
+        public static void Draw(string image)
         {
-            if (_timer == null)
-                return;
-            _timer.Stop();
-            _timer.Dispose();
+            var result = NativeMethods.RzSBSetImageTouchpad(image);
+            if (HRESULT.RZSB_FAILED(result))
+                throw new NativeCallException("RzSBSetImageTouchpad", result);
         }
 
         /// <summary>
-        /// Event handler for the Timer's Tick event.
+        /// Force a redraw of the image to the touchpad.
         /// </summary>
-        /// <param name="sender">Object that raised the event.</param>
-        /// <param name="e">Event arguments.</param>
-        private void TimerTick(object sender, ElapsedEventArgs e)
+        public override void Draw()
         {
-            RenderTarget.DrawBitmap(_provider.Bitmap);
+            Draw(Image);
         }
     }
 }

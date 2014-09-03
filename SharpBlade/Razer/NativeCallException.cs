@@ -30,7 +30,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
@@ -84,8 +83,6 @@ namespace SharpBlade.Razer
         protected NativeCallException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
-            Contract.Requires(info != null);
-
             _function = info.GetString("Function");
             _hresult = info.GetInt32("Hresult");
         }

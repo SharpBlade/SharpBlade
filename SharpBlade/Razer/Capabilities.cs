@@ -31,7 +31,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Runtime.InteropServices;
 
@@ -228,9 +227,6 @@ namespace SharpBlade.Razer
         /// </returns>
         public override int GetHashCode()
         {
-            Contract.Assume(_surfacegeometry != null);
-            Contract.Assume(_pixelformat != null);
-
             unchecked
             {
                 var hashCode = (int)_version;

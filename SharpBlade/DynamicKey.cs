@@ -30,12 +30,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 
-using SharpBlade.Helpers;
 using SharpBlade.Logging;
-using SharpBlade.Native;
 using SharpBlade.Razer;
+using SharpBlade.Rendering;
 
 namespace SharpBlade
 {
@@ -82,11 +80,6 @@ namespace SharpBlade
             EventHandler callback = null)
             : base(TargetDisplayMapping[keyType], Razer.Constants.DynamicKeyHeight, Razer.Constants.DynamicKeyWidth)
         {
-            Contract.Requires(!string.IsNullOrEmpty(image));
-            Contract.Ensures(_log != null);
-            Contract.Ensures(!string.IsNullOrEmpty(UpImage));
-            Contract.Ensures(!string.IsNullOrEmpty(DownImage));
-
             _log = LogManager.GetLogger(this);
 
             if (string.IsNullOrEmpty(pressedImage))
@@ -100,10 +93,11 @@ namespace SharpBlade
             PreviousState = DynamicKeyState.None;
             KeyType = keyType;
 
+            Images = new DynamicKeyImageRenderer(keyType, image, pressedImage);
+
             // Set{Up,Down}Image will also set the relevant properties
             _log.Debug("Setting images");
-            SetUpImage(image);
-            SetDownImage(pressedImage);
+            Images.Draw();
 
             if (callback != null)
             {
@@ -118,18 +112,17 @@ namespace SharpBlade
         public event EventHandler Pressed;
 
         /// <summary>
-        /// Gets the current image being displayed on the render target.
+        /// Gets the instance of <see cref="DynamicKeyImageRenderer" /> that
+        /// manages the static images for this dynamic key.
         /// </summary>
-        public override string CurrentImage
-        {
-            get { return UpImage; }
-            protected set { SetImage(value); }
-        }
-
-        /// <summary>
-        /// Gets the image displayed on this key when in DOWN state.
-        /// </summary>
-        public string DownImage { get; private set; }
+        /// <remarks>
+        /// Be wary when using this property and the <see cref="Renderer" />
+        /// property, careless switching between the two without calling their
+        /// respective <c>Stop</c> methods can cause the dynamic key to
+        /// switch back and forth between different images or bitmaps,
+        /// due to two different renderers fighting against each other.
+        /// </remarks>
+        public DynamicKeyImageRenderer Images { get; private set; }
 
         /// <summary>
         /// Gets the <see cref="DynamicKeyType" /> of this key.
@@ -142,115 +135,81 @@ namespace SharpBlade
         public DynamicKeyState PreviousState { get; private set; }
 
         /// <summary>
-        /// Gets a value indicating whether this key is
-        /// using a single image for both UP and DOWN states.
-        /// </summary>
-        public bool SingleImage
-        {
-            get
-            {
-                return UpImage == DownImage;
-            }
-        }
-
-        /// <summary>
         /// Gets the current state of this key.
         /// </summary>
         public DynamicKeyState State { get; private set; }
-
-        /// <summary>
-        /// Gets the image displayed on this key when in the UP state.
-        /// </summary>
-        public string UpImage { get; private set; }
 
         /// <summary>
         /// Disables this dynamic key (sets to blank image).
         /// </summary>
         public void Disable()
         {
-            Contract.Assume(Switchblade.Instance != null);
-            SetImage(Switchblade.Instance.DisabledDynamicKeyImagePath);
+            Images.Image = Switchblade.Instance.DisabledDynamicKeyImagePath;
         }
 
         /// <summary>
-        /// Refreshes this dynamic key to make sure its
-        /// images are up to date.
+        /// Sets a static image to both states of the dynamic key.
         /// </summary>
-        public void Refresh()
+        /// <param name="image">Path to the image file.</param>
+        public override void Draw(string image)
         {
-            SetImages(UpImage, DownImage);
+            Draw(image, image);
         }
 
         /// <summary>
-        /// Sets the image displayed when key is DOWN.
+        /// Sets the images for each state of the dynamic key.
+        /// </summary>
+        /// <param name="image">Image for the UP state.</param>
+        /// <param name="downImage">Image for the DOWN state.</param>
+        public void Draw(string image, string downImage)
+        {
+            Images.Up = image;
+            Images.Down = downImage;
+        }
+
+        /// <summary>
+        /// Sets the image that is displayed and refreshed on this key.
         /// </summary>
         /// <param name="image">Path to image.</param>
-        public void SetDownImage(string image)
-        {
-            Contract.Requires(!string.IsNullOrEmpty(image));
-            Contract.Ensures(!string.IsNullOrEmpty(DownImage));
-            SetImage(image, DynamicKeyState.Down);
-        }
-
-        /// <summary>
-        /// Sets the image that is displayed on this key.
-        /// </summary>
-        /// <param name="image">Path to image.</param>
+        /// <param name="interval">The interval (in milliseconds) at which to refresh the image.</param>
         /// <remarks>This will set the image on both the UP and DOWN states.</remarks>
-        public override void SetImage(string image)
+        public override void Set(string image, int interval = 42)
         {
-            SetUpImage(image);
-            SetDownImage(image);
+            Set(image, image, interval);
         }
 
         /// <summary>
-        /// Sets an image for a specific key state.
+        /// Sets the images to be drawn and refreshed on this key.
         /// </summary>
-        /// <param name="image">Path to image.</param>
-        /// <param name="state">State to display image in.</param>
-        public void SetImage(string image, DynamicKeyState state)
+        /// <param name="image">Path to UP image.</param>
+        /// <param name="downImage">Path to DOWN image.</param>
+        /// <param name="interval">The interval (in milliseconds) at which to refresh the images.</param>
+        public void Set(string image, string downImage, int interval = 42)
         {
-            Contract.Requires(!string.IsNullOrEmpty(image));
-            Contract.Requires(
-                state == DynamicKeyState.Up || state == DynamicKeyState.Down,
-                "State can only be up or down.");
-            Contract.Ensures(!string.IsNullOrEmpty(UpImage) || !string.IsNullOrEmpty(DownImage));
-
-            _log.DebugFormat("Setting {0} on {1} to {2}", state, KeyType, image);
-
-            var result = NativeMethods.RzSBSetImageDynamicKey(KeyType, state, GenericMethods.GetAbsolutePath(image));
-            if (!HRESULT.RZSB_SUCCESS(result))
-                throw new NativeCallException("RzSBSetImageDynamicKey", result);
-
-            if (state == DynamicKeyState.Up)
-                UpImage = image;
-            else
-                DownImage = image;
+            Images.Stop();
+            Images.Up = image;
+            Images.Down = downImage;
+            Images.Interval = interval;
         }
 
         /// <summary>
-        /// Sets the images that are displayed on this key.
+        /// Sets the <see cref="Renderer{T}" /> to be used for this <see cref="DynamicKey" /> and
+        /// calls its <see cref="Renderer{T}.Start" /> method.
         /// </summary>
-        /// <param name="image">Path to image displayed when this key is in the "UP" state.</param>
-        /// <param name="pressedImage">Path to the image displayed when this key is in the "DOWN" state.</param>
-        public void SetImages(string image, string pressedImage)
+        /// <typeparam name="T">
+        /// The type of <see cref="RenderTarget" /> that the renderer is compatible with.
+        /// </typeparam>
+        /// <param name="renderer">An instance of the <see cref="Renderer{T}" /> class.</param>
+        /// <remarks>
+        /// This overload also calls the <see cref="DynamicKeyImageRenderer.Stop" /> method
+        /// on <see cref="DynamicKeyImageRenderer" /> prior to setting the new renderer and starting it,
+        /// to avoid possible collisions.
+        /// </remarks>
+        public override void Set<T>(Renderer<T> renderer)
         {
-            Contract.Requires(!string.IsNullOrEmpty(image) && !string.IsNullOrEmpty(pressedImage));
-            Contract.Ensures(!string.IsNullOrEmpty(UpImage) && !string.IsNullOrEmpty(DownImage));
+            Images.Stop();
 
-            SetUpImage(image);
-            SetDownImage(pressedImage);
-        }
-
-        /// <summary>
-        /// Sets the image displayed when key is UP.
-        /// </summary>
-        /// <param name="image">Path to image.</param>
-        public void SetUpImage(string image)
-        {
-            Contract.Requires(!string.IsNullOrEmpty(image));
-            Contract.Ensures(!string.IsNullOrEmpty(UpImage));
-            SetImage(image, DynamicKeyState.Up);
+            base.Set(renderer);
         }
 
         /// <summary>
@@ -271,19 +230,8 @@ namespace SharpBlade
         /// </summary>
         protected override void ClearImage()
         {
-            Contract.Assume(Switchblade.Instance != null);
-            SetImage(Switchblade.Instance.DisabledDynamicKeyImagePath);
-        }
-
-        /// <summary>
-        /// The contract invariant method for <see cref="DynamicKey" />.
-        /// </summary>
-        [ContractInvariantMethod]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_log != null);
-            Contract.Invariant(!string.IsNullOrEmpty(UpImage));
-            Contract.Invariant(!string.IsNullOrEmpty(DownImage));
+            Images.Stop();
+            Images.Image = Switchblade.Instance.DisabledDynamicKeyImagePath;
         }
 
         /// <summary>

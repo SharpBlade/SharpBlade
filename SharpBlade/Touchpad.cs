@@ -29,7 +29,6 @@
 // ---------------------------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.Contracts;
 using System.Linq;
 
 using SharpBlade.Events;
@@ -37,6 +36,7 @@ using SharpBlade.Helpers;
 using SharpBlade.Logging;
 using SharpBlade.Native;
 using SharpBlade.Razer;
+using SharpBlade.Rendering;
 
 namespace SharpBlade
 {
@@ -63,11 +63,8 @@ namespace SharpBlade
         /// <summary>
         /// Prevents a default instance of the <see cref="Touchpad" /> class from being created.
         /// </summary>
-        private Touchpad() : base(Razer.TargetDisplay.Widget, Razer.Constants.TouchpadHeight, Razer.Constants.TouchpadWidth)
+        private Touchpad() : base(TargetDisplay.Widget, Razer.Constants.TouchpadHeight, Razer.Constants.TouchpadWidth)
         {
-            Contract.Ensures(_log != null);
-
-            CurrentNativeWindow = IntPtr.Zero;
             _log = LogManager.GetLogger(this);
             _log.Info("Setting disabled image");
             _log.Debug("Setting gesture callback");
@@ -138,19 +135,12 @@ namespace SharpBlade
         public event EventHandler<ZoomEventArgs> Zoom;
 
         /// <summary>
-        /// Gets the path to the image currently shown on the touchpad,
-        /// or null if no image is showing.
-        /// </summary>
-        public override string CurrentImage { get; protected set; }
-
-        /// <summary>
         /// Gets singleton instance of Touchpad.
         /// </summary>
         internal static Touchpad Instance
         {
             get
             {
-                Contract.Ensures(Contract.Result<Touchpad>() != null);
                 return _instance ?? (_instance = new Touchpad());
             }
         }
@@ -262,20 +252,26 @@ namespace SharpBlade
         #region Drawing Methods
 
         /// <summary>
+        /// Draws a static image to the touchpad.
+        /// </summary>
+        /// <param name="image">Path to the image file.</param>
+        public override void Draw(string image)
+        {
+            TouchpadImageRenderer.Draw(image);
+        }
+
+        /// <summary>
         /// Set a static image to be displayed on the touchpad.
         /// </summary>
         /// <param name="image">Path to image.</param>
-        public override void SetImage(string image)
+        /// <param name="interval">The interval (in milliseconds) at which to redraw the image file.</param>
+        public override void Set(string image, int interval = 42)
         {
             Clear();
 
             image = GenericMethods.GetAbsolutePath(image);
 
-            var result = NativeMethods.RzSBSetImageTouchpad(image);
-            if (HRESULT.RZSB_FAILED(result))
-                throw new NativeCallException("RzSBSetImageTouchpad", result);
-
-            CurrentImage = image;
+            Renderer = new TouchpadImageRenderer(image, interval);
         }
 
         /// <summary>
@@ -283,13 +279,7 @@ namespace SharpBlade
         /// </summary>
         protected override void ClearImage()
         {
-            var result =
-                NativeMethods.RzSBSetImageTouchpad(
-                    GenericMethods.GetAbsolutePath(Switchblade.Instance.BlankTouchpadImagePath));
-            if (HRESULT.RZSB_FAILED(result))
-                throw new NativeCallException("RzSBSetImageTouchpad", result);
-
-            CurrentImage = null;
+            TouchpadImageRenderer.Draw(GenericMethods.GetAbsolutePath(Switchblade.Instance.BlankTouchpadImagePath));
         }
 
         #endregion Drawing Methods
@@ -457,7 +447,6 @@ namespace SharpBlade
 
                 case GestureTypes.Flick:
                 {
-                    Contract.Assume(Enum.IsDefined(typeof(Direction), z));
                     var direction = (Direction)z;
                     OnFlick(parameters, direction);
                     break;
@@ -528,14 +517,5 @@ namespace SharpBlade
         }
 
         #endregion Native Handlers
-
-        /// <summary>
-        /// The contract invariant method for <see cref="Touchpad" />.
-        /// </summary>
-        [ContractInvariantMethod]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_log != null);
-        }
     }
 }

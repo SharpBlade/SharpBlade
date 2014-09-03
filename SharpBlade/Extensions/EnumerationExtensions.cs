@@ -29,7 +29,6 @@
 // ---------------------------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.Contracts;
 using System.Globalization;
 
 namespace SharpBlade.Extensions
@@ -51,7 +50,8 @@ namespace SharpBlade.Extensions
         /// in <c>check</c>, false otherwise.</returns>
         public static bool Has<T>(this Enum value, T check)
         {
-            Contract.Requires(value != null);
+            if (value == null)
+                throw new ArgumentNullException("value");
 
             var type = value.GetType();
 
@@ -77,7 +77,8 @@ namespace SharpBlade.Extensions
         /// value(s) in the parameter append included.</returns>
         public static T Include<T>(this Enum value, T append)
         {
-            Contract.Requires(value != null);
+            if (value == null)
+                throw new ArgumentNullException("value");
 
             var type = value.GetType();
 
@@ -103,7 +104,6 @@ namespace SharpBlade.Extensions
         /// in <c>value</c>, false otherwise.</returns>
         public static bool Missing<T>(this Enum obj, T value)
         {
-            Contract.Requires(obj != null);
             return !Has(obj, value);
         }
 
@@ -117,7 +117,8 @@ namespace SharpBlade.Extensions
         /// supplied in <c>remove</c> removed.</returns>
         public static T Remove<T>(this Enum value, T toRemove)
         {
-            Contract.Requires(value != null);
+            if (value == null)
+                throw new ArgumentNullException("value");
 
             Type type = value.GetType();
 

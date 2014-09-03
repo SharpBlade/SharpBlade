@@ -12,6 +12,7 @@
             <Word>Touchpoint</Word>
         </Recognized>
         <DiscreteExceptions>
+            <Term>drawdown</Term>
             <Term>setup</Term>
             <Term>pixelformat</Term>
         </DiscreteExceptions>
