@@ -4,6 +4,7 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=2C390908_002DD634_002D4450_002D9804_002D71D4929DD392_002Fd_003ANative_002Fd_003AWinAPI_002Ff_003AUser32_002Ecs/@EntryIndexedValue">2C390908-D634-4450-9804-71D4929DD392/d:Native/d:WinAPI/f:User32.cs</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=2C390908_002DD634_002D4450_002D9804_002D71D4929DD392_002Fd_003ANative_002Ff_003ARazerAPI_002Ecs/@EntryIndexedValue">2C390908-D634-4450-9804-71D4929DD392/d:Native/f:RazerAPI.cs</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=2C390908_002DD634_002D4450_002D9804_002D71D4929DD392_002Fd_003AProperties_002Ff_003AAssemblyInfo_002Ecs/@EntryIndexedValue">2C390908-D634-4450-9804-71D4929DD392/d:Properties/f:AssemblyInfo.cs</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=2C390908_002DD634_002D4450_002D9804_002D71D4929DD392_002Ff_003AGlobalSuppressions_002Ecs/@EntryIndexedValue">2C390908-D634-4450-9804-71D4929DD392/f:GlobalSuppressions.cs</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=EventNeverSubscribedTo_002EGlobal/@EntryIndexedValue">HINT</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=MemberCanBePrivate_002EGlobal/@EntryIndexedValue">HINT</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=UnusedAutoPropertyAccessor_002EGlobal/@EntryIndexedValue">HINT</s:String>
