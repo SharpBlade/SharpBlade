@@ -19,10 +19,10 @@
 //     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 //     CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // 
-//     Disclaimer: SharpBlade is in no way affiliated
-//     with Razer and/or any of its employees and/or licensors.
-//     Adam Hellberg does not take responsibility for any harm caused, direct
-//     or indirect, to any Razer peripherals via the use of SharpBlade.
+//     Disclaimer: SharpBlade is in no way affiliated with Razer and/or any of
+//     its employees and/or licensors. Adam Hellberg and/or Brandon Scott do not
+//     take responsibility for any harm caused, direct or indirect, to any Razer
+//     peripherals via the use of SharpBlade.
 // 
 //     "Razer" is a trademark of Razer USA Ltd.
 // </copyright>
@@ -108,7 +108,10 @@ namespace SharpBlade.Razer
         [CLSCompliant(false)]
         public uint BEVersion
         {
-            get { return _beVersion; }
+            get
+            {
+                return _beVersion;
+            }
         }
 
         /// <summary>
@@ -116,7 +119,10 @@ namespace SharpBlade.Razer
         /// </summary>
         public Point DynamicKeySize
         {
-            get { return _dynamicKeySize; }
+            get
+            {
+                return _dynamicKeySize;
+            }
         }
 
         /// <summary>
@@ -124,7 +130,10 @@ namespace SharpBlade.Razer
         /// </summary>
         public Point DynamicKeyArrangement
         {
-            get { return _dynamicKeyArrangement; }
+            get
+            {
+                return _dynamicKeyArrangement;
+            }
         }
 
         /// <summary>
@@ -132,7 +141,10 @@ namespace SharpBlade.Razer
         /// </summary>
         public byte DynamicKeyCount
         {
-            get { return _numDynamicKeys; }
+            get
+            {
+                return _numDynamicKeys;
+            }
         }
 
         /// <summary>
@@ -140,7 +152,10 @@ namespace SharpBlade.Razer
         /// </summary>
         public HardwareType HardwareType
         {
-            get { return _hardwareType; }
+            get
+            {
+                return _hardwareType;
+            }
         }
 
         /// <summary>
@@ -150,7 +165,10 @@ namespace SharpBlade.Razer
         [CLSCompliant(false)]
         public IList<uint> Pixelformat
         {
-            get { return _pixelformat; }
+            get
+            {
+                return _pixelformat;
+            }
         }
 
         /// <summary>
@@ -159,7 +177,10 @@ namespace SharpBlade.Razer
         /// <remarks>Contains <see cref="SurfaceCount" /> entries.</remarks>
         public IList<Point> Surfacegeometry
         {
-            get { return _surfacegeometry; }
+            get
+            {
+                return _surfacegeometry;
+            }
         }
 
         /// <summary>
@@ -168,7 +189,10 @@ namespace SharpBlade.Razer
         [CLSCompliant(false)]
         public uint SurfaceCount
         {
-            get { return _numSurfaces; }
+            get
+            {
+                return _numSurfaces;
+            }
         }
 
         /// <summary>
@@ -177,7 +201,10 @@ namespace SharpBlade.Razer
         [CLSCompliant(false)]
         public uint Version
         {
-            get { return _version; }
+            get
+            {
+                return _version;
+            }
         }
 
         /// <summary>
@@ -190,8 +217,8 @@ namespace SharpBlade.Razer
         {
             return left._version == right._version && left._beVersion == right._beVersion
                    && left._hardwareType == right._hardwareType && left._numSurfaces == right._numSurfaces
-                   && left._surfacegeometry.Equals(right._surfacegeometry) && left._pixelformat.Equals(right._pixelformat)
-                   && left._numDynamicKeys == right._numDynamicKeys
+                   && left._surfacegeometry.Equals(right._surfacegeometry)
+                   && left._pixelformat.Equals(right._pixelformat) && left._numDynamicKeys == right._numDynamicKeys
                    && left._dynamicKeyArrangement.Equals(right._dynamicKeyArrangement)
                    && left._dynamicKeySize.Equals(right._dynamicKeySize);
         }

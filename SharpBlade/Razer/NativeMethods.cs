@@ -19,34 +19,14 @@
 //     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 //     CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // 
-//     Disclaimer: SharpBlade is in no way affiliated
-//     with Razer and/or any of its employees and/or licensors.
-//     Adam Hellberg does not take responsibility for any harm caused, direct
-//     or indirect, to any Razer peripherals via the use of SharpBlade.
+//     Disclaimer: SharpBlade is in no way affiliated with Razer and/or any of
+//     its employees and/or licensors. Adam Hellberg and/or Brandon Scott do not
+//     take responsibility for any harm caused, direct or indirect, to any Razer
+//     peripherals via the use of SharpBlade.
 // 
 //     "Razer" is a trademark of Razer USA Ltd.
 // </copyright>
 // ---------------------------------------------------------------------------------------
-
-// Credits to itsbth for helping with P/Invoke
-
-// 2013-04-05: Major update to reflect changes in the new SDK.
-
-/* ╔══════════════════════════════╗
- * ║ Help table for mapping types ║
- * ╠════════╦═════════╦═══════════╩──────────┐
- * │ C Type │ C# Type │ MarshalAs            │
- * ├────────┼─────────┼──────────────────────┤
- * │ BYTE   │ Byte    │                      │
- * │ UINT   │ UInt32  │                      │
- * │ HWND   │ IntPtr  │                      │
- * │ WORD   │ UInt16  │                      │
- * │ DWORD  │ UInt32  │                      │
- * │ LPARAM │ Int32   │                      │
- * │ WPARAM │ UInt32  │                      │
- * │ LPWSTR │ String  │ UnmanagedType.LPWStr │
- * └────────┴─────────┴──────────────────────┘
- */
 
 using System;
 using System.Runtime.InteropServices;
@@ -113,7 +93,9 @@ namespace SharpBlade.Razer
         /// </remarks>
         /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-        internal static extern HRESULT RzSBEnableGesture([In] GestureTypes gestureTypes, [In, MarshalAs(UnmanagedType.U1)] bool enable);
+        internal static extern HRESULT RzSBEnableGesture(
+            [In] GestureTypes gestureTypes,
+            [In] [MarshalAs(UnmanagedType.U1)] bool enable);
 
         /// <summary>
         /// Enables or disables gesture event forwarding to the OS.
@@ -126,7 +108,9 @@ namespace SharpBlade.Razer
         /// </remarks>
         /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl, SetLastError = true)]
-        internal static extern HRESULT RzSBEnableOSGesture([In] GestureTypes gestureTypes, [In, MarshalAs(UnmanagedType.U1)] bool enable);
+        internal static extern HRESULT RzSBEnableOSGesture(
+            [In] GestureTypes gestureTypes,
+            [In] [MarshalAs(UnmanagedType.U1)] bool enable);
 
         /// <summary>
         /// Sets the callback function for gesture events.
