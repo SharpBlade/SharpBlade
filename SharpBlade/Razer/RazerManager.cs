@@ -152,9 +152,10 @@ namespace SharpBlade.Razer
 
 #if DEBUG
             _log.DebugFormat(
-                "HW type: {0}, DK size: {1}, DK arr: X={2} Y={3}",
+                "HW type: {0}, DK size: {1}x{2}, DK arr: X={3} Y={4}",
                 Capabilities.HardwareType,
-                Capabilities.DynamicKeySize,
+                Capabilities.DynamicKeySize.X,
+                Capabilities.DynamicKeySize.Y,
                 Capabilities.DynamicKeyArrangement.X,
                 Capabilities.DynamicKeyArrangement.Y);
 
@@ -200,6 +201,9 @@ namespace SharpBlade.Razer
             _log.Debug("Initializing dynamic key arrays");
 
             _dynamicKeys = new DynamicKey[RazerAPI.DynamicKeysCount];
+
+            _log.Debug("Initializing the RzDisplayState file manager");
+            DisplayStateFile = new DisplayStateFile();
         }
 
         /// <summary>
@@ -273,6 +277,11 @@ namespace SharpBlade.Razer
         /// </summary>
         /// <remarks>Defaults to <see cref="Constants.DisabledDynamicKeyImage" /></remarks>
         public string DisabledDynamicKeyImagePath { get; set; }
+
+        /// <summary>
+        /// Gets the <see cref="DisplayStateFile" /> instance associated with this <see cref="RazerManager" />.
+        /// </summary>
+        public DisplayStateFile DisplayStateFile { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether keyboard capture is enabled or not.
@@ -491,6 +500,11 @@ namespace SharpBlade.Razer
                     Touchpad.Dispose();
                     Touchpad = null;
                 }
+
+                if (DisplayStateFile != null)
+                {
+                    DisplayStateFile.Dispose();
+                }
             }
 
             _log.Debug("Dispose: Calling Stop()");
@@ -503,10 +517,10 @@ namespace SharpBlade.Razer
         /// Handles app event sent from Razer SDK.
         /// </summary>
         /// <param name="type">App event type.</param>
-        /// <param name="appMode">Mode associated with app event.</param>
-        /// <param name="processId">Process ID for event.</param>
+        /// <param name="firstParam">The first DWORD parameter.</param>
+        /// <param name="secondParam">The second DWORD parameter.</param>
         /// <returns><see cref="HRESULT" /> object indicating success or failure.</returns>
-        private HRESULT HandleAppEvent(RazerAPI.AppEventType type, uint appMode, uint processId)
+        private HRESULT HandleAppEvent(RazerAPI.AppEventType type, uint firstParam, uint secondParam)
         {
             const int Result = HRESULT.RZSB_OK;
             if (type == RazerAPI.AppEventType.Invalid || type == RazerAPI.AppEventType.None)
@@ -515,9 +529,7 @@ namespace SharpBlade.Razer
                 return Result;
             }
 
-            Contract.Assume(Enum.IsDefined(typeof(RazerAPI.AppEventMode), appMode));
-
-            OnAppEvent(type, (RazerAPI.AppEventMode)appMode, processId);
+            OnAppEvent(type, firstParam, secondParam);
 
             return Result;
         }
@@ -621,13 +633,13 @@ namespace SharpBlade.Razer
         /// Raises app event to subscribers.
         /// </summary>
         /// <param name="type">App event type.</param>
-        /// <param name="mode">Mode associated with the app event.</param>
-        /// <param name="processId">The process ID.</param>
-        private void OnAppEvent(RazerAPI.AppEventType type, RazerAPI.AppEventMode mode, uint processId)
+        /// <param name="firstParam">The first DWORD parameter.</param>
+        /// <param name="secondParam">The second DWORD parameter.</param>
+        private void OnAppEvent(RazerAPI.AppEventType type, uint firstParam, uint secondParam)
         {
             var func = AppEvent;
             if (func != null)
-                func(this, new AppEventEventArgs(type, mode, processId));
+                func(this, new AppEventEventArgs(type, firstParam, secondParam));
         }
 
         /// <summary>
