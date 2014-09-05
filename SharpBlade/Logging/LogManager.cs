@@ -84,9 +84,8 @@ namespace SharpBlade.Logging
         /// <param name="directory">The directory to check for log files.</param>
         /// <remarks>This will delete ALL files in the specified directory,
         /// regardless of file type.</remarks>
-        // ReSharper disable UnusedMember.Global
+        // ReSharper disable once UnusedMember.Global
         public static void ClearOldLogs(int daysOld = 7, string directory = "logs")
-            // ReSharper restore UnusedMember.Global
         {
             var log = GetLogger(typeof(LogManager));
 
@@ -124,8 +123,8 @@ namespace SharpBlade.Logging
         /// Destroys an open console, usually the one created by <see cref="SetupConsole" />.
         /// </summary>
         /// <remarks>Method body only compiled on DEBUG.</remarks>
-        // ReSharper disable UnusedMember.Global
-        public static void DestroyConsole() // ReSharper restore UnusedMember.Global
+        // ReSharper disable once UnusedMember.Global
+        public static void DestroyConsole()
         {
 #if DEBUG
             if (_consoleLoaded)
