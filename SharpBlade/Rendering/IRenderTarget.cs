@@ -62,6 +62,12 @@ namespace SharpBlade.Rendering
         int DisplayWidth { get; }
 
         /// <summary>
+        /// Gets the <see cref="IRenderer" /> instance used to
+        /// manage timed rendering of objects.
+        /// </summary>
+        IRenderer Renderer { get; }
+
+        /// <summary>
         /// Gets the <see cref="Razer.TargetDisplay" /> that content will be
         /// rendered to.
         /// </summary>
@@ -151,13 +157,13 @@ namespace SharpBlade.Rendering
         void Set(string image, int interval = 42);
 
         /// <summary>
-        /// Sets the <see cref="Renderer{T}" /> to be used for this <see cref="IRenderTarget" /> and
-        /// calls its <see cref="Renderer{T}.Start" /> method.
+        /// Sets the <see cref="IRenderer{T}" /> to be used for this <see cref="IRenderTarget" /> and
+        /// calls its <see cref="M:IRenderer{T}.Start" /> method.
         /// </summary>
         /// <typeparam name="T">
         /// The type of <see cref="RenderTarget" /> that the renderer is compatible with.
         /// </typeparam>
-        /// <param name="renderer">An instance of the <see cref="Renderer{T}" /> class.</param>
-        void Set<T>(Renderer<T> renderer) where T : class, IRenderTarget;
+        /// <param name="renderer">An instance of the <see cref="IRenderer{T}" /> class.</param>
+        void Set<T>(IRenderer<T> renderer) where T : class, IRenderTarget;
     }
 }

@@ -205,7 +205,7 @@ namespace SharpBlade
         /// on <see cref="DynamicKeyImageRenderer" /> prior to setting the new renderer and starting it,
         /// to avoid possible collisions.
         /// </remarks>
-        public override void Set<T>(Renderer<T> renderer)
+        public override void Set<T>(IRenderer<T> renderer)
         {
             Images.Stop();
 

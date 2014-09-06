@@ -226,29 +226,35 @@ namespace SharpBlade.Rendering
         public abstract void Set(string image, int interval = 42);
 
         /// <summary>
-        /// Sets the <see cref="Renderer{T}" /> to be used for this <see cref="RenderTarget" /> and
-        /// calls its <see cref="Renderer{T}.Start" /> method.
+        /// Sets the <see cref="IRenderer{T}" /> to be used for this <see cref="RenderTarget" /> and
+        /// calls its <see cref="M:IRenderer{T}.Start" /> method.
         /// </summary>
         /// <typeparam name="T">
         /// The type of <see cref="RenderTarget" /> that the renderer is compatible with.
         /// </typeparam>
-        /// <param name="renderer">An instance of the <see cref="Renderer{T}" /> class.</param>
-        public virtual void Set<T>(Renderer<T> renderer) where T : class, IRenderTarget
+        /// <param name="renderer">An instance of the <see cref="IRenderer{T}" /> class.</param>
+        public virtual void Set<T>(IRenderer<T> renderer) where T : class, IRenderTarget
         {
             if (renderer == null)
                 throw new ArgumentNullException("renderer");
 
             Clear();
 
-            var target = this as T;
+            var targetRenderer = renderer as Renderer<T>;
 
-            if (target == null)
+            if (targetRenderer != null)
             {
-                throw new RenderTargetNotCompatibleException(
-                    "Renderer type error, " + GetType() + " is not derived from " + typeof(T));
+                var target = this as T;
+
+                if (target == null)
+                {
+                    throw new RenderTargetNotCompatibleException(
+                        "Renderer type error, " + GetType() + " is not derived from " + typeof(T));
+                }
+
+                targetRenderer.Target = target;
             }
 
-            renderer.Target = target;
             Renderer = renderer;
             Renderer.Start();
         }
