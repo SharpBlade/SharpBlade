@@ -43,7 +43,7 @@ namespace SharpBlade
     /// <summary>
     /// The SwitchBlade touchpad.
     /// </summary>
-    public sealed class Touchpad : RenderTarget
+    public sealed class Touchpad : RenderTarget, ITouchpad
     {
         /// <summary>
         /// Gesture callback that is used as parameter in <see cref="NativeMethods.RzSBGestureSetCallback" />.

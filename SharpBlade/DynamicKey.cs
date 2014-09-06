@@ -40,7 +40,7 @@ namespace SharpBlade
     /// <summary>
     /// Represents a dynamic key on the SwitchBlade device
     /// </summary>
-    public sealed class DynamicKey : RenderTarget
+    public sealed class DynamicKey : RenderTarget, IDynamicKey
     {
         /// <summary>
         /// A mapping dictionary to translate a <see cref="DynamicKeyType" />

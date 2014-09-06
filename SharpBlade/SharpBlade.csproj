@@ -102,8 +102,13 @@
     <Compile Include="Helpers\GenericMethods.cs" />
     <Compile Include="Helpers\ScreenCapture.cs" />
     <Compile Include="Helpers\ThreadingMethods.cs" />
+    <Compile Include="IDisplayStateFile.cs" />
+    <Compile Include="IDynamicKey.cs" />
+    <Compile Include="IDynamicKeys.cs" />
     <Compile Include="Integration\EmbeddedWinFormsControl.cs" />
     <Compile Include="Integration\KeyboardControl.cs" />
+    <Compile Include="ISwitchblade.cs" />
+    <Compile Include="ITouchpad.cs" />
     <Compile Include="Logging\LogManager.cs" />
     <Compile Include="ModifierKeys.cs" />
     <Compile Include="Native\HelperMethods.cs" />

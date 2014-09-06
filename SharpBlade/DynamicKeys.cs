@@ -41,7 +41,7 @@ namespace SharpBlade
     /// <summary>
     /// Manages the dynamic keys of a device.
     /// </summary>
-    public class DynamicKeys
+    public class DynamicKeys : IDynamicKeys
     {
         /// <summary>
         /// Dynamic key callback that is used as parameter in <see cref="NativeMethods.RzSBDynamicKeySetCallback" />.
@@ -106,10 +106,10 @@ namespace SharpBlade
         /// </summary>
         /// <param name="keyType">The type of key to get.</param>
         /// <returns>
-        /// An instance of <see cref="DynamicKey" /> if the requested
+        /// An instance of <see cref="IDynamicKey" /> if the requested
         /// type has been enabled, otherwise <c>null</c>.
         /// </returns>
-        public DynamicKey this[DynamicKeyType keyType]
+        public IDynamicKey this[DynamicKeyType keyType]
         {
             get
             {
@@ -138,7 +138,7 @@ namespace SharpBlade
         /// <param name="replace">True to override this key's previous configuration
         /// if it has already been enabled, otherwise returns current key if already enabled.</param>
         /// <returns>The dynamic key that was enabled.</returns>
-        public DynamicKey EnableDynamicKey(DynamicKeyType keyType, string image, bool replace = false)
+        public IDynamicKey EnableDynamicKey(DynamicKeyType keyType, string image, bool replace = false)
         {
             return EnableDynamicKey(keyType, image, null, replace);
         }
@@ -152,7 +152,7 @@ namespace SharpBlade
         /// <param name="replace">True to override this key's previous configuration
         /// if it has already been enabled, otherwise returns current key if already enabled.</param>
         /// <returns>The dynamic key that was enabled.</returns>
-        public DynamicKey EnableDynamicKey(
+        public IDynamicKey EnableDynamicKey(
             DynamicKeyType keyType,
             EventHandler callback,
             string image,
@@ -170,7 +170,7 @@ namespace SharpBlade
         /// <param name="replace">True to override this key's previous configuration
         /// if it has already been enabled, otherwise returns current key if already enabled.</param>
         /// <returns>The dynamic key that was enabled.</returns>
-        public DynamicKey EnableDynamicKey(
+        public IDynamicKey EnableDynamicKey(
             DynamicKeyType keyType,
             string image,
             string pressedImage = null,
@@ -189,7 +189,7 @@ namespace SharpBlade
         /// <param name="replace">True to override this key's previous configuration
         /// if it has already been enabled, otherwise returns current key if already enabled.</param>
         /// <returns>The dynamic key that was enabled.</returns>
-        public DynamicKey EnableDynamicKey(
+        public IDynamicKey EnableDynamicKey(
             DynamicKeyType keyType,
             EventHandler callback,
             string image,
@@ -230,7 +230,7 @@ namespace SharpBlade
         /// </summary>
         /// <param name="keyType">The key type to get.</param>
         /// <returns><see cref="DynamicKey" /> object representing the specified key type.</returns>
-        public DynamicKey GetDynamicKey(DynamicKeyType keyType)
+        public IDynamicKey GetDynamicKey(DynamicKeyType keyType)
         {
             return _keys[(int)keyType - 1];
         }

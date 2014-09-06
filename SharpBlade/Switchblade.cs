@@ -45,7 +45,7 @@ namespace SharpBlade
     /// <summary>
     /// Manages everything related to Razer and its devices.
     /// </summary>
-    public sealed class Switchblade : IDisposable
+    public sealed class Switchblade : ISwitchblade
     {
         /// <summary>
         /// Array of 3-tuples to pair Virtual Keys (1st element) with their ModifierKeys counterpart (3rd element),
@@ -79,9 +79,27 @@ namespace SharpBlade
         // ReSharper restore PrivateFieldCanBeConvertedToLocalVariable
 
         /// <summary>
+        /// Private reference to the <see cref="DisplayStateFile" /> object that
+        /// manages the <c>rzdisplaystate</c> file.
+        /// </summary>
+        private readonly DisplayStateFile _displayStateFile;
+
+        /// <summary>
+        /// Private reference to the <see cref="DynamicKeys" /> object that
+        /// manages the dynamic keys.
+        /// </summary>
+        private readonly DynamicKeys _dynamicKeys;
+
+        /// <summary>
         /// Log object for the <see cref="Switchblade" />.
         /// </summary>
         private readonly log4net.ILog _log;
+
+        /// <summary>
+        /// Private reference to the <see cref="Touchpad" /> class that
+        /// handles touchpad-related operations.
+        /// </summary>
+        private readonly Touchpad _touchpad;
 
         /// <summary>
         /// Indicates whether the <see cref="Switchblade" /> has been disposed.
@@ -164,7 +182,7 @@ namespace SharpBlade
                 throw new NativeCallException("RzSBAppEventSetCallback", result);
 
             _log.Info("Setting up touchpad");
-            Touchpad = Touchpad.Instance;
+            _touchpad = SharpBlade.Touchpad.Instance;
 
             Touchpad.DisableOSGesture(GestureTypes.All);
 
@@ -179,10 +197,10 @@ namespace SharpBlade
                 throw new NativeCallException("RzSBKeyboardCaptureSetCallback", result);
 
             _log.Info("Setting up dynamic keys");
-            DynamicKeys = DynamicKeys.Instance;
+            _dynamicKeys = SharpBlade.DynamicKeys.Instance;
 
             _log.Debug("Initializing the RzDisplayState file manager");
-            DisplayStateFile = new DisplayStateFile();
+            _displayStateFile = new DisplayStateFile();
         }
 
         /// <summary>
@@ -225,7 +243,7 @@ namespace SharpBlade
         /// <summary>
         /// Gets singleton instance of Switchblade.
         /// </summary>
-        public static Switchblade Instance
+        public static ISwitchblade Instance
         {
             get
             {
@@ -249,7 +267,7 @@ namespace SharpBlade
         /// <summary>
         /// Gets the dynamic key manager.
         /// </summary>
-        public DynamicKeys DynamicKeys { get; private set; }
+        public IDynamicKeys DynamicKeys { get { return _dynamicKeys; } }
 
         /// <summary>
         /// Gets or sets the image shown on dynamic keys when disabled.
@@ -258,9 +276,10 @@ namespace SharpBlade
         public string DisabledDynamicKeyImagePath { get; set; }
 
         /// <summary>
-        /// Gets the <see cref="DisplayStateFile" /> instance associated with this <see cref="Switchblade" />.
+        /// Gets the <see cref="IDisplayStateFile" /> instance associated with this
+        /// <see cref="Switchblade" /> object.
         /// </summary>
-        public DisplayStateFile DisplayStateFile { get; private set; }
+        public IDisplayStateFile DisplayStateFile { get { return _displayStateFile; } }
 
         /// <summary>
         /// Gets a value indicating whether keyboard capture is enabled or not.
@@ -270,7 +289,7 @@ namespace SharpBlade
         /// <summary>
         /// Gets the touchpad on the keyboard.
         /// </summary>
-        public Touchpad Touchpad { get; private set; }
+        public ITouchpad Touchpad { get { return _touchpad; } }
 
         /// <summary>
         /// Disposes of this <see cref="Switchblade" />.
