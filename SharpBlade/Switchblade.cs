@@ -375,11 +375,11 @@ namespace SharpBlade
 
             if (disposing)
             {
-                if (!Touchpad.Disposed)
-                    Touchpad.Dispose();
+                if (!_touchpad.Disposed)
+                    _touchpad.Dispose();
 
-                if (!DisplayStateFile.Disposed)
-                    DisplayStateFile.Dispose();
+                if (!_displayStateFile.Disposed)
+                    _displayStateFile.Dispose();
             }
 
             _log.Debug("Dispose: Calling Stop()");

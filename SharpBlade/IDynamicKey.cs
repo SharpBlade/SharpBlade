@@ -38,7 +38,7 @@ namespace SharpBlade
     /// <summary>
     /// <see cref="DynamicKey" /> interface.
     /// </summary>
-    public interface IDynamicKey : IRenderTarget
+    public interface IDynamicKey
     {
         /// <summary>
         /// Raised when a dynamic key is pressed.

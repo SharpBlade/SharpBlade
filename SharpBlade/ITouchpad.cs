@@ -32,14 +32,13 @@ using System;
 
 using SharpBlade.Events;
 using SharpBlade.Razer;
-using SharpBlade.Rendering;
 
 namespace SharpBlade
 {
     /// <summary>
     /// <see cref="Touchpad" /> interface.
     /// </summary>
-    public interface ITouchpad : IRenderTarget
+    public interface ITouchpad
     {
         /// <summary>
         /// Raised when a finger(s?) flick on the touchpad.

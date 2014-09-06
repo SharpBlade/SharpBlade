@@ -128,10 +128,10 @@ namespace SharpBlade.Extensions
         /// </summary>
         /// <typeparam name="T">The type of the value(s) being removed.</typeparam>
         /// <param name="value">The <see cref="Enum" /> to remove values from.</param>
-        /// <param name="remove">The value(s) to remove from the enumeration.</param>
+        /// <param name="toRemove">The value(s) to remove from the enumeration.</param>
         /// <returns>A new enumeration of the specified type with the value(s)
         /// supplied in <c>remove</c> removed.</returns>
-        public static T Remove<T>(this Enum value, T remove)
+        public static T Remove<T>(this Enum value, T toRemove)
         {
             if (value == null)
                 throw new ArgumentNullException("value");
@@ -141,11 +141,11 @@ namespace SharpBlade.Extensions
             var removeType = typeof(T);
 
             if (removeType != type)
-                throw new ArgumentException("The enums have to be of the same type", "remove");
+                throw new ArgumentException("The enums have to be of the same type", "toRemove");
 
             // determine the values
             object result = value;
-            var parsed = new Value(remove, type);
+            var parsed = new Value(toRemove, type);
             if (parsed.Signed.HasValue)
                 result = Convert.ToInt64(value, CultureInfo.InvariantCulture) & ~(long)parsed.Signed;
             else if (parsed.Unsigned.HasValue)
