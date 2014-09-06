@@ -38,8 +38,6 @@ namespace SharpBlade.Extensions
     /// </summary>
     public static class EnumerationExtensions
     {
-        #region Extension Methods
-
         /// <summary>
         /// Checks if an enumerated type contains a value
         /// </summary>
@@ -55,22 +53,29 @@ namespace SharpBlade.Extensions
 
             var type = value.GetType();
 
+            var checkType = typeof(T);
+
+            if (checkType != type)
+                throw new ArgumentException("The enums have to be of the same type", "check");
+
             // determine the values
             var parsed = new Value(check, type);
 
+            var result = false;
+
             if (parsed.Signed.HasValue)
             {
-                return (Convert.ToInt64(value, CultureInfo.InvariantCulture) & (long)parsed.Signed)
+                result = (Convert.ToInt64(value, CultureInfo.InvariantCulture) & (long)parsed.Signed)
                        == (long)parsed.Signed;
             }
 
             if (parsed.Unsigned.HasValue)
             {
-                return (Convert.ToUInt64(value, CultureInfo.InvariantCulture) & (ulong)parsed.Unsigned)
+                result = (Convert.ToUInt64(value, CultureInfo.InvariantCulture) & (ulong)parsed.Unsigned)
                        == (ulong)parsed.Unsigned;
             }
 
-            return false;
+            return result;
         }
 
         /// <summary>
@@ -87,6 +92,11 @@ namespace SharpBlade.Extensions
                 throw new ArgumentNullException("value");
 
             var type = value.GetType();
+
+            var appendType = typeof(T);
+
+            if (appendType != type)
+                throw new ArgumentException("The enums have to be of the same type", "append");
 
             // determine the values
             object result = value;
@@ -118,19 +128,24 @@ namespace SharpBlade.Extensions
         /// </summary>
         /// <typeparam name="T">The type of the value(s) being removed.</typeparam>
         /// <param name="value">The <see cref="Enum" /> to remove values from.</param>
-        /// <param name="toRemove">The value(s) to remove from the enumeration.</param>
+        /// <param name="remove">The value(s) to remove from the enumeration.</param>
         /// <returns>A new enumeration of the specified type with the value(s)
         /// supplied in <c>remove</c> removed.</returns>
-        public static T Remove<T>(this Enum value, T toRemove)
+        public static T Remove<T>(this Enum value, T remove)
         {
             if (value == null)
                 throw new ArgumentNullException("value");
 
-            Type type = value.GetType();
+            var type = value.GetType();
+
+            var removeType = typeof(T);
+
+            if (removeType != type)
+                throw new ArgumentException("The enums have to be of the same type", "remove");
 
             // determine the values
             object result = value;
-            var parsed = new Value(toRemove, type);
+            var parsed = new Value(remove, type);
             if (parsed.Signed.HasValue)
                 result = Convert.ToInt64(value, CultureInfo.InvariantCulture) & ~(long)parsed.Signed;
             else if (parsed.Unsigned.HasValue)
@@ -140,16 +155,12 @@ namespace SharpBlade.Extensions
             return (T)Enum.Parse(type, result.ToString());
         }
 
-        #endregion Extension Methods
-
-        #region Helper Classes
-
         /// <summary>
         /// Class to simplify narrowing values between
         /// a unsigned long and long since either value should
         /// cover any lesser value.
         /// </summary>
-        private class Value
+        private struct Value
         {
             /// <summary>
             /// Signed value (or null).
@@ -164,11 +175,6 @@ namespace SharpBlade.Extensions
             // cached comparisons for tye to use
 
             /// <summary>
-            /// Cached comparison variable for unsigned 32bit integers.
-            /// </summary>
-            private static readonly Type CachedUint32 = typeof(long);
-
-            /// <summary>
             /// Cached comparison variable for unsigned 64bit integers.
             /// </summary>
             private static readonly Type CachedUInt64 = typeof(ulong);
@@ -180,22 +186,22 @@ namespace SharpBlade.Extensions
             /// <param name="type">The type of <c>value</c>.</param>
             public Value(object value, Type type)
             {
-                // make sure it is even an enum to work with
-                if (!type.IsEnum)
-                    throw new ArgumentException("Value provided is not an enumerated type!");
-
-                // then check for the enumerated value
+                // check for the enumerated value
                 var compare = Enum.GetUnderlyingType(type);
 
                 // if this is an unsigned long then the only
                 // value that can hold it would be a ulong
-                if (compare == CachedUint32 || compare == CachedUInt64)
+                if (compare == CachedUInt64)
+                {
+                    Signed = null;
                     Unsigned = Convert.ToUInt64(value, CultureInfo.InvariantCulture);
+                }
                 else // otherwise, a long should cover anything else
+                {
                     Signed = Convert.ToInt64(value, CultureInfo.InvariantCulture);
+                    Unsigned = null;
+                }
             }
         }
-
-        #endregion Helper Classes
     }
 }
