@@ -92,42 +92,32 @@ namespace SharpBlade
         event EventHandler<ZoomEventArgs> Zoom;
 
         /// <summary>
-        /// Gets or sets a value indicating whether this object has been disposed.
+        /// Gets a value indicating whether this object has been disposed.
         /// </summary>
         bool Disposed { get; }
-
-        /// <summary>
-        /// Gets or sets the <see cref="IRenderer" /> instance used to
-        /// manage timed rendering of objects.
-        /// </summary>
-        IRenderer Renderer { get; }
 
         /// <summary>
         /// Disables a gesture from being handled by the touchpad.
         /// </summary>
         /// <param name="gestureTypes">Gesture to disable.</param>
-        [CLSCompliant(false)]
         void DisableGesture(GestureTypes gestureTypes);
 
         /// <summary>
         /// Disables forwarding of a gesture.
         /// </summary>
         /// <param name="gestureTypes">Gesture to disable.</param>
-        [CLSCompliant(false)]
         void DisableOSGesture(GestureTypes gestureTypes);
 
         /// <summary>
         /// Enables a gesture to be handled by the touchpad.
         /// </summary>
         /// <param name="gestureTypes">Gesture to enable.</param>
-        [CLSCompliant(false)]
         void EnableGesture(GestureTypes gestureTypes);
 
         /// <summary>
         /// Enables a gesture to be forwarded to the host operating system.
         /// </summary>
         /// <param name="gestureTypes">Gesture to forward.</param>
-        [CLSCompliant(false)]
         void EnableOSGesture(GestureTypes gestureTypes);
 
         /// <summary>
@@ -135,7 +125,6 @@ namespace SharpBlade
         /// </summary>
         /// <param name="gestureTypes">The gesture type to set.</param>
         /// <param name="enabled">True to enable gesture, false to disable.</param>
-        [CLSCompliant(false)]
         void SetGesture(GestureTypes gestureTypes, bool enabled);
 
         /// <summary>
@@ -143,7 +132,6 @@ namespace SharpBlade
         /// </summary>
         /// <param name="gestureTypes">Gesture to set.</param>
         /// <param name="enabled">True to enable forwarding, false to disable.</param>
-        [CLSCompliant(false)]
         void SetOSGesture(GestureTypes gestureTypes, bool enabled);
     }
 }

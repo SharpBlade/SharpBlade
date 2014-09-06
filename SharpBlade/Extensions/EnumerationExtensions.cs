@@ -180,7 +180,7 @@ namespace SharpBlade.Extensions
             private static readonly Type CachedUInt64 = typeof(ulong);
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="Value" /> class.
+            /// Initializes a new instance of the <see cref="Value" /> struct.
             /// </summary>
             /// <param name="value">The value.</param>
             /// <param name="type">The type of <c>value</c>.</param>
@@ -196,8 +196,9 @@ namespace SharpBlade.Extensions
                     Signed = null;
                     Unsigned = Convert.ToUInt64(value, CultureInfo.InvariantCulture);
                 }
-                else // otherwise, a long should cover anything else
+                else
                 {
+                    // otherwise, a long should cover anything else
                     Signed = Convert.ToInt64(value, CultureInfo.InvariantCulture);
                     Unsigned = null;
                 }

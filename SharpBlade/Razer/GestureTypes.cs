@@ -37,7 +37,6 @@ namespace SharpBlade.Razer
     /// Gesture types supported by the device.
     /// </summary>
     [Flags]
-    [CLSCompliant(false)]
     [SuppressMessage("Microsoft.Usage", "CA2217:DoNotMarkEnumsWithFlags",
         Justification = "This was translated from native code.")]
     public enum GestureTypes

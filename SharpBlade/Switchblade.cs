@@ -267,7 +267,10 @@ namespace SharpBlade
         /// <summary>
         /// Gets the dynamic key manager.
         /// </summary>
-        public IDynamicKeys DynamicKeys { get { return _dynamicKeys; } }
+        public IDynamicKeys DynamicKeys
+        {
+            get { return _dynamicKeys; }
+        }
 
         /// <summary>
         /// Gets or sets the image shown on dynamic keys when disabled.
@@ -279,7 +282,10 @@ namespace SharpBlade
         /// Gets the <see cref="IDisplayStateFile" /> instance associated with this
         /// <see cref="Switchblade" /> object.
         /// </summary>
-        public IDisplayStateFile DisplayStateFile { get { return _displayStateFile; } }
+        public IDisplayStateFile DisplayStateFile
+        {
+            get { return _displayStateFile; }
+        }
 
         /// <summary>
         /// Gets a value indicating whether keyboard capture is enabled or not.
@@ -289,7 +295,10 @@ namespace SharpBlade
         /// <summary>
         /// Gets the touchpad on the keyboard.
         /// </summary>
-        public ITouchpad Touchpad { get { return _touchpad; } }
+        public ITouchpad Touchpad
+        {
+            get { return _touchpad; }
+        }
 
         /// <summary>
         /// Disposes of this <see cref="Switchblade" />.

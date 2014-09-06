@@ -37,6 +37,9 @@ using SharpBlade.Rendering;
 
 namespace SharpBlade
 {
+    /// <summary>
+    /// <see cref="Switchblade" /> interface.
+    /// </summary>
     public interface ISwitchblade : IDisposable
     {
         /// <summary>

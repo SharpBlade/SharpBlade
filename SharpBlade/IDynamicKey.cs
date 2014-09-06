@@ -74,15 +74,9 @@ namespace SharpBlade
         DynamicKeyState State { get; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this object has been disposed.
+        /// Gets a value indicating whether this object has been disposed.
         /// </summary>
         bool Disposed { get; }
-
-        /// <summary>
-        /// Gets or sets the <see cref="IRenderer" /> instance used to
-        /// manage timed rendering of objects.
-        /// </summary>
-        IRenderer Renderer { get; }
 
         /// <summary>
         /// Disables this dynamic key (sets to blank image).

@@ -71,10 +71,7 @@ namespace SharpBlade.Rendering
         /// </summary>
         public bool Active
         {
-            get
-            {
-                return _timer.Enabled;
-            }
+            get { return _timer.Enabled; }
         }
 
         /// <summary>
@@ -99,15 +96,8 @@ namespace SharpBlade.Rendering
         /// </summary>
         public int Interval
         {
-            get
-            {
-                return (int)_timer.Interval;
-            }
-
-            set
-            {
-                _timer.Interval = value;
-            }
+            get { return (int)_timer.Interval; }
+            set { _timer.Interval = value; }
         }
 
         /// <summary>
