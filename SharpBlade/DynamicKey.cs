@@ -201,7 +201,7 @@ namespace SharpBlade
         /// </typeparam>
         /// <param name="renderer">An instance of the <see cref="Renderer{T}" /> class.</param>
         /// <remarks>
-        /// This overload also calls the <see cref="DynamicKeyImageRenderer.Stop" /> method
+        /// This overload also calls the <see cref="Renderer{T}.Stop" /> method
         /// on <see cref="DynamicKeyImageRenderer" /> prior to setting the new renderer and starting it,
         /// to avoid possible collisions.
         /// </remarks>
