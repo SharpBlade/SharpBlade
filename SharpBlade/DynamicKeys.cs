@@ -147,14 +147,14 @@ namespace SharpBlade
         /// Enables a specific dynamic key.
         /// </summary>
         /// <param name="keyType">The key type to enable.</param>
-        /// <param name="callback">Callback called when this key is pressed.</param>
+        /// <param name="callback">Callback called when this key is released.</param>
         /// <param name="image">Image to display on this key when in the UP state.</param>
         /// <param name="replace">True to override this key's previous configuration
         /// if it has already been enabled, otherwise returns current key if already enabled.</param>
         /// <returns>The dynamic key that was enabled.</returns>
         public IDynamicKey EnableDynamicKey(
             DynamicKeyType keyType,
-            EventHandler callback,
+            EventHandler<DynamicKeyEventArgs> callback,
             string image,
             bool replace = false)
         {
@@ -183,7 +183,7 @@ namespace SharpBlade
         /// Enables a specific dynamic key.
         /// </summary>
         /// <param name="keyType">The key type to enable.</param>
-        /// <param name="callback">Callback called when this key is pressed.</param>
+        /// <param name="callback">Callback called when this key is released.</param>
         /// <param name="image">Image to display on this key when in the UP state.</param>
         /// <param name="pressedImage">Image to display on this key when in the DOWN state.</param>
         /// <param name="replace">True to override this key's previous configuration
@@ -191,7 +191,7 @@ namespace SharpBlade
         /// <returns>The dynamic key that was enabled.</returns>
         public IDynamicKey EnableDynamicKey(
             DynamicKeyType keyType,
-            EventHandler callback,
+            EventHandler<DynamicKeyEventArgs> callback,
             string image,
             string pressedImage = null,
             bool replace = false)

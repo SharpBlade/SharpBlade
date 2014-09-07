@@ -31,6 +31,7 @@
 using System;
 using System.Collections.Generic;
 
+using SharpBlade.Events;
 using SharpBlade.Logging;
 using SharpBlade.Razer;
 using SharpBlade.Rendering;
@@ -72,12 +73,12 @@ namespace SharpBlade
         /// <param name="keyType">The type of dynamic key being initialized.</param>
         /// <param name="image">Image to set for this key's depressed state.</param>
         /// <param name="pressedImage">Image to set for this key's pressed state.</param>
-        /// <param name="callback">The function to call when this key is pressed.</param>
+        /// <param name="callback">The function to call when this key is released.</param>
         internal DynamicKey(
             DynamicKeyType keyType,
             string image,
             string pressedImage = null,
-            EventHandler callback = null)
+            EventHandler<DynamicKeyEventArgs> callback = null)
             : base(TargetDisplayMapping[keyType], Razer.Constants.DynamicKeyHeight, Razer.Constants.DynamicKeyWidth)
         {
             _log = LogManager.GetLogger(this);
@@ -102,14 +103,28 @@ namespace SharpBlade
             if (callback != null)
             {
                 _log.Debug("Setting callback");
-                Pressed += callback;
+                Released += callback;
             }
         }
 
         /// <summary>
+        /// Raised when the state of this key changes.
+        /// </summary>
+        /// <remarks>
+        /// This event is raised for <b>every</b> state change, it can
+        /// potentially lead to very frequent calls.
+        /// </remarks>
+        public event EventHandler<DynamicKeyEventArgs> Changed; 
+
+        /// <summary>
         /// Raised when a dynamic key is pressed.
         /// </summary>
-        public event EventHandler Pressed;
+        public event EventHandler<DynamicKeyEventArgs> Pressed;
+
+        /// <summary>
+        /// Raised when this key is released.
+        /// </summary>
+        public event EventHandler<DynamicKeyEventArgs> Released;
 
         /// <summary>
         /// Gets the instance of <see cref="DynamicKeyImageRenderer" /> that
@@ -220,8 +235,12 @@ namespace SharpBlade
         {
             PreviousState = State;
             State = state;
+            OnChanged();
             if (State == DynamicKeyState.Up
                 && (PreviousState == DynamicKeyState.Down || PreviousState == DynamicKeyState.None))
+                OnReleased();
+            else if (State == DynamicKeyState.Down
+                && (PreviousState == DynamicKeyState.Up || PreviousState == DynamicKeyState.None))
                 OnPressed();
         }
 
@@ -232,6 +251,22 @@ namespace SharpBlade
         {
             Images.Stop();
             Images.Image = Switchblade.Instance.DisabledDynamicKeyImagePath;
+        }
+
+        private void OnChanged()
+        {
+            var func = Changed;
+            if (func == null)
+                return;
+
+            try
+            {
+                func(this, new DynamicKeyEventArgs(KeyType, State));
+            }
+            catch (ObjectDisposedException ex)
+            {
+                _log.ErrorFormat("OnChanged: ObjectDisposedException: {0}", ex.Message);
+            }
         }
 
         /// <summary>
@@ -245,11 +280,27 @@ namespace SharpBlade
 
             try
             {
-                func(this, null);
+                func(this, new DynamicKeyEventArgs(KeyType, State));
             }
             catch (ObjectDisposedException ex)
             {
                 _log.ErrorFormat("OnPressed: ObjectDisposedException: {0}", ex.Message);
+            }
+        }
+
+        private void OnReleased()
+        {
+            var func = Released;
+            if (func == null)
+                return;
+
+            try
+            {
+                func(this, new DynamicKeyEventArgs(KeyType, State));
+            }
+            catch (ObjectDisposedException ex)
+            {
+                _log.ErrorFormat("OnReleased: ObjectDisposedException: {0}", ex.Message);
             }
         }
     }

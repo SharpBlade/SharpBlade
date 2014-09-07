@@ -30,6 +30,7 @@
 
 using System;
 
+using SharpBlade.Events;
 using SharpBlade.Razer;
 using SharpBlade.Rendering;
 
@@ -41,9 +42,19 @@ namespace SharpBlade
     public interface IDynamicKey
     {
         /// <summary>
-        /// Raised when a dynamic key is pressed.
+        /// Raised when the state of this key changes.
         /// </summary>
-        event EventHandler Pressed;
+        event EventHandler<DynamicKeyEventArgs> Changed;
+
+        /// <summary>
+        /// Raised when this key is pressed.
+        /// </summary>
+        event EventHandler<DynamicKeyEventArgs> Pressed;
+
+        /// <summary>
+        /// Raised when this key is released.
+        /// </summary>
+        event EventHandler<DynamicKeyEventArgs> Released;
 
         /// <summary>
         /// Gets the instance of <see cref="DynamicKeyImageRenderer" /> that
