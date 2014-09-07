@@ -80,7 +80,7 @@ namespace SharpBlade
             if (HRESULT.RZSB_FAILED(result))
                 throw new NativeCallException("RzSBDynamicKeySetCallback", result);
 
-            _log.Debug("Initializing dynamic key arrays");
+            _log.Debug("Initializing dynamic key array");
 
             _keys = new DynamicKey[Razer.Constants.DynamicKeysCount];
         }
