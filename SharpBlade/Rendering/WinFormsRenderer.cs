@@ -33,6 +33,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Windows.Forms;
 
+using SharpBlade.Annotations;
+
 namespace SharpBlade.Rendering
 {
     /// <summary>
@@ -63,6 +65,7 @@ namespace SharpBlade.Rendering
         /// </summary>
         /// <param name="form">WinForms form to render.</param>
         /// <param name="interval">Interval (in milliseconds) to redraw at.</param>
+        [PublicAPI]
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "This is public.")]
         public WinFormsRenderer(Form form, int interval = 42)
             : this(form, RenderMethod.Polling, interval)

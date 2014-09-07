@@ -31,6 +31,8 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
+using SharpBlade.Annotations;
+
 namespace SharpBlade.Razer
 {
     /// <summary>
@@ -44,6 +46,7 @@ namespace SharpBlade.Razer
         /// <summary>
         /// Invalid or no gesture.
         /// </summary>
+        [UsedImplicitly]
         None = 0x00000000,
 
         /// <summary>

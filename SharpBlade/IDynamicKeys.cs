@@ -30,6 +30,7 @@
 
 using System;
 
+using SharpBlade.Annotations;
 using SharpBlade.Events;
 using SharpBlade.Razer;
 
@@ -43,6 +44,7 @@ namespace SharpBlade
         /// <summary>
         /// Raised when a dynamic key event occurs.
         /// </summary>
+        [PublicAPI]
         event EventHandler<DynamicKeyEventArgs> DynamicKeyEvent;
 
         /// <summary>
@@ -53,12 +55,14 @@ namespace SharpBlade
         /// An instance of <see cref="IDynamicKey" /> if the requested
         /// type has been enabled, otherwise <c>null</c>.
         /// </returns>
+        [PublicAPI]
         IDynamicKey this[DynamicKeyType keyType] { get; }
 
         /// <summary>
         /// Disables a specific dynamic key.
         /// </summary>
         /// <param name="keyType">The key type to disable.</param>
+        [PublicAPI]
         void DisableDynamicKey(DynamicKeyType keyType);
 
         /// <summary>
@@ -69,6 +73,7 @@ namespace SharpBlade
         /// <param name="replace">True to override this key's previous configuration
         /// if it has already been enabled, otherwise returns current key if already enabled.</param>
         /// <returns>The dynamic key that was enabled.</returns>
+        [PublicAPI]
         IDynamicKey EnableDynamicKey(DynamicKeyType keyType, string image, bool replace = false);
 
         /// <summary>
@@ -80,6 +85,7 @@ namespace SharpBlade
         /// <param name="replace">True to override this key's previous configuration
         /// if it has already been enabled, otherwise returns current key if already enabled.</param>
         /// <returns>The dynamic key that was enabled.</returns>
+        [PublicAPI]
         IDynamicKey EnableDynamicKey(
             DynamicKeyType keyType,
             EventHandler<DynamicKeyEventArgs> callback,
@@ -95,6 +101,7 @@ namespace SharpBlade
         /// <param name="replace">True to override this key's previous configuration
         /// if it has already been enabled, otherwise returns current key if already enabled.</param>
         /// <returns>The dynamic key that was enabled.</returns>
+        [PublicAPI]
         IDynamicKey EnableDynamicKey(
             DynamicKeyType keyType,
             string image,
@@ -111,6 +118,7 @@ namespace SharpBlade
         /// <param name="replace">True to override this key's previous configuration
         /// if it has already been enabled, otherwise returns current key if already enabled.</param>
         /// <returns>The dynamic key that was enabled.</returns>
+        [PublicAPI]
         IDynamicKey EnableDynamicKey(
             DynamicKeyType keyType,
             EventHandler<DynamicKeyEventArgs> callback,
@@ -123,6 +131,7 @@ namespace SharpBlade
         /// </summary>
         /// <param name="keyType">The key type to get.</param>
         /// <returns><see cref="DynamicKey" /> object representing the specified key type.</returns>
+        [PublicAPI]
         IDynamicKey GetDynamicKey(DynamicKeyType keyType);
     }
 }

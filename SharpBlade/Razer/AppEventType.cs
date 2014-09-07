@@ -28,6 +28,8 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
+using SharpBlade.Annotations;
+
 namespace SharpBlade.Razer
 {
     /// <summary>
@@ -44,6 +46,7 @@ namespace SharpBlade.Razer
         /// The Switchblade framework has activated the SDK application.
         /// The application can resume its operations and update the Switchblade UI display.
         /// </summary>
+        [UsedImplicitly]
         Activated,
 
         /// <summary>
@@ -51,12 +54,14 @@ namespace SharpBlade.Razer
         /// In this state, the SDK application will not receive any Dynamic Key or Gesture events,
         /// nor will it be able to update the Switchblade displays.
         /// </summary>
+        [UsedImplicitly]
         Deactivated,
 
         /// <summary>
         /// The Switchblade framework has initiated a request to close the application.
         /// The application should perform cleanup and can terminate on its own when done.
         /// </summary>
+        [UsedImplicitly]
         Close,
 
         /// <summary>
@@ -64,6 +69,7 @@ namespace SharpBlade.Razer
         /// This event is always preceded by the <see cref="Close" /> event.
         /// Cleanup should be done there.
         /// </summary>
+        [UsedImplicitly]
         Exit,
 
         /// <summary>

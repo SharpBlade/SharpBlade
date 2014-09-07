@@ -41,6 +41,7 @@ using log4net.Config;
 
 using Microsoft.Win32.SafeHandles;
 
+using SharpBlade.Annotations;
 using SharpBlade.Native.WinAPI;
 
 #else
@@ -52,6 +53,8 @@ using System.Xml.Linq;
 
 using log4net;
 using log4net.Config;
+
+using SharpBlade.Annotations;
 
 #endif
 
@@ -84,7 +87,7 @@ namespace SharpBlade.Logging
         /// <param name="directory">The directory to check for log files.</param>
         /// <remarks>This will delete ALL files in the specified directory,
         /// regardless of file type.</remarks>
-        // ReSharper disable once UnusedMember.Global
+        [PublicAPI]
         public static void ClearOldLogs(int daysOld = 7, string directory = "logs")
         {
             var log = GetLogger(typeof(LogManager));
@@ -123,7 +126,7 @@ namespace SharpBlade.Logging
         /// Destroys an open console, usually the one created by <see cref="SetupConsole" />.
         /// </summary>
         /// <remarks>Method body only compiled on DEBUG.</remarks>
-        // ReSharper disable once UnusedMember.Global
+        [PublicAPI]
         public static void DestroyConsole()
         {
 #if DEBUG

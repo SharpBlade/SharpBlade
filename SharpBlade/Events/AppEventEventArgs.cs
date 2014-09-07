@@ -30,6 +30,7 @@
 
 using System;
 
+using SharpBlade.Annotations;
 using SharpBlade.Razer;
 
 namespace SharpBlade.Events
@@ -70,6 +71,7 @@ namespace SharpBlade.Events
         /// <summary>
         /// Gets the event type.
         /// </summary>
+        [PublicAPI]
         public AppEventType EventType
         {
             get { return _eventType; }
@@ -79,6 +81,7 @@ namespace SharpBlade.Events
         /// Gets the first DWORD (<c>uint</c>) parameter passed to the app event callback.
         /// </summary>
         [CLSCompliant(false)]
+        [PublicAPI]
         public uint FirstParameter
         {
             get { return _firstParam; }
@@ -88,6 +91,7 @@ namespace SharpBlade.Events
         /// Gets the second DWORD (<c>uint</c>) parameter passed to the app event callback.
         /// </summary>
         [CLSCompliant(false)]
+        [PublicAPI]
         public uint SecondParameter
         {
             get { return _secondParam; }

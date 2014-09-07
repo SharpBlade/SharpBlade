@@ -28,6 +28,8 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
+using SharpBlade.Annotations;
+
 namespace SharpBlade.Razer
 {
     /// <summary>
@@ -53,11 +55,13 @@ namespace SharpBlade.Razer
         /// <summary>
         /// Being held.
         /// </summary>
+        [UsedImplicitly]
         Hold,
 
         /// <summary>
         /// Invalid key state.
         /// </summary>
+        [UsedImplicitly]
         Invalid
     }
 }

@@ -31,6 +31,7 @@
 using System;
 using System.Windows.Forms;
 
+using SharpBlade.Annotations;
 using SharpBlade.Events;
 using SharpBlade.Razer;
 using SharpBlade.Rendering;
@@ -45,26 +46,31 @@ namespace SharpBlade
         /// <summary>
         /// Raised when an app event occurs.
         /// </summary>
+        [PublicAPI]
         event EventHandler<AppEventEventArgs> AppEvent;
 
         /// <summary>
         /// Raised when a keyboard char event occurs.
         /// </summary>
+        [PublicAPI]
         event EventHandler<KeyboardCharEventArgs> KeyboardCharTyped;
 
         /// <summary>
         /// Raised when a keyboard key is pressed.
         /// </summary>
+        [PublicAPI]
         event EventHandler<KeyboardKeyEventArgs> KeyboardKeyDown;
 
         /// <summary>
         /// Raised when a keyboard key is released.
         /// </summary>
+        [PublicAPI]
         event EventHandler<KeyboardKeyEventArgs> KeyboardKeyUp;
 
         /// <summary>
         /// Raised when a keyboard raw event occurs.
         /// </summary>
+        [PublicAPI]
         event EventHandler<KeyboardRawEventArgs> KeyboardRawEvent;
 
         /// <summary>
@@ -73,44 +79,52 @@ namespace SharpBlade
         /// have been called.
         /// </summary>
         /// <remarks>Defaults to <see cref="Constants.BlankTouchpadImage" /></remarks>
+        [PublicAPI]
         string BlankTouchpadImagePath { get; set; }
 
         /// <summary>
         /// Gets a structure describing the SDK and hardware capabilities of the system.
         /// </summary>
+        [PublicAPI]
         Capabilities Capabilities { get; }
 
         /// <summary>
         /// Gets the dynamic key manager.
         /// </summary>
+        [PublicAPI]
         IDynamicKeys DynamicKeys { get; }
 
         /// <summary>
         /// Gets or sets the image shown on dynamic keys when disabled.
         /// </summary>
         /// <remarks>Defaults to <see cref="Constants.DisabledDynamicKeyImage" /></remarks>
+        [PublicAPI]
         string DisabledDynamicKeyImagePath { get; set; }
 
         /// <summary>
         /// Gets the <see cref="IDisplayStateFile" /> instance associated with this
         /// <see cref="Switchblade" /> object.
         /// </summary>
+        [PublicAPI]
         IDisplayStateFile DisplayStateFile { get; }
 
         /// <summary>
         /// Gets a value indicating whether keyboard capture is enabled or not.
         /// </summary>
+        [PublicAPI]
         bool KeyboardCapture { get; }
 
         /// <summary>
         /// Gets the touchpad on the keyboard.
         /// </summary>
+        [PublicAPI]
         ITouchpad Touchpad { get; }
 
         /// <summary>
         /// Enables or disables keyboard capture.
         /// </summary>
         /// <param name="enabled">Whether or not to enable keyboard capture.</param>
+        [PublicAPI]
         void SetKeyboardCapture(bool enabled);
 
         /// <summary>
@@ -119,6 +133,7 @@ namespace SharpBlade
         /// <param name="control">THe control to forward input to.</param>
         /// <param name="releaseOnEnter">If true, keyboard capture will cease when the enter key is pressed,
         /// otherwise, <see cref="Switchblade.SetKeyboardCapture" /> has to be called explicitly with false as the argument.</param>
+        [PublicAPI]
         void StartWinFormsControlKeyboardCapture(Control control, bool releaseOnEnter = true);
 
         /// <summary>
@@ -127,11 +142,13 @@ namespace SharpBlade
         /// <param name="control">The control to forward input to.</param>
         /// <param name="releaseOnEnter">If true, keyboard capture will cease when the enter key is pressed,
         /// otherwise, <see cref="Switchblade.SetKeyboardCapture" /> has to be called explicitly with false as the argument.</param>
+        [PublicAPI]
         void StartWpfControlKeyboardCapture(System.Windows.Controls.Control control, bool releaseOnEnter = true);
 
         /// <summary>
         /// Stops all Razer interaction.
         /// </summary>
+        [PublicAPI]
         void Stop();
     }
 }

@@ -38,6 +38,6 @@ namespace SharpBlade.Razer
         /// <summary>
         /// RGB565 pixel format.
         /// </summary>
-        RGB565 = 0
+        Rgb565 = 0
     }
 }

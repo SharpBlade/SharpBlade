@@ -28,6 +28,7 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
+using SharpBlade.Annotations;
 using SharpBlade.Native;
 using SharpBlade.Razer;
 
@@ -54,6 +55,7 @@ namespace SharpBlade.Rendering
         /// <param name="keyType">The type of DK to render to.</param>
         /// <param name="image">The image to render (both states).</param>
         /// <param name="interval">The interval (in milliseconds) at which to refresh the image.</param>
+        [PublicAPI]
         public DynamicKeyImageRenderer(DynamicKeyType keyType, string image, int interval = 42)
             : this(keyType, image, image, interval)
         {
@@ -139,6 +141,7 @@ namespace SharpBlade.Rendering
         /// Gets a value indicating whether the same image file is rendered
         /// for both dynamic key states.
         /// </summary>
+        [PublicAPI]
         public bool SingleFile
         {
             get
@@ -152,6 +155,7 @@ namespace SharpBlade.Rendering
         /// </summary>
         /// <param name="keyType">The dynamic key to modify.</param>
         /// <param name="image">Image file for both states.</param>
+        [PublicAPI]
         public static void Draw(DynamicKeyType keyType, string image)
         {
             Draw(keyType, image, image);

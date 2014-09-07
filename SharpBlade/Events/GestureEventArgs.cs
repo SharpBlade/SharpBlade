@@ -31,6 +31,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
+using SharpBlade.Annotations;
 using SharpBlade.Razer;
 
 namespace SharpBlade.Events
@@ -86,6 +87,7 @@ namespace SharpBlade.Events
         /// Gets the type of gesture.
         /// </summary>
         [CLSCompliant(false)]
+        [PublicAPI]
         public GestureTypes GestureTypes
         {
             get { return _gestureTypes; }
@@ -95,6 +97,7 @@ namespace SharpBlade.Events
         /// Gets the gesture-specific parameter.
         /// </summary>
         [CLSCompliant(false)]
+        [PublicAPI]
         public uint Parameter
         {
             get { return _parameter; }
@@ -104,6 +107,7 @@ namespace SharpBlade.Events
         /// Gets the X position of the gesture.
         /// </summary>
         [CLSCompliant(false)]
+        [PublicAPI]
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "X",
             Justification = "The naming is acceptable for this simple property.")]
         public ushort X
@@ -115,6 +119,7 @@ namespace SharpBlade.Events
         /// Gets the Y position of the gesture.
         /// </summary>
         [CLSCompliant(false)]
+        [PublicAPI]
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Y",
             Justification = "The naming is acceptable for this simple property.")]
         public ushort Y
@@ -126,6 +131,7 @@ namespace SharpBlade.Events
         /// Gets the Z position of the gesture.
         /// </summary>
         [CLSCompliant(false)]
+        [PublicAPI]
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Z",
             Justification = "The naming is acceptable for this simple property.")]
         public ushort Z

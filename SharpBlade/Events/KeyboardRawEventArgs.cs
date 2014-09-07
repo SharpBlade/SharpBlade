@@ -30,6 +30,8 @@
 
 using System;
 
+using SharpBlade.Annotations;
+
 namespace SharpBlade.Events
 {
     /// <summary>
@@ -71,6 +73,7 @@ namespace SharpBlade.Events
         /// Gets the data associated with the keyboard event.
         /// </summary>
         [CLSCompliant(false)]
+        [PublicAPI]
         public UIntPtr Data
         {
             get { return _data; }
@@ -79,6 +82,7 @@ namespace SharpBlade.Events
         /// <summary>
         /// Gets the modifiers applied during key press.
         /// </summary>
+        [PublicAPI]
         public IntPtr Modifiers
         {
             get { return _modifiers; }
@@ -88,6 +92,7 @@ namespace SharpBlade.Events
         /// Gets the type of event (KeyUp, Char, KeyDown).
         /// </summary>
         [CLSCompliant(false)]
+        [PublicAPI]
         public uint EventType
         {
             get { return _eventType; }

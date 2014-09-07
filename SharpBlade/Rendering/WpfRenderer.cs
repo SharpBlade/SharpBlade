@@ -37,6 +37,7 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
+using SharpBlade.Annotations;
 using SharpBlade.Integration;
 
 namespace SharpBlade.Rendering
@@ -75,6 +76,7 @@ namespace SharpBlade.Rendering
         /// Trying to call <see cref="Draw()" />, <see cref="Start" />, or <see cref="Stop"/>
         /// while <see cref="Renderer{T}.Target" /> is null will cause a runtime error.
         /// </remarks>
+        [PublicAPI]
         public WpfRenderer(Window window, int interval = 42)
             : this(window, RenderMethod.Polling, interval)
         {
@@ -138,17 +140,11 @@ namespace SharpBlade.Rendering
         /// <summary>
         /// Gets or sets the WPF window to render.
         /// </summary>
+        [PublicAPI]
         public Window Window
         {
-            get
-            {
-                return _window;
-            }
-
-            set
-            {
-                _window = value;
-            }
+            get { return _window; }
+            set { _window = value; }
         }
 
         /// <summary>

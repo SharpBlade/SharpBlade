@@ -28,6 +28,8 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
+using SharpBlade.Annotations;
+
 namespace SharpBlade.Razer
 {
     /// <summary>
@@ -38,6 +40,7 @@ namespace SharpBlade.Razer
         /// <summary>
         /// Color depth of the device's display areas.
         /// </summary>
+        [PublicAPI]
         public const int DisplayColorDepth = 16;
 
         /// <summary>
@@ -50,6 +53,7 @@ namespace SharpBlade.Razer
         /// <summary>
         /// Size of image data for one dynamic key.
         /// </summary>
+        [PublicAPI]
         public const int DynamicKeyImageDataSize = DynamicKeyWidth * DynamicKeyHeight * sizeof(ushort);
 
         /// <summary>
@@ -77,6 +81,7 @@ namespace SharpBlade.Razer
         /// <summary>
         /// Max string length.
         /// </summary>
+        [PublicAPI]
         public const int MaxStringLength = 260;
 
         /// <summary>
@@ -87,11 +92,13 @@ namespace SharpBlade.Razer
         /// <summary>
         /// Invalid pixel format.
         /// </summary>
+        [PublicAPI]
         public const int PixelFormatInvalid = 0;
 
         /// <summary>
         /// RGB565 pixel format, used by standard SwitchBlade devices.
         /// </summary>
+        [PublicAPI]
         public const int PixelFormatRgb565 = 1;
 
         /// <summary>
@@ -102,6 +109,7 @@ namespace SharpBlade.Razer
         /// <summary>
         /// Size of image data to cover the touchpad.
         /// </summary>
+        [PublicAPI]
         public const int TouchpadImageDataSize = TouchpadWidth * TouchpadHeight * sizeof(ushort);
 
         /// <summary>

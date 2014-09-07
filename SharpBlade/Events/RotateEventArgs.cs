@@ -30,6 +30,8 @@
 
 using System;
 
+using SharpBlade.Annotations;
+
 namespace SharpBlade.Events
 {
     /// <summary>
@@ -55,6 +57,7 @@ namespace SharpBlade.Events
         /// <summary>
         /// Gets the direction of the rotation.
         /// </summary>
+        [PublicAPI]
         public RotateDirection Direction
         {
             get { return _direction; }

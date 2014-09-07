@@ -30,6 +30,7 @@
 
 using System;
 
+using SharpBlade.Annotations;
 using SharpBlade.Razer;
 
 namespace SharpBlade.Events
@@ -64,6 +65,7 @@ namespace SharpBlade.Events
         /// <summary>
         /// Gets the direction of the flick.
         /// </summary>
+        [PublicAPI]
         public Direction Direction
         {
             get { return _direction; }
@@ -72,6 +74,7 @@ namespace SharpBlade.Events
         /// <summary>
         /// Gets the number of touch points.
         /// </summary>
+        [PublicAPI]
         [CLSCompliant(false)]
         public uint TouchpointCount
         {

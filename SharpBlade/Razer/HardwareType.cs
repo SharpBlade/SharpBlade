@@ -28,6 +28,8 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
+using SharpBlade.Annotations;
+
 namespace SharpBlade.Razer
 {
     /// <summary>
@@ -38,16 +40,19 @@ namespace SharpBlade.Razer
         /// <summary>
         /// Invalid hardware.
         /// </summary>
+        [UsedImplicitly]
         Invalid = 0,
 
         /// <summary>
         /// SwitchBlade device.
         /// </summary>
+        [UsedImplicitly]
         Switchblade,
 
         /// <summary>
         /// Unknown device type.
         /// </summary>
+        [UsedImplicitly]
         Undefined
     }
 }

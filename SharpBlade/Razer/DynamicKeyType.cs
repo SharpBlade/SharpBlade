@@ -28,6 +28,8 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
+using SharpBlade.Annotations;
+
 namespace SharpBlade.Razer
 {
     /// <summary>
@@ -38,6 +40,7 @@ namespace SharpBlade.Razer
         /// <summary>
         /// None of the keys.
         /// </summary>
+        [UsedImplicitly]
         None = 0,
 
         /// <summary>
@@ -93,11 +96,13 @@ namespace SharpBlade.Razer
         /// <summary>
         /// Invalid dynamic key.
         /// </summary>
+        [UsedImplicitly]
         Invalid,
 
         /// <summary>
         /// Number of keys available.
         /// </summary>
+        [PublicAPI]
         Count = 10
     }
 }

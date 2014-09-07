@@ -28,6 +28,8 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
+using SharpBlade.Annotations;
+
 namespace SharpBlade.Razer
 {
     /// <summary>
@@ -38,31 +40,37 @@ namespace SharpBlade.Razer
         /// <summary>
         /// No direction.
         /// </summary>
+        [UsedImplicitly]
         None = 0,
 
         /// <summary>
         /// To the left.
         /// </summary>
+        [UsedImplicitly]
         Left,
 
         /// <summary>
         /// To the right.
         /// </summary>
+        [UsedImplicitly]
         Right,
 
         /// <summary>
         /// Upwards (smaller Y).
         /// </summary>
+        [UsedImplicitly]
         Up,
 
         /// <summary>
         /// Downwards (larger Y).
         /// </summary>
+        [UsedImplicitly]
         Down,
 
         /// <summary>
         /// Invalid direction.
         /// </summary>
+        [UsedImplicitly]
         Invalid
     }
 }

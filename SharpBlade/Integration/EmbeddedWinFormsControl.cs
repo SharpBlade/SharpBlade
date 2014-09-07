@@ -32,6 +32,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 
+using SharpBlade.Annotations;
+
 namespace SharpBlade.Integration
 {
     /// <summary>
@@ -56,6 +58,7 @@ namespace SharpBlade.Integration
         /// </summary>
         /// <param name="host">The WindowsFormsHost object containing the control.</param>
         /// <param name="control">The WinForms control contained in the host.</param>
+        [PublicAPI]
         public EmbeddedWinFormsControl(WindowsFormsHost host, Control control)
         {
             _host = host;

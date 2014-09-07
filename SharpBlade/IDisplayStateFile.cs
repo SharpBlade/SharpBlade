@@ -30,6 +30,8 @@
 
 using System;
 
+using SharpBlade.Annotations;
+
 namespace SharpBlade
 {
     /// <summary>
@@ -40,6 +42,7 @@ namespace SharpBlade
         /// <summary>
         /// Gets a value indicating whether this instance of <see cref="DisplayStateFile" /> has been disposed.
         /// </summary>
+        [PublicAPI]
         bool Disposed { get; }
 
         /// <summary>
@@ -60,6 +63,7 @@ namespace SharpBlade
         /// the workaround is needed or not.
         /// </para>
         /// </remarks>
+        [PublicAPI]
         bool Enabled { get; set; }
 
         /// <summary>
@@ -74,6 +78,7 @@ namespace SharpBlade
         /// // This will enable the SharpBlade workaround if the app is not compatible with Razer's code.
         /// Switchblade.Instance.DisplayStateFile.Enabled = Switchblade.Instance.DisplayStateFile.WorkaroundRequired;
         /// </example>
+        [PublicAPI]
         bool WorkaroundRequired { get; }
 
         /// <summary>
@@ -83,6 +88,7 @@ namespace SharpBlade
         /// This may have unintended side-effects when run in an app that
         /// is already compatible with Razer's existing generation code.
         /// </remarks>
+        [PublicAPI]
         void Fix();
     }
 }

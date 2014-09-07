@@ -30,6 +30,7 @@
 
 using System;
 
+using SharpBlade.Annotations;
 using SharpBlade.Razer;
 
 namespace SharpBlade.Events
@@ -64,6 +65,7 @@ namespace SharpBlade.Events
         /// <summary>
         /// Gets the dynamic key that changed.
         /// </summary>
+        [PublicAPI]
         public DynamicKeyType KeyType
         {
             get { return _keyType; }
@@ -72,6 +74,7 @@ namespace SharpBlade.Events
         /// <summary>
         /// Gets the new key state.
         /// </summary>
+        [PublicAPI]
         public DynamicKeyState State
         {
             get { return _state; }

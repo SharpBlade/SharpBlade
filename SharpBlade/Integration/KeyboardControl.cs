@@ -33,6 +33,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Input;
 
+using SharpBlade.Logging;
 using SharpBlade.Native.WinAPI;
 
 namespace SharpBlade.Integration
@@ -48,6 +49,11 @@ namespace SharpBlade.Integration
         /// been pressed.
         /// </summary>
         internal readonly bool ReleaseOnEnter;
+
+        /// <summary>
+        /// The shared <see cref="log4net.ILog" /> instance for this class.
+        /// </summary>
+        private static readonly log4net.ILog Log = LogManager.GetLogger(typeof(KeyboardControl));
 
         /// <summary>
         /// The WinForms control that receives keyboard input.
@@ -186,14 +192,22 @@ namespace SharpBlade.Integration
             // Conversion magic, don't blink!
             var wpfKey = KeyInterop.KeyFromVirtualKey((int)key);
 
+            var source = PresentationSource.FromVisual(_wpfControl);
+
+            if (source == null)
+            {
+                Log.Error("SendWPFKeyDown: source is null");
+                return;
+            }
+
             _wpfControl.RaiseEvent(
-                new KeyEventArgs(Keyboard.PrimaryDevice, PresentationSource.FromVisual(_wpfControl), 0, wpfKey)
+                new KeyEventArgs(Keyboard.PrimaryDevice, source, 0, wpfKey)
                 {
                     RoutedEvent = Keyboard.PreviewKeyDownEvent
                 });
 
             _wpfControl.RaiseEvent(
-                new KeyEventArgs(Keyboard.PrimaryDevice, PresentationSource.FromVisual(_wpfControl), 1, wpfKey)
+                new KeyEventArgs(Keyboard.PrimaryDevice, source, 1, wpfKey)
                 {
                     RoutedEvent = Keyboard.KeyDownEvent
                 });
@@ -208,14 +222,22 @@ namespace SharpBlade.Integration
             // Conversion magic, don't blink!
             var wpfKey = KeyInterop.KeyFromVirtualKey((int)key);
 
+            var source = PresentationSource.FromVisual(_wpfControl);
+
+            if (source == null)
+            {
+                Log.Error("SendWPFKeyUp: source is null");
+                return;
+            }
+
             _wpfControl.RaiseEvent(
-                new KeyEventArgs(Keyboard.PrimaryDevice, PresentationSource.FromVisual(_wpfControl), 0, wpfKey)
+                new KeyEventArgs(Keyboard.PrimaryDevice, source, 0, wpfKey)
                 {
                     RoutedEvent = Keyboard.PreviewKeyUpEvent
                 });
 
             _wpfControl.RaiseEvent(
-                new KeyEventArgs(Keyboard.PrimaryDevice, PresentationSource.FromVisual(_wpfControl), 1, wpfKey)
+                new KeyEventArgs(Keyboard.PrimaryDevice, source, 1, wpfKey)
                 {
                     RoutedEvent = Keyboard.KeyUpEvent
                 });

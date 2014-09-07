@@ -32,6 +32,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Timers;
 
+using SharpBlade.Annotations;
+
 namespace SharpBlade.Rendering
 {
     /// <summary>
@@ -77,6 +79,7 @@ namespace SharpBlade.Rendering
         /// <summary>
         /// Gets or sets the image which this image renderer is drawing.
         /// </summary>
+        [PublicAPI]
         public virtual string Image
         {
             get

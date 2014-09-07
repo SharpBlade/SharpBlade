@@ -34,6 +34,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Runtime.InteropServices;
 
+using SharpBlade.Annotations;
+
 namespace SharpBlade.Razer
 {
     /// <summary>
@@ -108,32 +110,25 @@ namespace SharpBlade.Razer
         [CLSCompliant(false)]
         public uint BEVersion
         {
-            get
-            {
-                return _beVersion;
-            }
+            get { return _beVersion; }
         }
 
         /// <summary>
         /// Gets the size of each dynamic key.
         /// </summary>
+        [PublicAPI]
         public Point DynamicKeySize
         {
-            get
-            {
-                return _dynamicKeySize;
-            }
+            get { return _dynamicKeySize; }
         }
 
         /// <summary>
         /// Gets the arrangement of the dynamic keys.
         /// </summary>
+        [PublicAPI]
         public Point DynamicKeyArrangement
         {
-            get
-            {
-                return _dynamicKeyArrangement;
-            }
+            get { return _dynamicKeyArrangement; }
         }
 
         /// <summary>
@@ -141,21 +136,16 @@ namespace SharpBlade.Razer
         /// </summary>
         public byte DynamicKeyCount
         {
-            get
-            {
-                return _numDynamicKeys;
-            }
+            get { return _numDynamicKeys; }
         }
 
         /// <summary>
         /// Gets the type of device that is currently connected.
         /// </summary>
+        [PublicAPI]
         public HardwareType HardwareType
         {
-            get
-            {
-                return _hardwareType;
-            }
+            get { return _hardwareType; }
         }
 
         /// <summary>
@@ -163,24 +153,20 @@ namespace SharpBlade.Razer
         /// </summary>
         /// <remarks>Contains <see cref="SurfaceCount" /> entries.</remarks>
         [CLSCompliant(false)]
+        [PublicAPI]
         public IList<uint> Pixelformat
         {
-            get
-            {
-                return _pixelformat;
-            }
+            get { return _pixelformat; }
         }
 
         /// <summary>
         /// Gets the surface geometry of each surface.
         /// </summary>
         /// <remarks>Contains <see cref="SurfaceCount" /> entries.</remarks>
+        [PublicAPI]
         public IList<Point> Surfacegeometry
         {
-            get
-            {
-                return _surfacegeometry;
-            }
+            get { return _surfacegeometry; }
         }
 
         /// <summary>
@@ -189,10 +175,7 @@ namespace SharpBlade.Razer
         [CLSCompliant(false)]
         public uint SurfaceCount
         {
-            get
-            {
-                return _numSurfaces;
-            }
+            get { return _numSurfaces; }
         }
 
         /// <summary>
@@ -201,10 +184,7 @@ namespace SharpBlade.Razer
         [CLSCompliant(false)]
         public uint Version
         {
-            get
-            {
-                return _version;
-            }
+            get { return _version; }
         }
 
         /// <summary>

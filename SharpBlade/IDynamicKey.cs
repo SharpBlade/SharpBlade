@@ -30,6 +30,7 @@
 
 using System;
 
+using SharpBlade.Annotations;
 using SharpBlade.Events;
 using SharpBlade.Razer;
 using SharpBlade.Rendering;
@@ -44,16 +45,19 @@ namespace SharpBlade
         /// <summary>
         /// Raised when the state of this key changes.
         /// </summary>
+        [PublicAPI]
         event EventHandler<DynamicKeyEventArgs> Changed;
 
         /// <summary>
         /// Raised when this key is pressed.
         /// </summary>
+        [PublicAPI]
         event EventHandler<DynamicKeyEventArgs> Pressed;
 
         /// <summary>
         /// Raised when this key is released.
         /// </summary>
+        [PublicAPI]
         event EventHandler<DynamicKeyEventArgs> Released;
 
         /// <summary>
@@ -67,31 +71,37 @@ namespace SharpBlade
         /// switch back and forth between different images or bitmaps,
         /// due to two different renderers fighting against each other.
         /// </remarks>
+        [PublicAPI]
         DynamicKeyImageRenderer Images { get; }
 
         /// <summary>
         /// Gets the <see cref="DynamicKeyType" /> of this key.
         /// </summary>
+        [PublicAPI]
         DynamicKeyType KeyType { get; }
 
         /// <summary>
         /// Gets the previous state of this key.
         /// </summary>
+        [PublicAPI]
         DynamicKeyState PreviousState { get; }
 
         /// <summary>
         /// Gets the current state of this key.
         /// </summary>
+        [PublicAPI]
         DynamicKeyState State { get; }
 
         /// <summary>
         /// Gets a value indicating whether this object has been disposed.
         /// </summary>
+        [PublicAPI]
         bool Disposed { get; }
 
         /// <summary>
         /// Disables this dynamic key (sets to blank image).
         /// </summary>
+        [PublicAPI]
         void Disable();
 
         /// <summary>
@@ -99,6 +109,7 @@ namespace SharpBlade
         /// </summary>
         /// <param name="image">Image for the UP state.</param>
         /// <param name="downImage">Image for the DOWN state.</param>
+        [PublicAPI]
         void Draw(string image, string downImage);
 
         /// <summary>
@@ -107,6 +118,7 @@ namespace SharpBlade
         /// <param name="image">Path to UP image.</param>
         /// <param name="downImage">Path to DOWN image.</param>
         /// <param name="interval">The interval (in milliseconds) at which to refresh the images.</param>
+        [PublicAPI]
         void Set(string image, string downImage, int interval = 42);
     }
 }

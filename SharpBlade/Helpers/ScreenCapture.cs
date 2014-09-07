@@ -30,7 +30,6 @@
 
 using System;
 using System.Drawing;
-using System.Drawing.Imaging;
 
 using SharpBlade.Logging;
 using SharpBlade.Native.WinAPI;
@@ -38,34 +37,11 @@ using SharpBlade.Native.WinAPI;
 namespace SharpBlade.Helpers
 {
     /// <summary>
-    /// Provides functions to capture the entire screen, or a particular window, and save it to a file.
+    /// Provides functions to capture screen regions,
+    /// or a particular window to an <see cref="Image" /> object.
     /// </summary>
-    public static class ScreenCapture
+    internal static class ScreenCapture
     {
-        /// <summary>
-        /// Creates an Image object containing a screen shot of the entire desktop.
-        /// </summary>
-        /// <returns>Image object of desktop screenshot.</returns>
-        public static Image CaptureScreen()
-        {
-            return CaptureWindow(User32.NativeMethods.GetDesktopWindow());
-        }
-
-        /// <summary>
-        /// Captures a screen shot of the entire desktop, and saves it to a file
-        /// </summary>
-        /// <param name="fileName">
-        /// Filename to save screenshot to.
-        /// </param>
-        /// <param name="format">
-        /// Image format to save in.
-        /// </param>
-        public static void CaptureScreenToFile(string fileName, ImageFormat format)
-        {
-            var img = CaptureScreen();
-            img.Save(fileName, format);
-        }
-
         /// <summary>
         /// Creates an Image object containing a screen shot of a specific window.
         /// </summary>
@@ -75,10 +51,10 @@ namespace SharpBlade.Helpers
         /// <returns>
         /// Image object of a specific window.
         /// </returns>
-        public static Image CaptureWindow(IntPtr handle)
+        internal static Image CaptureWindow(IntPtr handle)
         {
             // get te hDC of the target window
-            IntPtr hdcSrc = User32.NativeMethods.GetWindowDC(handle);
+            var hdcSrc = User32.NativeMethods.GetWindowDC(handle);
 
             // get the size
             var windowRect = new User32.Rect();
@@ -117,24 +93,6 @@ namespace SharpBlade.Helpers
             // free up the Bitmap object
             GDI32.NativeMethods.DeleteObject(bitmapHandle);
             return img;
-        }
-
-        /// <summary>
-        /// Captures a screen shot of a specific window, and saves it to a file
-        /// </summary>
-        /// <param name="handle">
-        /// Handle of window to capture.
-        /// </param>
-        /// <param name="fileName">
-        /// Filename to save the captured image to.
-        /// </param>
-        /// <param name="format">
-        /// Image format to save image in.
-        /// </param>
-        public static void CaptureWindowToFile(IntPtr handle, string fileName, ImageFormat format)
-        {
-            var img = CaptureWindow(handle);
-            img.Save(fileName, format);
         }
     }
 }

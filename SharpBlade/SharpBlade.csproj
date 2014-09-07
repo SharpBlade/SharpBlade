@@ -116,6 +116,7 @@
     <Compile Include="Native\WinAPI\GDI32.cs" />
     <Compile Include="Native\WinAPI\Kernel32.cs" />
     <Compile Include="Native\WinAPI\User32.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DynamicKeyException.cs" />
     <Compile Include="Razer\DynamicKeyCallback.cs" />
@@ -131,7 +132,6 @@
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Rendering\Renderer{T}.cs" />
     <Compile Include="Rendering\RenderMethod.cs" />
-    <Compile Include="Rendering\RenderMethodNotSupportedException.cs" />
     <Compile Include="Rendering\RenderTarget.cs" />
     <Compile Include="Rendering\RenderTargetNotCompatibleException.cs" />
     <Compile Include="Rendering\TouchpadImageRenderer.cs" />

@@ -30,6 +30,8 @@
 
 using System;
 
+using SharpBlade.Annotations;
+
 namespace SharpBlade.Events
 {
     /// <summary>
@@ -56,6 +58,7 @@ namespace SharpBlade.Events
         /// <summary>
         /// Gets the character that was pressed.
         /// </summary>
+        [PublicAPI]
         public char Character
         {
             get { return _character; }

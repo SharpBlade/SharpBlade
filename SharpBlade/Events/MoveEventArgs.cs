@@ -31,6 +31,8 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
+using SharpBlade.Annotations;
+
 namespace SharpBlade.Events
 {
     /// <summary>
@@ -68,6 +70,7 @@ namespace SharpBlade.Events
         /// Gets the X-coordinate of the touch point.
         /// </summary>
         [CLSCompliant(false)]
+        [PublicAPI]
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "X",
             Justification = "The naming is acceptable for this simple property.")]
         public ushort X
@@ -79,6 +82,7 @@ namespace SharpBlade.Events
         /// Gets the Y-coordinate of the touch point.
         /// </summary>
         [CLSCompliant(false)]
+        [PublicAPI]
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Y",
             Justification = "The naming is acceptable for this simple property.")]
         public ushort Y

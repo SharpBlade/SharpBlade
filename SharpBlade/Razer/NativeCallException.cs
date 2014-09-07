@@ -34,6 +34,7 @@ using System.Globalization;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 
+using SharpBlade.Annotations;
 using SharpBlade.Native;
 
 namespace SharpBlade.Razer
@@ -90,6 +91,7 @@ namespace SharpBlade.Razer
         /// <summary>
         /// Gets the name of the native function that failed.
         /// </summary>
+        [PublicAPI]
         public string Function
         {
             get

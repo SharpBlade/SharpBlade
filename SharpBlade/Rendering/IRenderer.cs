@@ -30,6 +30,8 @@
 
 using System;
 
+using SharpBlade.Annotations;
+
 namespace SharpBlade.Rendering
 {
     /// <summary>
@@ -41,17 +43,20 @@ namespace SharpBlade.Rendering
         /// Gets a value indicating whether this renderer is currently
         /// in an active state (redrawing based on a timer or event).
         /// </summary>
+        [PublicAPI]
         bool Active { get; }
 
         /// <summary>
         /// Gets or sets the interval (in milliseconds) used for the redraw timer.
         /// </summary>
+        [PublicAPI]
         int Interval { get; set; }
 
         /// <summary>
         /// Force a redraw of the object associated with this
         /// <see cref="IRenderer" /> to the render target.
         /// </summary>
+        [PublicAPI]
         void Draw();
 
         /// <summary>
@@ -76,6 +81,7 @@ namespace SharpBlade.Rendering
         /// Gets the <typeparamref name="T" /> which this <see cref="IRenderer{T}" />
         /// is rendering to.
         /// </summary>
+        [PublicAPI]
         T Target { get; }
     }
 }

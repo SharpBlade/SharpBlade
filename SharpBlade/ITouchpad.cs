@@ -30,6 +30,7 @@
 
 using System;
 
+using SharpBlade.Annotations;
 using SharpBlade.Events;
 using SharpBlade.Razer;
 
@@ -43,62 +44,74 @@ namespace SharpBlade
         /// <summary>
         /// Raised when a finger(s?) flick on the touchpad.
         /// </summary>
+        [PublicAPI]
         event EventHandler<FlickEventArgs> Flick;
 
         /// <summary>
         /// Raised when a gesture occurs on the touchpad.
         /// </summary>
+        [PublicAPI]
         event EventHandler<GestureEventArgs> Gesture;
 
         /// <summary>
         /// Raised when a finger is held on the touchpad.
         /// </summary>
+        [PublicAPI]
         event EventHandler<GestureEventArgs> Hold;
 
         /// <summary>
         /// Raised when the finger moves on the touchpad.
         /// </summary>
+        [PublicAPI]
         event EventHandler<MoveEventArgs> Move;
 
         /// <summary>
         /// Raised when the touchpad is pressed.
         /// </summary>
+        [PublicAPI]
         event EventHandler<PressEventArgs> Press;
 
         /// <summary>
         /// Raised when a finger is released from the touchpad.
         /// </summary>
+        [PublicAPI]
         event EventHandler<ReleaseEventArgs> Release;
 
         /// <summary>
         /// Raised when a rotating motion is performed on the touchpad.
         /// </summary>
+        [PublicAPI]
         event EventHandler<RotateEventArgs> Rotate;
 
         /// <summary>
         /// Raised when a scrolling motion is performed on the touchpad.
         /// </summary>
+        [PublicAPI]
         event EventHandler<GestureEventArgs> Scroll;
 
         /// <summary>
         /// Raised when the touchpad is tapped.
         /// </summary>
+        [PublicAPI]
         event EventHandler<TapEventArgs> Tap;
 
         /// <summary>
         /// Raised when a pinch motion is performed on the touchpad.
         /// </summary>
+        [PublicAPI]
         event EventHandler<ZoomEventArgs> Zoom;
 
         /// <summary>
         /// Gets a value indicating whether this object has been disposed.
         /// </summary>
+        [PublicAPI]
         bool Disposed { get; }
 
         /// <summary>
         /// Disables a gesture from being handled by the touchpad.
         /// </summary>
         /// <param name="gestureTypes">Gesture to disable.</param>
+        [PublicAPI]
         void DisableGesture(GestureTypes gestureTypes);
 
         /// <summary>
@@ -111,12 +124,14 @@ namespace SharpBlade
         /// Enables a gesture to be handled by the touchpad.
         /// </summary>
         /// <param name="gestureTypes">Gesture to enable.</param>
+        [PublicAPI]
         void EnableGesture(GestureTypes gestureTypes);
 
         /// <summary>
         /// Enables a gesture to be forwarded to the host operating system.
         /// </summary>
         /// <param name="gestureTypes">Gesture to forward.</param>
+        [PublicAPI]
         void EnableOSGesture(GestureTypes gestureTypes);
 
         /// <summary>
@@ -124,6 +139,7 @@ namespace SharpBlade
         /// </summary>
         /// <param name="gestureTypes">The gesture type to set.</param>
         /// <param name="enabled">True to enable gesture, false to disable.</param>
+        [PublicAPI]
         void SetGesture(GestureTypes gestureTypes, bool enabled);
 
         /// <summary>
@@ -131,6 +147,7 @@ namespace SharpBlade
         /// </summary>
         /// <param name="gestureTypes">Gesture to set.</param>
         /// <param name="enabled">True to enable forwarding, false to disable.</param>
+        [PublicAPI]
         void SetOSGesture(GestureTypes gestureTypes, bool enabled);
     }
 }

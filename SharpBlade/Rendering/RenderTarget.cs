@@ -71,11 +71,6 @@ namespace SharpBlade.Rendering
         }
 
         /// <summary>
-        /// Gets or sets the current image being displayed on the render target.
-        /// </summary>
-        public virtual string CurrentImage { get; protected set; }
-
-        /// <summary>
         /// Gets the height of this <see cref="IRenderTarget" /> in pixels.
         /// </summary>
         public int DisplayHeight { get; private set; }
@@ -205,6 +200,18 @@ namespace SharpBlade.Rendering
         }
 
         /// <summary>
+        /// Sets a native window to be rendered to this <see cref="RenderTarget" />.
+        /// </summary>
+        /// <param name="handle">A handle to the window that is to be rendered.</param>
+        /// <param name="interval">Interval (in milliseconds) at which to render the window.</param>
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
+            Justification = "Doesn't make sense to dispose the object we are creating here.")]
+        public void Set(IntPtr handle, int interval = 42)
+        {
+            Set(new NativeRenderer(handle, interval));
+        }
+
+        /// <summary>
         /// Sets a WPF window to be rendered to this <see cref="RenderTarget" />.
         /// </summary>
         /// <param name="window">The window to render.</param>
@@ -292,6 +299,7 @@ namespace SharpBlade.Rendering
         /// Disposes of this <see cref="RenderTarget" />.
         /// </summary>
         /// <param name="disposing"><c>true</c> if called from parameter-less <see cref="Dispose()" />, false otherwise.</param>
+        // ReSharper disable VirtualMemberNeverOverriden.Global
         protected virtual void Dispose(bool disposing)
         {
             if (Disposed)

@@ -29,71 +29,22 @@
 // ---------------------------------------------------------------------------------------
 
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.InteropServices;
 
 namespace SharpBlade.Native
 {
     /// <summary>
     /// Provides helper methods for working with native code.
     /// </summary>
-    public static class HelperMethods
+    internal static class HelperMethods
     {
-        /// <summary>
-        /// Gets the last error code that was set by native code.
-        /// </summary>
-        public static int LastError
-        {
-            get
-            {
-                return Marshal.GetLastWin32Error();
-            }
-        }
-
-        /// <summary>
-        /// Gets the message associated with the last error.
-        /// </summary>
-        public static string LastErrorMessage
-        {
-            get
-            {
-                return GetErrorMessage(LastError);
-            }
-        }
-
-        /// <summary>
-        /// Gets a Win32Exception object for the last error code.
-        /// </summary>
-        public static Win32Exception LastWin32Exception
-        {
-            get
-            {
-                return GetWin32Exception(LastError);
-            }
-        }
-
         /// <summary>
         /// Gets the message associated with the specified error code.
         /// </summary>
         /// <param name="err">The error code.</param>
         /// <returns>The message associated with this error code.</returns>
-        public static string GetErrorMessage(int err)
+        internal static string GetErrorMessage(int err)
         {
             return GetWin32Exception(err).Message;
-        }
-
-        /// <summary>
-        /// Gets the last error code and its associated info that was set by native code.
-        /// </summary>
-        /// <param name="message">Will be set to the message associated with the error code.</param>
-        /// <returns>The error code.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "0#",
-            Justification = "This method is difficult to do in another way without making it too complex.")]
-        public static int GetLastErrorInfo(out string message)
-        {
-            var err = LastError;
-            message = GetWin32Exception(err).Message;
-            return err;
         }
 
         /// <summary>
@@ -101,7 +52,7 @@ namespace SharpBlade.Native
         /// </summary>
         /// <param name="err">The error code.</param>
         /// <returns>An exception object with more detailed information about the error.</returns>
-        public static Win32Exception GetWin32Exception(int err)
+        internal static Win32Exception GetWin32Exception(int err)
         {
             return new Win32Exception(err);
         }

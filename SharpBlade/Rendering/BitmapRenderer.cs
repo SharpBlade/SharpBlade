@@ -126,7 +126,7 @@ namespace SharpBlade.Rendering
 
             var buffer = new BufferParams
             {
-                PixelType = PixelType.RGB565,
+                PixelType = PixelType.Rgb565,
                 DataSize = (uint)(bitmap.Width * bitmap.Height * sizeof(ushort)),
                 PtrData = data.Scan0
             };

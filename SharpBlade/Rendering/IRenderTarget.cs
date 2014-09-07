@@ -34,6 +34,7 @@ using System.Drawing;
 using System.Windows;
 using System.Windows.Forms;
 
+using SharpBlade.Annotations;
 using SharpBlade.Integration;
 using SharpBlade.Razer;
 
@@ -45,12 +46,6 @@ namespace SharpBlade.Rendering
     /// </summary>
     public interface IRenderTarget : IDisposable
     {
-        /// <summary>
-        /// Gets the path to the image currently shown on the render target,
-        /// or null if no image is showing.
-        /// </summary>
-        string CurrentImage { get; }
-
         /// <summary>
         /// Gets the height of this <see cref="IRenderTarget" /> in pixels.
         /// </summary>
@@ -65,6 +60,7 @@ namespace SharpBlade.Rendering
         /// Gets the <see cref="IRenderer" /> instance used to
         /// manage timed rendering of objects.
         /// </summary>
+        [PublicAPI]
         IRenderer Renderer { get; }
 
         /// <summary>
@@ -81,12 +77,14 @@ namespace SharpBlade.Rendering
         /// Will not attempt to clear the image if the object is disposing,
         /// in order to avoid sending commands to the hardware.
         /// </remarks>
+        [PublicAPI]
         void Clear();
 
         /// <summary>
         /// Draws a static image to the target display.
         /// </summary>
         /// <param name="image">Path to the image file.</param>
+        [PublicAPI]
         void Draw(string image);
 
         /// <summary>
@@ -106,12 +104,14 @@ namespace SharpBlade.Rendering
         /// Draws the specified form to the target display.
         /// </summary>
         /// <param name="form">Form to draw.</param>
+        [PublicAPI]
         void Draw(Form form);
 
         /// <summary>
         /// Draws the specified native window to the target display.
         /// </summary>
         /// <param name="windowHandle">The window handle of the window to draw.</param>
+        [PublicAPI]
         void Draw(IntPtr windowHandle);
 
         /// <summary>
@@ -120,6 +120,7 @@ namespace SharpBlade.Rendering
         /// <param name="window">Window object to draw.</param>
         /// <param name="winFormsComponents">Array of KeyValuePairs containing a WindowsFormsHost as the key and a WinForms control as the value.
         /// These pairs will be overlaid on the bitmap that is passed to the SwitchBlade device.</param>
+        [PublicAPI]
         void Draw(Window window, IEnumerable<EmbeddedWinFormsControl> winFormsComponents = null);
 
         /// <summary>
@@ -129,6 +130,7 @@ namespace SharpBlade.Rendering
         /// <param name="provider">An object implementing the <see cref="IBitmapProvider" /> interface.</param>
         /// <param name="interval">The interval at which to query the provider
         /// for a new <see cref="Bitmap" /> and draw it.</param>
+        [PublicAPI]
         void Set(IBitmapProvider provider, int interval = 42);
 
         /// <summary>
@@ -138,7 +140,16 @@ namespace SharpBlade.Rendering
         /// <param name="method">The method to use for rendering the form.</param>
         /// <param name="interval">Interval (in milliseconds) at which to render the form
         /// (only used when <paramref name="method" /> is set to <see cref="RenderMethod.Polling" />.</param>
+        [PublicAPI]
         void Set(Form form, RenderMethod method = RenderMethod.Polling, int interval = 42);
+
+        /// <summary>
+        /// Sets a native window to be rendered to this <see cref="IRenderTarget" />.
+        /// </summary>
+        /// <param name="handle">A handle to the window that is to be rendered.</param>
+        /// <param name="interval">Interval (in milliseconds) at which to render the window.</param>
+        [PublicAPI]
+        void Set(IntPtr handle, int interval = 42);
 
         /// <summary>
         /// Sets a WPF window to be rendered to this <see cref="IRenderTarget" />.
@@ -147,6 +158,7 @@ namespace SharpBlade.Rendering
         /// <param name="method">The method to use for rendering the window.</param>
         /// <param name="interval">Interval (in milliseconds) at which to render the window
         /// (only used when <paramref name="method" /> is set to <see cref="RenderMethod.Polling" />.</param>
+        [PublicAPI]
         void Set(Window window, RenderMethod method = RenderMethod.Polling, int interval = 42);
 
         /// <summary>
@@ -154,6 +166,7 @@ namespace SharpBlade.Rendering
         /// </summary>
         /// <param name="image">Path to image.</param>
         /// <param name="interval">The interval (in milliseconds) at which to refresh the image.</param>
+        [PublicAPI]
         void Set(string image, int interval = 42);
 
         /// <summary>
@@ -164,6 +177,7 @@ namespace SharpBlade.Rendering
         /// The type of <see cref="RenderTarget" /> that the renderer is compatible with.
         /// </typeparam>
         /// <param name="renderer">An instance of the <see cref="IRenderer{T}" /> class.</param>
+        [PublicAPI]
         void Set<T>(IRenderer<T> renderer) where T : class, IRenderTarget;
     }
 }

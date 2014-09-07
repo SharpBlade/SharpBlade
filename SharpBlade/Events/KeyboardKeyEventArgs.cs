@@ -30,6 +30,7 @@
 
 using System;
 
+using SharpBlade.Annotations;
 using SharpBlade.Extensions;
 using SharpBlade.Native.WinAPI;
 
@@ -89,6 +90,7 @@ namespace SharpBlade.Events
         /// <summary>
         /// Gets a value indicating whether or not the alt key is pressed.
         /// </summary>
+        [PublicAPI]
         public bool AltPressed
         {
             get { return _altPressed; }
@@ -97,6 +99,7 @@ namespace SharpBlade.Events
         /// <summary>
         /// Gets a value indicating whether or not the caps lock key is active.
         /// </summary>
+        [PublicAPI]
         public bool CapsLockActive
         {
             get { return _capsLockActive; }
@@ -105,6 +108,7 @@ namespace SharpBlade.Events
         /// <summary>
         /// Gets a value indicating whether or not the control key is pressed.
         /// </summary>
+        [PublicAPI]
         public bool ControlPressed
         {
             get { return _controlPressed; }
@@ -114,6 +118,7 @@ namespace SharpBlade.Events
         /// Gets the key that had its state changed.
         /// </summary>
         [CLSCompliant(false)]
+        [PublicAPI]
         public User32.VirtualKey Key
         {
             get { return _key; }
@@ -122,6 +127,7 @@ namespace SharpBlade.Events
         /// <summary>
         /// Gets the modifiers that were pressed.
         /// </summary>
+        [PublicAPI]
         public ModifierKeys Modifiers
         {
             get { return _modifiers; }
@@ -130,6 +136,7 @@ namespace SharpBlade.Events
         /// <summary>
         /// Gets a value indicating whether or not the shift key is pressed.
         /// </summary>
+        [PublicAPI]
         public bool ShiftPressed
         {
             get { return _shiftPressed; }
