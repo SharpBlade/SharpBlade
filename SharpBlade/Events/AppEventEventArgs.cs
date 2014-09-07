@@ -68,15 +68,20 @@ namespace SharpBlade.Events
         }
 
         /// <summary>
+        /// Gets the event type.
+        /// </summary>
+        public AppEventType EventType
+        {
+            get { return _eventType; }
+        }
+
+        /// <summary>
         /// Gets the first DWORD (<c>uint</c>) parameter passed to the app event callback.
         /// </summary>
         [CLSCompliant(false)]
         public uint FirstParameter
         {
-            get
-            {
-                return _firstParam;
-            }
+            get { return _firstParam; }
         }
 
         /// <summary>
@@ -85,21 +90,7 @@ namespace SharpBlade.Events
         [CLSCompliant(false)]
         public uint SecondParameter
         {
-            get
-            {
-                return _secondParam;
-            }
-        }
-
-        /// <summary>
-        /// Gets the event type.
-        /// </summary>
-        public AppEventType EventType
-        {
-            get
-            {
-                return _eventType;
-            }
+            get { return _secondParam; }
         }
     }
 }

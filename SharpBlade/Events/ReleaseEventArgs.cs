@@ -73,10 +73,7 @@ namespace SharpBlade.Events
         [CLSCompliant(false)]
         public uint TouchpointCount
         {
-            get
-            {
-                return _touchpointCount;
-            }
+            get { return _touchpointCount; }
         }
 
         /// <summary>
@@ -87,10 +84,7 @@ namespace SharpBlade.Events
             Justification = "The naming is acceptable for this simple property.")]
         public ushort X
         {
-            get
-            {
-                return _x;
-            }
+            get { return _x; }
         }
 
         /// <summary>
@@ -101,10 +95,7 @@ namespace SharpBlade.Events
             Justification = "The naming is acceptable for this simple property.")]
         public ushort Y
         {
-            get
-            {
-                return _y;
-            }
+            get { return _y; }
         }
     }
 }

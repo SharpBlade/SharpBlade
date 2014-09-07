@@ -91,10 +91,7 @@ namespace SharpBlade.Events
         /// </summary>
         public bool AltPressed
         {
-            get
-            {
-                return _altPressed;
-            }
+            get { return _altPressed; }
         }
 
         /// <summary>
@@ -102,10 +99,7 @@ namespace SharpBlade.Events
         /// </summary>
         public bool CapsLockActive
         {
-            get
-            {
-                return _capsLockActive;
-            }
+            get { return _capsLockActive; }
         }
 
         /// <summary>
@@ -113,10 +107,7 @@ namespace SharpBlade.Events
         /// </summary>
         public bool ControlPressed
         {
-            get
-            {
-                return _controlPressed;
-            }
+            get { return _controlPressed; }
         }
 
         /// <summary>
@@ -125,10 +116,7 @@ namespace SharpBlade.Events
         [CLSCompliant(false)]
         public User32.VirtualKey Key
         {
-            get
-            {
-                return _key;
-            }
+            get { return _key; }
         }
 
         /// <summary>
@@ -136,10 +124,7 @@ namespace SharpBlade.Events
         /// </summary>
         public ModifierKeys Modifiers
         {
-            get
-            {
-                return _modifiers;
-            }
+            get { return _modifiers; }
         }
 
         /// <summary>
@@ -147,10 +132,7 @@ namespace SharpBlade.Events
         /// </summary>
         public bool ShiftPressed
         {
-            get
-            {
-                return _shiftPressed;
-            }
+            get { return _shiftPressed; }
         }
     }
 }

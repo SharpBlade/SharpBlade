@@ -58,10 +58,7 @@ namespace SharpBlade.Events
         /// </summary>
         public char Character
         {
-            get
-            {
-                return _character;
-            }
+            get { return _character; }
         }
     }
 }

@@ -57,10 +57,7 @@ namespace SharpBlade.Events
         /// </summary>
         public RotateDirection Direction
         {
-            get
-            {
-                return _direction;
-            }
+            get { return _direction; }
         }
     }
 }

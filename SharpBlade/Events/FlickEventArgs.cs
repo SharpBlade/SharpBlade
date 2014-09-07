@@ -66,10 +66,7 @@ namespace SharpBlade.Events
         /// </summary>
         public Direction Direction
         {
-            get
-            {
-                return _direction;
-            }
+            get { return _direction; }
         }
 
         /// <summary>
@@ -78,10 +75,7 @@ namespace SharpBlade.Events
         [CLSCompliant(false)]
         public uint TouchpointCount
         {
-            get
-            {
-                return _touchpointCount;
-            }
+            get { return _touchpointCount; }
         }
     }
 }

@@ -88,10 +88,7 @@ namespace SharpBlade.Events
         [CLSCompliant(false)]
         public GestureTypes GestureTypes
         {
-            get
-            {
-                return _gestureTypes;
-            }
+            get { return _gestureTypes; }
         }
 
         /// <summary>
@@ -100,10 +97,7 @@ namespace SharpBlade.Events
         [CLSCompliant(false)]
         public uint Parameter
         {
-            get
-            {
-                return _parameter;
-            }
+            get { return _parameter; }
         }
 
         /// <summary>
@@ -114,10 +108,7 @@ namespace SharpBlade.Events
             Justification = "The naming is acceptable for this simple property.")]
         public ushort X
         {
-            get
-            {
-                return _x;
-            }
+            get { return _x; }
         }
 
         /// <summary>
@@ -128,10 +119,7 @@ namespace SharpBlade.Events
             Justification = "The naming is acceptable for this simple property.")]
         public ushort Y
         {
-            get
-            {
-                return _y;
-            }
+            get { return _y; }
         }
 
         /// <summary>
@@ -142,10 +130,7 @@ namespace SharpBlade.Events
             Justification = "The naming is acceptable for this simple property.")]
         public ushort Z
         {
-            get
-            {
-                return _z;
-            }
+            get { return _z; }
         }
     }
 }

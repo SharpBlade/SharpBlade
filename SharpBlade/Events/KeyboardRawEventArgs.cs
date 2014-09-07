@@ -73,10 +73,7 @@ namespace SharpBlade.Events
         [CLSCompliant(false)]
         public UIntPtr Data
         {
-            get
-            {
-                return _data;
-            }
+            get { return _data; }
         }
 
         /// <summary>
@@ -84,10 +81,7 @@ namespace SharpBlade.Events
         /// </summary>
         public IntPtr Modifiers
         {
-            get
-            {
-                return _modifiers;
-            }
+            get { return _modifiers; }
         }
 
         /// <summary>
@@ -96,10 +90,7 @@ namespace SharpBlade.Events
         [CLSCompliant(false)]
         public uint EventType
         {
-            get
-            {
-                return _eventType;
-            }
+            get { return _eventType; }
         }
     }
 }

@@ -66,10 +66,7 @@ namespace SharpBlade.Events
         /// </summary>
         public DynamicKeyType KeyType
         {
-            get
-            {
-                return _keyType;
-            }
+            get { return _keyType; }
         }
 
         /// <summary>
@@ -77,10 +74,7 @@ namespace SharpBlade.Events
         /// </summary>
         public DynamicKeyState State
         {
-            get
-            {
-                return _state;
-            }
+            get { return _state; }
         }
     }
 }
