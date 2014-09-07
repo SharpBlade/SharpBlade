@@ -253,6 +253,9 @@ namespace SharpBlade
             Images.Image = Switchblade.Instance.DisabledDynamicKeyImagePath;
         }
 
+        /// <summary>
+        /// Raises <see cref="Changed" /> event to subscribers.
+        /// </summary>
         private void OnChanged()
         {
             var func = Changed;
@@ -270,7 +273,7 @@ namespace SharpBlade
         }
 
         /// <summary>
-        /// Raises Pressed event to subscribers.
+        /// Raises <see cref="Pressed" /> event to subscribers.
         /// </summary>
         private void OnPressed()
         {
@@ -288,6 +291,9 @@ namespace SharpBlade
             }
         }
 
+        /// <summary>
+        /// Raises <see cref="Released" /> event to subscribers.
+        /// </summary>
         private void OnReleased()
         {
             var func = Released;

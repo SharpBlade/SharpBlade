@@ -111,10 +111,7 @@ namespace SharpBlade
         /// </returns>
         public IDynamicKey this[DynamicKeyType keyType]
         {
-            get
-            {
-                return GetDynamicKey(keyType);
-            }
+            get { return GetDynamicKey(keyType); }
         }
 
         /// <summary>
