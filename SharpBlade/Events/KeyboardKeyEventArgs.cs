@@ -33,7 +33,6 @@ namespace SharpBlade.Events
     using System;
 
     using SharpBlade.Annotations;
-    using SharpBlade.Extensions;
     using SharpBlade.Native.WinAPI;
 
     /// <summary>
@@ -81,10 +80,10 @@ namespace SharpBlade.Events
             _key = key;
             _modifiers = modifiers;
 
-            _shiftPressed = _modifiers.Has(ModifierKeys.Shift);
-            _controlPressed = _modifiers.Has(ModifierKeys.Control);
-            _altPressed = _modifiers.Has(ModifierKeys.Alt);
-            _capsLockActive = _modifiers.Has(ModifierKeys.CapsLock);
+            _shiftPressed = (_modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
+            _controlPressed = (_modifiers & ModifierKeys.Control) == ModifierKeys.Control;
+            _altPressed = (_modifiers & ModifierKeys.Alt) == ModifierKeys.Alt;
+            _capsLockActive = (_modifiers & ModifierKeys.CapsLock) == ModifierKeys.CapsLock;
         }
 
         /// <summary>

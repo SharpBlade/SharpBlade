@@ -97,7 +97,6 @@
     <Compile Include="Events\RotateEventArgs.cs" />
     <Compile Include="Events\TapEventArgs.cs" />
     <Compile Include="Events\ZoomEventArgs.cs" />
-    <Compile Include="Extensions\EnumerationExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\GenericMethods.cs" />
     <Compile Include="Helpers\ScreenCapture.cs" />
