@@ -34,16 +34,13 @@ namespace SharpBlade
     using System.Linq;
     using System.Windows.Forms;
 
-    using log4net;
-
     using SharpBlade.Events;
     using SharpBlade.Integration;
+    using SharpBlade.Logging;
     using SharpBlade.Native;
     using SharpBlade.Native.WinAPI;
     using SharpBlade.Razer;
     using SharpBlade.Rendering;
-
-    using LogManager = SharpBlade.Logging.LogManager;
 
     /// <summary>
     /// Manages everything related to Razer and its devices.
@@ -106,7 +103,7 @@ namespace SharpBlade
         /// <summary>
         /// Log object for the <see cref="Switchblade" />.
         /// </summary>
-        private readonly ILog _log;
+        private readonly log4net.ILog _log;
 
         /// <summary>
         /// Private reference to the <see cref="Touchpad" /> class that
