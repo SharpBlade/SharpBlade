@@ -80,7 +80,6 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constants.cs" />
     <Compile Include="DisplayStateFile.cs" />
     <Compile Include="DynamicKey.cs" />
     <Compile Include="DynamicKeys.cs" />

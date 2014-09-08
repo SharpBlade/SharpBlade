@@ -34,19 +34,32 @@ namespace SharpBlade
     using System.Linq;
     using System.Windows.Forms;
 
+    using log4net;
+
     using SharpBlade.Events;
     using SharpBlade.Integration;
-    using SharpBlade.Logging;
     using SharpBlade.Native;
     using SharpBlade.Native.WinAPI;
     using SharpBlade.Razer;
     using SharpBlade.Rendering;
+
+    using LogManager = SharpBlade.Logging.LogManager;
 
     /// <summary>
     /// Manages everything related to Razer and its devices.
     /// </summary>
     public sealed class Switchblade : ISwitchblade
     {
+        /// <summary>
+        /// Blank image used for touchpad.
+        /// </summary>
+        private const string DefaultBlankTouchpadImage = @"Default\Images\tp_blank.png";
+
+        /// <summary>
+        /// Blank image used for dynamic keys.
+        /// </summary>
+        private const string DefaultDisabledDynamicKeyImage = @"Default\Images\dk_disabled.png";
+
         /// <summary>
         /// Array of 3-tuples to pair Virtual Keys (1st element) with their ModifierKeys counterpart (3rd element),
         /// the second element is used when checking for VK status (pressed or toggled, VK specific).
@@ -93,7 +106,7 @@ namespace SharpBlade
         /// <summary>
         /// Log object for the <see cref="Switchblade" />.
         /// </summary>
-        private readonly log4net.ILog _log;
+        private readonly ILog _log;
 
         /// <summary>
         /// Private reference to the <see cref="Touchpad" /> class that
@@ -125,8 +138,8 @@ namespace SharpBlade
             _log.Info("Switchblade is initializing");
 
             _log.Debug("Setting default values for touchpad/dynamickey blank/disabled images");
-            BlankTouchpadImagePath = Constants.BlankTouchpadImage;
-            DisabledDynamicKeyImagePath = Constants.DisabledDynamicKeyImage;
+            BlankTouchpadImagePath = DefaultBlankTouchpadImage;
+            DisabledDynamicKeyImagePath = DefaultDisabledDynamicKeyImage;
 
             _log.Debug("Calling RzSBStart()");
 
@@ -256,7 +269,7 @@ namespace SharpBlade
         /// after <see cref="SharpBlade.Touchpad.ClearImage" /> or <see cref="RenderTarget.Clear()" />.
         /// have been called.
         /// </summary>
-        /// <remarks>Defaults to <see cref="Constants.BlankTouchpadImage" /></remarks>
+        /// <remarks>Defaults to <see cref="DefaultBlankTouchpadImage" /></remarks>
         public string BlankTouchpadImagePath { get; set; }
 
         /// <summary>
@@ -275,7 +288,7 @@ namespace SharpBlade
         /// <summary>
         /// Gets or sets the image shown on dynamic keys when disabled.
         /// </summary>
-        /// <remarks>Defaults to <see cref="Constants.DisabledDynamicKeyImage" /></remarks>
+        /// <remarks>Defaults to <see cref="DefaultDisabledDynamicKeyImage" /></remarks>
         public string DisabledDynamicKeyImagePath { get; set; }
 
         /// <summary>
@@ -425,7 +438,7 @@ namespace SharpBlade
 
             // We only want to send the char event if it's a char that can actually be typed
             // So it doesn't handle SHIFT and CONTROL as "characters"
-            if (msgType == User32.MessageType.CHAR && !char.IsControl(asChar))
+            if (msgType == User32.MessageType.CHAR && !Char.IsControl(asChar))
             {
                 OnKeyboardCharTyped(asChar);
                 if (_keyboardControl != null)
