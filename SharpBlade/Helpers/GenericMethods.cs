@@ -35,14 +35,14 @@ namespace SharpBlade.Helpers
     /// <summary>
     /// Helper functions for generic operations.
     /// </summary>
-    public static class GenericMethods
+    internal static class GenericMethods
     {
         /// <summary>
         /// Gets the absolute path to the specified file.
         /// </summary>
         /// <param name="path">(Relative) path to resolve.</param>
         /// <returns>The absolute path to the specified relative path on the file system.</returns>
-        public static string GetAbsolutePath(string path)
+        internal static string GetAbsolutePath(string path)
         {
             var currentDirectory = Directory.GetCurrentDirectory();
             var combined = Path.Combine(currentDirectory, path);

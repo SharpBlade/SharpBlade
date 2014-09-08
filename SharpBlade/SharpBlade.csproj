@@ -100,7 +100,6 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\GenericMethods.cs" />
     <Compile Include="Helpers\ScreenCapture.cs" />
-    <Compile Include="Helpers\ThreadingMethods.cs" />
     <Compile Include="IDisplayStateFile.cs" />
     <Compile Include="IDynamicKey.cs" />
     <Compile Include="IDynamicKeys.cs" />
