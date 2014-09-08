@@ -30,24 +30,6 @@
 
 namespace SharpBlade.Logging
 {
-#if DEBUG
-
-    using System;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-    using System.Xml.Linq;
-
-    using log4net;
-    using log4net.Config;
-
-    using Microsoft.Win32.SafeHandles;
-
-    using SharpBlade.Annotations;
-    using SharpBlade.Native.WinAPI;
-
-#else
-
     using System;
     using System.IO;
     using System.Linq;
@@ -57,23 +39,12 @@ namespace SharpBlade.Logging
     using log4net.Config;
 
     using SharpBlade.Annotations;
-
-#endif
 
     /// <summary>
     /// Provides helper methods for logging functions.
     /// </summary>
     public static class LogManager
     {
-#if DEBUG
-
-    /// <summary>
-    /// Whether or not a console has been loaded and allocated for log output.
-    /// </summary>
-        private static bool _consoleLoaded;
-
-#endif
-
         /// <summary>
         /// Whether or not a log4net instance (and thus its config)
         /// has been loaded.
@@ -120,19 +91,6 @@ namespace SharpBlade.Logging
             }
 
             log.InfoFormat("Done! Cleared {0} log files.", count);
-        }
-
-        /// <summary>
-        /// Destroys an open console, usually the one created by <see cref="SetupConsole" />.
-        /// </summary>
-        /// <remarks>Method body only compiled on DEBUG.</remarks>
-        [PublicAPI]
-        public static void DestroyConsole()
-        {
-#if DEBUG
-            if (_consoleLoaded)
-                Kernel32.NativeMethods.FreeConsole();
-#endif
         }
 
         /// <summary>
@@ -195,28 +153,6 @@ namespace SharpBlade.Logging
             }
 
             _loaded = true;
-        }
-
-        /// <summary>
-        /// Sets up a console for standard output.
-        /// </summary>
-        /// <remarks>Method body only compiled on DEBUG.</remarks>
-        // ReSharper disable UnusedMember.Global
-        public static void SetupConsole() // ReSharper restore UnusedMember.Global
-        {
-#if DEBUG
-            if (System.Diagnostics.Debugger.IsAttached)
-                return;
-
-            Kernel32.NativeMethods.AllocConsole();
-            var stdHandle = Kernel32.NativeMethods.GetStdHandle(Kernel32.STD_OUTPUT_HANDLE);
-            var safeFileHandle = new SafeFileHandle(stdHandle, true);
-            var fileStream = new FileStream(safeFileHandle, FileAccess.Write);
-            var encoding = Encoding.GetEncoding(Kernel32.CODE_PAGE);
-            var stdOut = new StreamWriter(fileStream, encoding) { AutoFlush = true };
-            Console.SetOut(stdOut);
-            _consoleLoaded = true;
-#endif
         }
     }
 }

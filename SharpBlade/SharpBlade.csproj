@@ -114,7 +114,6 @@
     <Compile Include="Native\HelperMethods.cs" />
     <Compile Include="Native\HRESULT.cs" />
     <Compile Include="Native\WinAPI\GDI32.cs" />
-    <Compile Include="Native\WinAPI\Kernel32.cs" />
     <Compile Include="Native\WinAPI\User32.cs" />
     <Compile Include="Native\WinAPI\VirtualKey.cs" />
     <Compile Include="Properties\Annotations.cs" />
