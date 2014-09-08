@@ -28,12 +28,12 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-
-using SharpBlade.Annotations;
-
 namespace SharpBlade
 {
+    using System;
+
+    using SharpBlade.Annotations;
+
     /// <summary>
     /// <see cref="DisplayStateFile" /> interface.
     /// </summary>

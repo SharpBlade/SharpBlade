@@ -28,22 +28,22 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-using System.Linq;
-
-using SharpBlade.Events;
-using SharpBlade.Helpers;
-using SharpBlade.Logging;
-using SharpBlade.Native;
-using SharpBlade.Razer;
-using SharpBlade.Rendering;
-
 namespace SharpBlade
 {
+    using System;
+    using System.Linq;
+
+    using SharpBlade.Events;
+    using SharpBlade.Helpers;
+    using SharpBlade.Logging;
+    using SharpBlade.Native;
+    using SharpBlade.Razer;
+    using SharpBlade.Rendering;
+
     /// <summary>
     /// The SwitchBlade touchpad.
     /// </summary>
-    public sealed class Touchpad : RenderTarget, ITouchpad
+    internal sealed class Touchpad : RenderTarget, ITouchpad
     {
         /// <summary>
         /// Gesture callback that is used as parameter in <see cref="NativeMethods.RzSBGestureSetCallback" />.

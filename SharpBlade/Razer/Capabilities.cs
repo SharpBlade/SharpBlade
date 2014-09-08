@@ -28,16 +28,16 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
-using System.Runtime.InteropServices;
-
-using SharpBlade.Annotations;
-
 namespace SharpBlade.Razer
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Drawing;
+    using System.Runtime.InteropServices;
+
+    using SharpBlade.Annotations;
+
     /// <summary>
     /// Specifies the capabilities of this SwitchBlade device.
     /// </summary>

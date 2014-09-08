@@ -28,10 +28,10 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-
 namespace SharpBlade.Rendering
 {
+    using System;
+
     /// <summary>
     /// Helper class to manage rendering complex structures to a render target.
     /// </summary>

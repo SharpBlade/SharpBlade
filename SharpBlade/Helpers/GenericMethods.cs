@@ -28,10 +28,10 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System.IO;
-
 namespace SharpBlade.Helpers
 {
+    using System.IO;
+
     /// <summary>
     /// Helper functions for generic operations.
     /// </summary>

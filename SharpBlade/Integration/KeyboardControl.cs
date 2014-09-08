@@ -28,16 +28,16 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-using System.Globalization;
-using System.Windows;
-using System.Windows.Input;
-
-using SharpBlade.Logging;
-using SharpBlade.Native.WinAPI;
-
 namespace SharpBlade.Integration
 {
+    using System;
+    using System.Globalization;
+    using System.Windows;
+    using System.Windows.Input;
+
+    using SharpBlade.Logging;
+    using SharpBlade.Native.WinAPI;
+
     /// <summary>
     /// Helper class to send input to either a WinForms or WPF control.
     /// </summary>
@@ -107,7 +107,7 @@ namespace SharpBlade.Integration
         /// Sends a KeyDown event to the active control.
         /// </summary>
         /// <param name="key">The key that was pressed.</param>
-        internal void SendKeyDown(User32.VirtualKey key)
+        internal void SendKeyDown(VirtualKey key)
         {
             if (_winFormControl != null && !_winFormControl.IsDisposed)
                 SendWinFormKeyDown(key);
@@ -119,7 +119,7 @@ namespace SharpBlade.Integration
         /// Sends a KeyUp event to the active control.
         /// </summary>
         /// <param name="key">The key that was released.</param>
-        internal void SendKeyUp(User32.VirtualKey key)
+        internal void SendKeyUp(VirtualKey key)
         {
             if (_winFormControl != null && !_winFormControl.IsDisposed)
                 SendWinFormKeyUp(key);
@@ -144,7 +144,7 @@ namespace SharpBlade.Integration
         /// Sends WM_KEYDOWN to WinForms control.
         /// </summary>
         /// <param name="key">Key that was pressed.</param>
-        private void SendWinFormKeyDown(User32.VirtualKey key)
+        private void SendWinFormKeyDown(VirtualKey key)
         {
             User32.NativeMethods.PostMessage(
                 _winFormControl.Handle,
@@ -157,7 +157,7 @@ namespace SharpBlade.Integration
         /// Sends WM_KEYUP to WinForms control.
         /// </summary>
         /// <param name="key">Key that was released.</param>
-        private void SendWinFormKeyUp(User32.VirtualKey key)
+        private void SendWinFormKeyUp(VirtualKey key)
         {
             User32.NativeMethods.PostMessage(
                 _winFormControl.Handle,
@@ -187,7 +187,7 @@ namespace SharpBlade.Integration
         /// Sends a WPF KeyDown event to the WPF control.
         /// </summary>
         /// <param name="key">Key that was pressed.</param>
-        private void SendWPFKeyDown(User32.VirtualKey key)
+        private void SendWPFKeyDown(VirtualKey key)
         {
             // Conversion magic, don't blink!
             var wpfKey = KeyInterop.KeyFromVirtualKey((int)key);
@@ -217,7 +217,7 @@ namespace SharpBlade.Integration
         /// Sends a WPF KeyUp event to the WPF control.
         /// </summary>
         /// <param name="key">Key that was released.</param>
-        private void SendWPFKeyUp(User32.VirtualKey key)
+        private void SendWPFKeyUp(VirtualKey key)
         {
             // Conversion magic, don't blink!
             var wpfKey = KeyInterop.KeyFromVirtualKey((int)key);

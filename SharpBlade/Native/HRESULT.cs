@@ -14,13 +14,11 @@
 
 #pragma warning disable 1591
 
-using System;
-using System.CodeDom.Compiler;
-using System.Globalization;
-
 namespace SharpBlade.Native
 {
-    #region HRESULT
+    using System;
+    using System.CodeDom.Compiler;
+    using System.Globalization;
 
     // ReSharper disable InconsistentNaming
     [GeneratedCode("pinvoke.net", "1.0.0.0")]
@@ -7511,8 +7509,4 @@ namespace SharpBlade.Native
             return codes;
         }
     }
-
-    // ReSharper restore InconsistentNaming
-
-    #endregion HRESULT
 }

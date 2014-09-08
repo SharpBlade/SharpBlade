@@ -28,11 +28,11 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-using System.Runtime.InteropServices;
-
 namespace SharpBlade.Razer
 {
+    using System;
+    using System.Runtime.InteropServices;
+
     /// <summary>
     /// Buffer data sent to display when rendering image data.
     /// </summary>

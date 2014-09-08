@@ -28,10 +28,10 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using SharpBlade.Annotations;
-
 namespace SharpBlade.Razer
 {
+    using SharpBlade.Annotations;
+
     /// <summary>
     /// Possible states of a dynamic key.
     /// </summary>

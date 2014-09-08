@@ -28,14 +28,14 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-
-using SharpBlade.Annotations;
-using SharpBlade.Extensions;
-using SharpBlade.Native.WinAPI;
-
 namespace SharpBlade.Events
 {
+    using System;
+
+    using SharpBlade.Annotations;
+    using SharpBlade.Extensions;
+    using SharpBlade.Native.WinAPI;
+
     /// <summary>
     /// EventArgs class for the KeyboardKey event.
     /// </summary>
@@ -59,7 +59,7 @@ namespace SharpBlade.Events
         /// <summary>
         /// Key that had its state changed.
         /// </summary>
-        private readonly User32.VirtualKey _key;
+        private readonly VirtualKey _key;
 
         /// <summary>
         /// Modifiers pressed.
@@ -76,7 +76,7 @@ namespace SharpBlade.Events
         /// </summary>
         /// <param name="key">Key that was pressed.</param>
         /// <param name="modifiers">Modifiers active during key press.</param>
-        internal KeyboardKeyEventArgs(User32.VirtualKey key, ModifierKeys modifiers)
+        internal KeyboardKeyEventArgs(VirtualKey key, ModifierKeys modifiers)
         {
             _key = key;
             _modifiers = modifiers;
@@ -119,7 +119,7 @@ namespace SharpBlade.Events
         /// </summary>
         [CLSCompliant(false)]
         [PublicAPI]
-        public User32.VirtualKey Key
+        public VirtualKey Key
         {
             get { return _key; }
         }

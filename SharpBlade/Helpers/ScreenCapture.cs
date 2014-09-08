@@ -28,14 +28,14 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-using System.Drawing;
-
-using SharpBlade.Logging;
-using SharpBlade.Native.WinAPI;
-
 namespace SharpBlade.Helpers
 {
+    using System;
+    using System.Drawing;
+
+    using SharpBlade.Logging;
+    using SharpBlade.Native.WinAPI;
+
     /// <summary>
     /// Provides functions to capture screen regions,
     /// or a particular window to an <see cref="Image" /> object.

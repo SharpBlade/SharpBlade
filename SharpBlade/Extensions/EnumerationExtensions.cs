@@ -28,11 +28,11 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-using System.Globalization;
-
 namespace SharpBlade.Extensions
 {
+    using System;
+    using System.Globalization;
+
     /// <summary>
     /// Extension methods to make working with enumeration values easier
     /// </summary>

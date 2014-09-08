@@ -28,10 +28,10 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using SharpBlade.Annotations;
-
 namespace SharpBlade.Razer
 {
+    using SharpBlade.Annotations;
+
     /// <summary>
     /// Different hardware types returned by <see cref="NativeMethods.RzSBQueryCapabilities" />.
     /// </summary>

@@ -28,20 +28,20 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
-using SharpBlade.Events;
-using SharpBlade.Logging;
-using SharpBlade.Razer;
-using SharpBlade.Rendering;
-
 namespace SharpBlade
 {
+    using System;
+    using System.Collections.Generic;
+
+    using SharpBlade.Events;
+    using SharpBlade.Logging;
+    using SharpBlade.Razer;
+    using SharpBlade.Rendering;
+
     /// <summary>
     /// Represents a dynamic key on the SwitchBlade device
     /// </summary>
-    public sealed class DynamicKey : RenderTarget, IDynamicKey
+    internal sealed class DynamicKey : RenderTarget, IDynamicKey
     {
         /// <summary>
         /// A mapping dictionary to translate a <see cref="DynamicKeyType" />

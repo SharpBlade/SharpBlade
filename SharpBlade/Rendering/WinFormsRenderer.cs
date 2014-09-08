@@ -28,15 +28,15 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
-using System.Windows.Forms;
-
-using SharpBlade.Annotations;
-
 namespace SharpBlade.Rendering
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Drawing;
+    using System.Windows.Forms;
+
+    using SharpBlade.Annotations;
+
     /// <summary>
     /// Renders WinForms forms.
     /// </summary>

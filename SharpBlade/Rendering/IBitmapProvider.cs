@@ -28,10 +28,10 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System.Drawing;
-
 namespace SharpBlade.Rendering
 {
+    using System.Drawing;
+
     /// <summary>
     /// An object that is able to provide a Bitmap object.
     /// </summary>

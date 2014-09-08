@@ -28,20 +28,20 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
-using System.IO;
-using System.Windows;
-using System.Windows.Media.Imaging;
-using System.Windows.Threading;
-
-using SharpBlade.Annotations;
-using SharpBlade.Integration;
-
 namespace SharpBlade.Rendering
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Drawing;
+    using System.IO;
+    using System.Windows;
+    using System.Windows.Media.Imaging;
+    using System.Windows.Threading;
+
+    using SharpBlade.Annotations;
+    using SharpBlade.Integration;
+
     /// <summary>
     /// Renders WPF windows.
     /// </summary>

@@ -28,10 +28,10 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System.Threading;
-
 namespace SharpBlade.Helpers
 {
+    using System.Threading;
+
     /// <summary>
     /// Helper functions for threading operations.
     /// </summary>

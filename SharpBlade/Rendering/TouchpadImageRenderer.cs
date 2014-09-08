@@ -28,11 +28,11 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using SharpBlade.Native;
-using SharpBlade.Razer;
-
 namespace SharpBlade.Rendering
 {
+    using SharpBlade.Native;
+    using SharpBlade.Razer;
+
     /// <summary>
     /// Renders a static file to the touchpad.
     /// </summary>

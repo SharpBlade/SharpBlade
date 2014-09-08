@@ -28,15 +28,15 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
-using System.Timers;
-
-using SharpBlade.Helpers;
-
 namespace SharpBlade.Rendering
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Drawing;
+    using System.Timers;
+
+    using SharpBlade.Helpers;
+
     /// <summary>
     /// A renderer to render a native window of any type that
     /// is able to supply a window handle.

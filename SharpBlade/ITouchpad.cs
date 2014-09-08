@@ -28,14 +28,14 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-
-using SharpBlade.Annotations;
-using SharpBlade.Events;
-using SharpBlade.Razer;
-
 namespace SharpBlade
 {
+    using System;
+
+    using SharpBlade.Annotations;
+    using SharpBlade.Events;
+    using SharpBlade.Razer;
+
     /// <summary>
     /// <see cref="Touchpad" /> interface.
     /// </summary>

@@ -28,20 +28,20 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-using System.Linq;
-using System.Windows.Forms;
-
-using SharpBlade.Events;
-using SharpBlade.Integration;
-using SharpBlade.Logging;
-using SharpBlade.Native;
-using SharpBlade.Native.WinAPI;
-using SharpBlade.Razer;
-using SharpBlade.Rendering;
-
 namespace SharpBlade
 {
+    using System;
+    using System.Linq;
+    using System.Windows.Forms;
+
+    using SharpBlade.Events;
+    using SharpBlade.Integration;
+    using SharpBlade.Logging;
+    using SharpBlade.Native;
+    using SharpBlade.Native.WinAPI;
+    using SharpBlade.Razer;
+    using SharpBlade.Rendering;
+
     /// <summary>
     /// Manages everything related to Razer and its devices.
     /// </summary>
@@ -51,12 +51,12 @@ namespace SharpBlade
         /// Array of 3-tuples to pair Virtual Keys (1st element) with their ModifierKeys counterpart (3rd element),
         /// the second element is used when checking for VK status (pressed or toggled, VK specific).
         /// </summary>
-        private static readonly Tuple<User32.VirtualKey, int, ModifierKeys>[] KeyMapping =
+        private static readonly Tuple<VirtualKey, int, ModifierKeys>[] KeyMapping =
         {
-            Tuple.Create(User32.VirtualKey.SHIFT, User32.KEY_PRESSED, ModifierKeys.Shift),
-            Tuple.Create(User32.VirtualKey.CONTROL, User32.KEY_PRESSED, ModifierKeys.Control),
-            Tuple.Create(User32.VirtualKey.MENU, User32.KEY_PRESSED, ModifierKeys.Alt),
-            Tuple.Create(User32.VirtualKey.CAPITAL, User32.KEY_TOGGLED, ModifierKeys.CapsLock)
+            Tuple.Create(VirtualKey.SHIFT, User32.KEY_PRESSED, ModifierKeys.Shift),
+            Tuple.Create(VirtualKey.CONTROL, User32.KEY_PRESSED, ModifierKeys.Control),
+            Tuple.Create(VirtualKey.MENU, User32.KEY_PRESSED, ModifierKeys.Alt),
+            Tuple.Create(VirtualKey.CAPITAL, User32.KEY_TOGGLED, ModifierKeys.CapsLock)
         };
 
         // ReSharper disable PrivateFieldCanBeConvertedToLocalVariable
@@ -433,7 +433,7 @@ namespace SharpBlade
             }
             else if (msgType == User32.MessageType.KEYDOWN || msgType == User32.MessageType.KEYUP)
             {
-                var key = (User32.VirtualKey)(uint)data;
+                var key = (VirtualKey)(uint)data;
 
                 // Workaround to get the modifier keys
                 // Item1 = VK, Item2 = mask, Item3 = ModifierKey
@@ -454,7 +454,7 @@ namespace SharpBlade
                     if (_keyboardControl != null)
                     {
                         _keyboardControl.SendKeyUp(key);
-                        if (key == User32.VirtualKey.RETURN && _keyboardControl.ReleaseOnEnter)
+                        if (key == VirtualKey.RETURN && _keyboardControl.ReleaseOnEnter)
                             SetKeyboardCapture(false);
                     }
                 }
@@ -492,7 +492,7 @@ namespace SharpBlade
         /// </summary>
         /// <param name="key">Key that was pressed.</param>
         /// <param name="modifiers">Active modifier keys.</param>
-        private void OnKeyboardKeyDown(User32.VirtualKey key, ModifierKeys modifiers)
+        private void OnKeyboardKeyDown(VirtualKey key, ModifierKeys modifiers)
         {
             var func = KeyboardKeyDown;
             if (func != null)
@@ -504,7 +504,7 @@ namespace SharpBlade
         /// </summary>
         /// <param name="key">Key that was released.</param>
         /// <param name="modifiers">Active modifier keys.</param>
-        private void OnKeyboardKeyUp(User32.VirtualKey key, ModifierKeys modifiers)
+        private void OnKeyboardKeyUp(VirtualKey key, ModifierKeys modifiers)
         {
             var func = KeyboardKeyUp;
             if (func != null)

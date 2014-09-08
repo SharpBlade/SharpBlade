@@ -28,10 +28,10 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System.ComponentModel;
-
 namespace SharpBlade.Native
 {
+    using System.ComponentModel;
+
     /// <summary>
     /// Provides helper methods for working with native code.
     /// </summary>

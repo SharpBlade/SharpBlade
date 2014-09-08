@@ -28,12 +28,12 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Serialization;
-
 namespace SharpBlade.Rendering
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Thrown when an attempt is made to call <see cref="RenderTarget.Set{T}" />
     /// with a <see cref="Renderer{T}" /> that is not compatible.

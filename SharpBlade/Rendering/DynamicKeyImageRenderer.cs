@@ -28,12 +28,12 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using SharpBlade.Annotations;
-using SharpBlade.Native;
-using SharpBlade.Razer;
-
 namespace SharpBlade.Rendering
 {
+    using SharpBlade.Annotations;
+    using SharpBlade.Native;
+    using SharpBlade.Razer;
+
     /// <summary>
     /// Renders a static image to a dynamic key.
     /// </summary>

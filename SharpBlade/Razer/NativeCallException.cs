@@ -28,17 +28,17 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.Runtime.Serialization;
-using System.Security.Permissions;
-
-using SharpBlade.Annotations;
-using SharpBlade.Native;
-
 namespace SharpBlade.Razer
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
+    using System.Runtime.Serialization;
+    using System.Security.Permissions;
+
+    using SharpBlade.Annotations;
+    using SharpBlade.Native;
+
     /// <summary>
     /// Exception for failures in native code provided by Razer.
     /// </summary>

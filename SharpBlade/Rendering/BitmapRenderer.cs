@@ -28,18 +28,18 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
-using System.Timers;
-
-using SharpBlade.Native;
-using SharpBlade.Razer;
-
 namespace SharpBlade.Rendering
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Drawing;
+    using System.Drawing.Imaging;
+    using System.Runtime.InteropServices;
+    using System.Timers;
+
+    using SharpBlade.Native;
+    using SharpBlade.Razer;
+
     /// <summary>
     /// A renderer that queries an object implementing <see cref="IBitmapProvider" />
     /// to get a <see cref="System.Drawing.Bitmap" /> that is then sent to the

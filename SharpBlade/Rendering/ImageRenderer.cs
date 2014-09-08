@@ -28,14 +28,14 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Timers;
-
-using SharpBlade.Annotations;
-
 namespace SharpBlade.Rendering
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Timers;
+
+    using SharpBlade.Annotations;
+
     /// <summary>
     /// Renders a static image.
     /// </summary>

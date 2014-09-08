@@ -28,38 +28,38 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
+namespace SharpBlade.Logging
+{
 #if DEBUG
 
-using System;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Xml.Linq;
+    using System;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Xml.Linq;
 
-using log4net;
-using log4net.Config;
+    using log4net;
+    using log4net.Config;
 
-using Microsoft.Win32.SafeHandles;
+    using Microsoft.Win32.SafeHandles;
 
-using SharpBlade.Annotations;
-using SharpBlade.Native.WinAPI;
+    using SharpBlade.Annotations;
+    using SharpBlade.Native.WinAPI;
 
 #else
 
-using System;
-using System.IO;
-using System.Linq;
-using System.Xml.Linq;
+    using System;
+    using System.IO;
+    using System.Linq;
+    using System.Xml.Linq;
 
-using log4net;
-using log4net.Config;
+    using log4net;
+    using log4net.Config;
 
-using SharpBlade.Annotations;
+    using SharpBlade.Annotations;
 
 #endif
 
-namespace SharpBlade.Logging
-{
     /// <summary>
     /// Provides helper methods for logging functions.
     /// </summary>

@@ -28,20 +28,20 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-using System.Globalization;
-
-using SharpBlade.Events;
-using SharpBlade.Logging;
-using SharpBlade.Native;
-using SharpBlade.Razer;
-
 namespace SharpBlade
 {
+    using System;
+    using System.Globalization;
+
+    using SharpBlade.Events;
+    using SharpBlade.Logging;
+    using SharpBlade.Native;
+    using SharpBlade.Razer;
+
     /// <summary>
     /// Manages the dynamic keys of a device.
     /// </summary>
-    public class DynamicKeys : IDynamicKeys
+    internal sealed class DynamicKeys : IDynamicKeys
     {
         /// <summary>
         /// Dynamic key callback that is used as parameter in <see cref="NativeMethods.RzSBDynamicKeySetCallback" />.

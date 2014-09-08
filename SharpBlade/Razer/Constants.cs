@@ -28,10 +28,10 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using SharpBlade.Annotations;
-
 namespace SharpBlade.Razer
 {
+    using SharpBlade.Annotations;
+
     /// <summary>
     /// Constant values from <c>SwitchBladeSDK_defines.h</c>.
     /// </summary>

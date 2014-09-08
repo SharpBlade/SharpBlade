@@ -28,18 +28,18 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
-using System.Windows;
-using System.Windows.Forms;
-
-using SharpBlade.Integration;
-using SharpBlade.Razer;
-
 namespace SharpBlade.Rendering
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Drawing;
+    using System.Windows;
+    using System.Windows.Forms;
+
+    using SharpBlade.Integration;
+    using SharpBlade.Razer;
+
     /// <summary>
     /// Common methods for rendering to a display.
     /// </summary>

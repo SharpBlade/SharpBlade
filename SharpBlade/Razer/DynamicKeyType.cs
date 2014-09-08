@@ -28,10 +28,10 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using SharpBlade.Annotations;
-
 namespace SharpBlade.Razer
 {
+    using SharpBlade.Annotations;
+
     /// <summary>
     /// Dynamic keys available on the SwitchBlade device.
     /// </summary>

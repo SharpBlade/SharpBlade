@@ -28,13 +28,13 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-using System.Diagnostics.CodeAnalysis;
-
-using SharpBlade.Annotations;
-
 namespace SharpBlade.Razer
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+
+    using SharpBlade.Annotations;
+
     /// <summary>
     /// Gesture types supported by the device.
     /// </summary>

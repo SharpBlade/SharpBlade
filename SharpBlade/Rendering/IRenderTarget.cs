@@ -28,18 +28,18 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows;
-using System.Windows.Forms;
-
-using SharpBlade.Annotations;
-using SharpBlade.Integration;
-using SharpBlade.Razer;
-
 namespace SharpBlade.Rendering
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.Windows;
+    using System.Windows.Forms;
+
+    using SharpBlade.Annotations;
+    using SharpBlade.Integration;
+    using SharpBlade.Razer;
+
     /// <summary>
     /// A class implementing methods to draw bitmaps and images
     /// to a supported target display.

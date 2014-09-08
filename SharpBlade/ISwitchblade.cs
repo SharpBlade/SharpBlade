@@ -28,16 +28,16 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-using System.Windows.Forms;
-
-using SharpBlade.Annotations;
-using SharpBlade.Events;
-using SharpBlade.Razer;
-using SharpBlade.Rendering;
-
 namespace SharpBlade
 {
+    using System;
+    using System.Windows.Forms;
+
+    using SharpBlade.Annotations;
+    using SharpBlade.Events;
+    using SharpBlade.Razer;
+    using SharpBlade.Rendering;
+
     /// <summary>
     /// <see cref="Switchblade" /> interface.
     /// </summary>

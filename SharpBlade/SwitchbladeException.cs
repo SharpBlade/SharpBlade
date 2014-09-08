@@ -28,12 +28,12 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Serialization;
-
 namespace SharpBlade
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Exception for SharpBlade and Switchblade related issues.
     /// </summary>

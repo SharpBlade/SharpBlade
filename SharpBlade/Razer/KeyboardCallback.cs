@@ -28,13 +28,13 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-using System.Runtime.InteropServices;
-
-using SharpBlade.Native;
-
 namespace SharpBlade.Razer
 {
+    using System;
+    using System.Runtime.InteropServices;
+
+    using SharpBlade.Native;
+
     /// <summary>
     /// Function delegate for keyboard callback.
     /// </summary>

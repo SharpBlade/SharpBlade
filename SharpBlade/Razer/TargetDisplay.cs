@@ -28,10 +28,10 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System.Diagnostics.CodeAnalysis;
-
 namespace SharpBlade.Razer
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Target displays available on SwitchBlade device.
     /// </summary>

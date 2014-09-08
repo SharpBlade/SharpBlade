@@ -3,12 +3,15 @@
 // (Doesn't really count as auto-generated but we circumvent StyleCop this way)
 // </auto-generated>
 
-using System;
-using System.CodeDom.Compiler;
-using System.Runtime.InteropServices;
+#if DEBUG
 
+// ReSharper disable InconsistentNaming
 namespace SharpBlade.Native.WinAPI
 {
+    using System;
+    using System.CodeDom.Compiler;
+    using System.Runtime.InteropServices;
+
     /// <summary>
     /// Static class containing all functions
     /// provided by the Windows Kernel32 library.
@@ -20,16 +23,6 @@ namespace SharpBlade.Native.WinAPI
         /// The code page recommended for consoles spawned with <see cref="NativeMethods.AllocConsole" />.
         /// </summary>
         public const int CODE_PAGE = 437;
-
-        /// <summary>
-        /// The standard error device. Initially, this is the active console screen buffer, CONOUT$.
-        /// </summary>
-        public const int STD_ERROR_HANDLE = -12;
-
-        /// <summary>
-        /// The standard input device. Initially, this is the console input buffer, CONIN$.
-        /// </summary>
-        public const int STD_INPUT_HANDLE = -10;
 
         /// <summary>
         /// The standard output device. Initially, this is the active console screen buffer, CONOUT$.
@@ -117,3 +110,5 @@ namespace SharpBlade.Native.WinAPI
         }
     }
 }
+
+#endif

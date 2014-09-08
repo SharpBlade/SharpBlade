@@ -28,15 +28,15 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-
-using SharpBlade.Annotations;
-using SharpBlade.Events;
-using SharpBlade.Razer;
-using SharpBlade.Rendering;
-
 namespace SharpBlade
 {
+    using System;
+
+    using SharpBlade.Annotations;
+    using SharpBlade.Events;
+    using SharpBlade.Razer;
+    using SharpBlade.Rendering;
+
     /// <summary>
     /// <see cref="DynamicKey" /> interface.
     /// </summary>

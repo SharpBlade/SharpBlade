@@ -28,10 +28,10 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-
 namespace SharpBlade
 {
+    using System;
+
     /// <summary>
     /// Modifier keys.
     /// </summary>

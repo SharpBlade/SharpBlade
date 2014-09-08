@@ -28,14 +28,14 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System.Drawing;
-using System.Windows.Forms;
-using System.Windows.Forms.Integration;
-
-using SharpBlade.Annotations;
-
 namespace SharpBlade.Integration
 {
+    using System.Drawing;
+    using System.Windows.Forms;
+    using System.Windows.Forms.Integration;
+
+    using SharpBlade.Annotations;
+
     /// <summary>
     /// Contains references to a <see cref="WindowsFormsHost" /> object and
     /// a <see cref="System.Windows.Forms.Control" /> embedded in the host. Provides methods

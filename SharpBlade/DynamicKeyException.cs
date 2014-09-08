@@ -28,12 +28,12 @@
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Serialization;
-
 namespace SharpBlade
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.Serialization;
+
     /// <summary>
     /// Exception thrown when there is a problem with the dynamic keys.
     /// </summary>
