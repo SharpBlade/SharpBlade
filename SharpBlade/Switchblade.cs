@@ -435,7 +435,7 @@ namespace SharpBlade
 
             // We only want to send the char event if it's a char that can actually be typed
             // So it doesn't handle SHIFT and CONTROL as "characters"
-            if (msgType == User32.MessageType.CHAR && !Char.IsControl(asChar))
+            if (msgType == User32.MessageType.CHAR && !char.IsControl(asChar))
             {
                 OnKeyboardCharTyped(asChar);
                 if (_keyboardControl != null)
