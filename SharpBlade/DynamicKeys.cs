@@ -82,7 +82,7 @@ namespace SharpBlade
 
             _log.Debug("Initializing dynamic key array");
 
-            _keys = new DynamicKey[Razer.Constants.DynamicKeysCount];
+            _keys = new DynamicKey[Constants.DynamicKeysCount];
         }
 
         /// <summary>
@@ -111,14 +111,14 @@ namespace SharpBlade
         /// </returns>
         public IDynamicKey this[DynamicKeyType keyType]
         {
-            get { return GetDynamicKey(keyType); }
+            get { return Get(keyType); }
         }
 
         /// <summary>
         /// Disables a specific dynamic key.
         /// </summary>
         /// <param name="keyType">The key type to disable.</param>
-        public void DisableDynamicKey(DynamicKeyType keyType)
+        public void Disable(DynamicKeyType keyType)
         {
             var index = (int)keyType - 1;
             var dk = _keys[index];
@@ -135,9 +135,9 @@ namespace SharpBlade
         /// <param name="replace">True to override this key's previous configuration
         /// if it has already been enabled, otherwise returns current key if already enabled.</param>
         /// <returns>The dynamic key that was enabled.</returns>
-        public IDynamicKey EnableDynamicKey(DynamicKeyType keyType, string image, bool replace = false)
+        public IDynamicKey Enable(DynamicKeyType keyType, string image, bool replace = false)
         {
-            return EnableDynamicKey(keyType, image, null, replace);
+            return Enable(keyType, image, null, replace);
         }
 
         /// <summary>
@@ -149,13 +149,13 @@ namespace SharpBlade
         /// <param name="replace">True to override this key's previous configuration
         /// if it has already been enabled, otherwise returns current key if already enabled.</param>
         /// <returns>The dynamic key that was enabled.</returns>
-        public IDynamicKey EnableDynamicKey(
+        public IDynamicKey Enable(
             DynamicKeyType keyType,
             EventHandler<DynamicKeyEventArgs> callback,
             string image,
             bool replace = false)
         {
-            return EnableDynamicKey(keyType, callback, image, null, replace);
+            return Enable(keyType, callback, image, null, replace);
         }
 
         /// <summary>
@@ -167,13 +167,13 @@ namespace SharpBlade
         /// <param name="replace">True to override this key's previous configuration
         /// if it has already been enabled, otherwise returns current key if already enabled.</param>
         /// <returns>The dynamic key that was enabled.</returns>
-        public IDynamicKey EnableDynamicKey(
+        public IDynamicKey Enable(
             DynamicKeyType keyType,
             string image,
             string pressedImage = null,
             bool replace = false)
         {
-            return EnableDynamicKey(keyType, null, image, pressedImage, replace);
+            return Enable(keyType, null, image, pressedImage, replace);
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace SharpBlade
         /// <param name="replace">True to override this key's previous configuration
         /// if it has already been enabled, otherwise returns current key if already enabled.</param>
         /// <returns>The dynamic key that was enabled.</returns>
-        public IDynamicKey EnableDynamicKey(
+        public IDynamicKey Enable(
             DynamicKeyType keyType,
             EventHandler<DynamicKeyEventArgs> callback,
             string image,
@@ -200,8 +200,8 @@ namespace SharpBlade
                 return _keys[index];
             }
 
-            _log.Debug("Resetting dynamic key (DisableDynamicKey)");
-            DisableDynamicKey(keyType);
+            _log.Debug("Resetting dynamic key (Disable)");
+            Disable(keyType);
             try
             {
                 _log.Debug("Creating new DynamicKey object");
@@ -227,7 +227,7 @@ namespace SharpBlade
         /// </summary>
         /// <param name="keyType">The key type to get.</param>
         /// <returns><see cref="DynamicKey" /> object representing the specified key type.</returns>
-        public IDynamicKey GetDynamicKey(DynamicKeyType keyType)
+        public IDynamicKey Get(DynamicKeyType keyType)
         {
             return _keys[(int)keyType - 1];
         }
