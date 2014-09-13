@@ -6,11 +6,14 @@
 // ReSharper disable InconsistentNaming
 namespace SharpBlade.Native.WinAPI
 {
+    using System.CodeDom.Compiler;
+
     using SharpBlade.Annotations;
 
     /// <summary>
     /// Virtual-key codes used by the system.
     /// </summary>
+    [GeneratedCode("WinAPI", "1.0.0.0")]
     public enum VirtualKey
     {
         /// <summary>
