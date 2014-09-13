@@ -418,131 +418,157 @@ namespace SharpBlade.Native.WinAPI
         /// <summary>
         /// A key.
         /// </summary>
+        [UsedImplicitly]
         A = 0x41,
 
         /// <summary>
         /// B key.
         /// </summary>
+        [UsedImplicitly]
         B = 0x42,
 
         /// <summary>
         /// C key.
         /// </summary>
+        [UsedImplicitly]
         C = 0x43,
 
         /// <summary>
         /// D key.
         /// </summary>
+        [UsedImplicitly]
         D = 0x44,
 
         /// <summary>
         /// E key.
         /// </summary>
+        [UsedImplicitly]
         E = 0x45,
 
         /// <summary>
         /// F key.
         /// </summary>
+        [UsedImplicitly]
         F = 0x46,
 
         /// <summary>
         /// G key.
         /// </summary>
+        [UsedImplicitly]
         G = 0x47,
 
         /// <summary>
         /// H key.
         /// </summary>
+        [UsedImplicitly]
         H = 0x48,
 
         /// <summary>
         /// I key.
         /// </summary>
+        [UsedImplicitly]
         I = 0x49,
 
         /// <summary>
         /// J key.
         /// </summary>
+        [UsedImplicitly]
         J = 0x4A,
 
         /// <summary>
         /// K key.
         /// </summary>
+        [UsedImplicitly]
         K = 0x4B,
 
         /// <summary>
         /// L key.
         /// </summary>
+        [UsedImplicitly]
         L = 0x4C,
 
         /// <summary>
         /// M key.
         /// </summary>
+        [UsedImplicitly]
         M = 0x4D,
 
         /// <summary>
         /// N key.
         /// </summary>
+        [UsedImplicitly]
         N = 0x4E,
 
         /// <summary>
         /// O key.
         /// </summary>
+        [UsedImplicitly]
         O = 0x4F,
 
         /// <summary>
         /// P key.
         /// </summary>
+        [UsedImplicitly]
         P = 0x50,
 
         /// <summary>
         /// Q key.
         /// </summary>
+        [UsedImplicitly]
         Q = 0x51,
 
         /// <summary>
         /// R key.
         /// </summary>
+        [UsedImplicitly]
         R = 0x52,
 
         /// <summary>
         /// S key.
         /// </summary>
+        [UsedImplicitly]
         S = 0x53,
 
         /// <summary>
         /// T key.
         /// </summary>
+        [UsedImplicitly]
         T = 0x54,
 
         /// <summary>
         /// U key.
         /// </summary>
+        [UsedImplicitly]
         U = 0x55,
 
         /// <summary>
         /// V key.
         /// </summary>
+        [UsedImplicitly]
         V = 0x56,
 
         /// <summary>
         /// W key.
         /// </summary>
+        [UsedImplicitly]
         W = 0x57,
 
         /// <summary>
         /// X key.
         /// </summary>
+        [UsedImplicitly]
         X = 0x58,
 
         /// <summary>
         /// Y key.
         /// </summary>
+        [UsedImplicitly]
         Y = 0x59,
 
         /// <summary>
         /// Z key.
         /// </summary>
+        [UsedImplicitly]
         Z = 0x5A,
 
         /// <summary>

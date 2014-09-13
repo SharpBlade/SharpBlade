@@ -64,7 +64,7 @@ namespace SharpBlade
         /// Prevents a default instance of the <see cref="Touchpad" /> class from being created.
         /// </summary>
         private Touchpad()
-            : base(TargetDisplay.Widget, Razer.Constants.TouchpadHeight, Razer.Constants.TouchpadWidth)
+            : base(TargetDisplay.Widget, Constants.TouchpadHeight, Constants.TouchpadWidth)
         {
             _log = LogManager.GetLogger(this);
             _log.Info("Setting disabled image");

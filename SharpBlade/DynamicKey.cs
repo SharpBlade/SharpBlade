@@ -79,7 +79,7 @@ namespace SharpBlade
             string image,
             string pressedImage = null,
             EventHandler<DynamicKeyEventArgs> callback = null)
-            : base(TargetDisplayMapping[keyType], Razer.Constants.DynamicKeyHeight, Razer.Constants.DynamicKeyWidth)
+            : base(TargetDisplayMapping[keyType], Constants.DynamicKeyHeight, Constants.DynamicKeyWidth)
         {
             _log = LogManager.GetLogger(this);
 
