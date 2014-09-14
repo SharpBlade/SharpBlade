@@ -30,7 +30,6 @@
 
 namespace SharpBlade.Rendering
 {
-    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Timers;
 
@@ -39,7 +38,7 @@ namespace SharpBlade.Rendering
     /// <summary>
     /// Renders a static image.
     /// </summary>
-    public abstract class ImageRenderer : IRenderer
+    public abstract class ImageRenderer : Renderer
     {
         /// <summary>
         /// Timer object used for redrawing the image
@@ -59,7 +58,7 @@ namespace SharpBlade.Rendering
         /// <param name="interval">The interval (in milliseconds) at which to redraw the image.</param>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
             Justification = "The values used for the properties won't cause exceptions.")]
-        internal ImageRenderer(string image, int interval = 42)
+        protected ImageRenderer(string image, int interval = 42)
         {
             _image = image;
 
@@ -71,7 +70,7 @@ namespace SharpBlade.Rendering
         /// Gets a value indicating whether this <see cref="ImageRenderer" />
         /// is currently active (redrawing image based on timer).
         /// </summary>
-        public bool Active
+        public override bool Active
         {
             get { return _timer.Enabled; }
         }
@@ -97,31 +96,16 @@ namespace SharpBlade.Rendering
         /// <summary>
         /// Gets or sets the interval (in milliseconds) used for the redraw timer.
         /// </summary>
-        public int Interval
+        public override int Interval
         {
             get { return (int)_timer.Interval; }
             set { _timer.Interval = value; }
         }
 
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Force a redraw of the image associated with this
-        /// <see cref="ImageRenderer" /> to the render target.
-        /// </summary>
-        public abstract void Draw();
-
-        /// <summary>
         /// Starts continuous rendering to the render target.
         /// </summary>
-        public void Start()
+        public override void Start()
         {
             if (!_timer.Enabled)
                 _timer.Start();
@@ -130,7 +114,7 @@ namespace SharpBlade.Rendering
         /// <summary>
         /// Stops an ongoing continuous render operation.
         /// </summary>
-        public void Stop()
+        public override void Stop()
         {
             if (_timer.Enabled)
                 _timer.Stop();
@@ -140,7 +124,7 @@ namespace SharpBlade.Rendering
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         /// <param name="disposing">True if this is called from <see cref="Dispose()" />, false otherwise.</param>
-        private void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
             if (disposing)
                 _timer.Dispose();

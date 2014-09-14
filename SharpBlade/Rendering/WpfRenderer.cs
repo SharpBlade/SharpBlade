@@ -45,7 +45,7 @@ namespace SharpBlade.Rendering
     /// <summary>
     /// Renders WPF windows.
     /// </summary>
-    public sealed class WpfRenderer : Renderer
+    public sealed class WpfRenderer : Renderer<IRenderTarget>
     {
         /// <summary>
         /// Timer to control rendering of window when
@@ -70,6 +70,7 @@ namespace SharpBlade.Rendering
         /// Sets the target to <c>null</c>, this constructor is meant for
         /// when an instance is created to later be used with <see cref="IRenderTarget.Set{T}" />.
         /// </summary>
+        /// <param name="target">The <see cref="IRenderTarget" /> to render the window to.</param>
         /// <param name="window">The window to render.</param>
         /// <param name="interval">The interval to render the window at.</param>
         /// <remarks>
@@ -77,19 +78,21 @@ namespace SharpBlade.Rendering
         /// while <see cref="Renderer{T}.Target" /> is null will cause a runtime error.
         /// </remarks>
         [PublicAPI]
-        public WpfRenderer(Window window, int interval = 42)
-            : this(window, RenderMethod.Polling, interval)
+        internal WpfRenderer(IRenderTarget target, Window window, int interval = 42)
+            : this(target, window, RenderMethod.Polling, interval)
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WpfRenderer" /> class.
         /// </summary>
+        /// <param name="target">The <see cref="IRenderTarget" /> to render the window to.</param>
         /// <param name="window">WPF window to render.</param>
         /// <param name="method">The render method to use for drawing the window.</param>
         /// <param name="interval">The interval to render the window at.
         /// Only used if <paramref name="method" /> is set to <see cref="RenderMethod.Polling" />.</param>
-        public WpfRenderer(Window window, RenderMethod method, int interval = 42)
+        internal WpfRenderer(IRenderTarget target, Window window, RenderMethod method, int interval = 42)
+            : base(target)
         {
             _window = window;
             Method = method;

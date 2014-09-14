@@ -30,13 +30,55 @@
 
 namespace SharpBlade.Rendering
 {
+    using System;
+
     /// <summary>
-    /// Helper class to manage rendering complex structures to a render target.
-    /// This inherits from <see cref="Renderer{T}" /> with <see cref="RenderTarget" />
-    /// set as the type as a way to provide a default Renderer class for common
-    /// implementations.
+    /// Class that can render objects in arbitrary ways.
+    /// This class is not directly associated with a render target,
+    /// in contrast to <see cref="Renderer{T}" />.
     /// </summary>
-    public abstract class Renderer : Renderer<IRenderTarget>
+    public abstract class Renderer : IRenderer
     {
+        /// <summary>
+        /// Gets a value indicating whether this renderer is currently
+        /// in an active state (redrawing based on a timer or event).
+        /// </summary>
+        public abstract bool Active { get; }
+
+        /// <summary>
+        /// Gets or sets the interval (in milliseconds) used for the redraw timer.
+        /// </summary>
+        public abstract int Interval { get; set; }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Force a redraw of the object associated with this
+        /// <see cref="Renderer{T}" /> to the <see cref="Target" />.
+        /// </summary>
+        public abstract void Draw();
+
+        /// <summary>
+        /// Starts continuous rendering to the render target.
+        /// </summary>
+        public abstract void Start();
+
+        /// <summary>
+        /// Stops an ongoing continuous render operation.
+        /// </summary>
+        public abstract void Stop();
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <param name="disposing">True if called from <see cref="Dispose()" />, false otherwise.</param>
+        protected abstract void Dispose(bool disposing);
     }
 }

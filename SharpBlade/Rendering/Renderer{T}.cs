@@ -30,8 +30,6 @@
 
 namespace SharpBlade.Rendering
 {
-    using System;
-
     /// <summary>
     /// Helper class to manage rendering complex structures to a render target.
     /// </summary>
@@ -40,65 +38,31 @@ namespace SharpBlade.Rendering
     /// The <c>typeparam</c> can be used to restrict a renderer to certain types
     /// of render targets.
     /// </remarks>
-    public abstract class Renderer<T> : IRenderer<T> where T : class, IRenderTarget
+    public abstract class Renderer<T> : Renderer, IRenderer<T> where T : class, IRenderTarget
     {
-        /// <summary>
-        /// Gets a value indicating whether this renderer is currently
-        /// in an active state (redrawing based on a timer or event).
-        /// </summary>
-        public abstract bool Active { get; }
-
-        /// <summary>
-        /// Gets or sets the interval (in milliseconds) used for the redraw timer.
-        /// </summary>
-        public abstract int Interval { get; set; }
-
         /// <summary>
         /// Gets a local instance of the SwitchBlade target.
         /// </summary>
         public T Target { get; internal set; }
 
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// Initializes a new instance of the <see cref="Renderer{T}" /> class.
+        /// This constructor does not initialize the <see cref="Target" /> property.
         /// </summary>
-        public void Dispose()
+        protected Renderer()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            
         }
 
         /// <summary>
-        /// Force a redraw of the object associated with this
-        /// <see cref="Renderer{T}" /> to the <see cref="Target" />.
+        /// Initializes a new instance of the <see cref="Renderer{T}" /> class.
+        /// This constructor allows internal components to supply the target
+        /// <see cref="IRenderTarget" /> object at the time of instantiation.
         /// </summary>
-        public virtual void Draw()
+        /// <param name="target">The render target to render to.</param>
+        internal Renderer(T target)
         {
-            if (Target == null)
-                throw new InvalidOperationException("Can't call Draw before Target is assigned");
+            Target = target;
         }
-
-        /// <summary>
-        /// Starts continuous rendering to the render target.
-        /// </summary>
-        public virtual void Start()
-        {
-            if (Target == null)
-                throw new InvalidOperationException("Can't call Start before Target is assigned");
-        }
-
-        /// <summary>
-        /// Stops an ongoing continuous render operation.
-        /// </summary>
-        public virtual void Stop()
-        {
-            if (Target == null)
-                throw new InvalidOperationException("Can't call Stop before Target is assigned");
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        /// <param name="disposing">True if called from <see cref="Dispose()" />, false otherwise.</param>
-        protected abstract void Dispose(bool disposing);
     }
 }

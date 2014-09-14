@@ -262,8 +262,6 @@ namespace SharpBlade
         /// <param name="interval">The interval (in milliseconds) at which to redraw the image file.</param>
         public override void Set(string image, int interval = 42)
         {
-            Clear();
-
             image = GenericMethods.GetAbsolutePath(image);
 
             Renderer = new TouchpadImageRenderer(image, interval);

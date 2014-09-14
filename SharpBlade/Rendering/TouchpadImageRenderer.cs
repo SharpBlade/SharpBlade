@@ -41,10 +41,10 @@ namespace SharpBlade.Rendering
         /// <summary>
         /// Initializes a new instance of the <see cref="TouchpadImageRenderer" /> class.
         /// </summary>
-        /// <param name="up">Path to the image to render.</param>
+        /// <param name="image">Path to the image to render.</param>
         /// <param name="interval">The interval at which to refresh the image.</param>
-        public TouchpadImageRenderer(string up, int interval = 42)
-            : base(up, interval)
+        internal TouchpadImageRenderer(string image, int interval = 42)
+            : base(image, interval)
         {
         }
 

@@ -45,7 +45,7 @@ namespace SharpBlade.Rendering
     /// to get a <see cref="System.Drawing.Bitmap" /> that is then sent to the
     /// <see cref="Touchpad" /> for drawing.
     /// </summary>
-    public sealed class BitmapRenderer : Renderer
+    public sealed class BitmapRenderer : Renderer<IRenderTarget>
     {
         /// <summary>
         /// The Bitmap provider.
@@ -60,11 +60,13 @@ namespace SharpBlade.Rendering
         /// <summary>
         /// Initializes a new instance of the <see cref="BitmapRenderer" /> class.
         /// </summary>
+        /// <param name="target">The <see cref="IRenderTarget" /> to render the bitmap to.</param>
         /// <param name="provider">An object implementing the <see cref="IBitmapProvider" /> interface.</param>
         /// <param name="interval">How often to refresh the target (in milliseconds).</param>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
             Justification = "The values used for the properties won't cause exceptions.")]
-        public BitmapRenderer(IBitmapProvider provider, int interval = 42)
+        internal BitmapRenderer(IRenderTarget target, IBitmapProvider provider, int interval = 42)
+            : base(target)
         {
             _provider = provider;
             _timer = new Timer(interval) { AutoReset = true, Enabled = false };

@@ -94,17 +94,16 @@ namespace SharpBlade
             PreviousState = DynamicKeyState.None;
             KeyType = keyType;
 
-            Images = new DynamicKeyImageRenderer(keyType, image, pressedImage);
-
-            // Set{Up,Down}Image will also set the relevant properties
             _log.Debug("Setting images");
-            Images.Draw();
+            Draw(image, pressedImage);
 
             if (callback != null)
             {
                 _log.Debug("Setting callback");
                 Released += callback;
             }
+
+            Enabled = true;
         }
 
         /// <summary>
@@ -126,18 +125,7 @@ namespace SharpBlade
         /// </summary>
         public event EventHandler<DynamicKeyEventArgs> Released;
 
-        /// <summary>
-        /// Gets the instance of <see cref="DynamicKeyImageRenderer" /> that
-        /// manages the static images for this dynamic key.
-        /// </summary>
-        /// <remarks>
-        /// Be wary when using this property and the <see cref="Renderer" />
-        /// property, careless switching between the two without calling their
-        /// respective <c>Stop</c> methods can cause the dynamic key to
-        /// switch back and forth between different images or bitmaps,
-        /// due to two different renderers fighting against each other.
-        /// </remarks>
-        public DynamicKeyImageRenderer Images { get; private set; }
+        public bool Enabled { get; private set; }
 
         /// <summary>
         /// Gets the <see cref="DynamicKeyType" /> of this key.
@@ -155,11 +143,17 @@ namespace SharpBlade
         public DynamicKeyState State { get; private set; }
 
         /// <summary>
-        /// Disables this dynamic key (sets to blank image).
+        /// Disables this dynamic key (sets to blank image
+        /// and stops event propagation).
         /// </summary>
+        /// <remarks>
+        /// Events for this dynamic key will not be propagated again
+        /// until a call to <see cref="Enable" /> is made.
+        /// </remarks>
         public void Disable()
         {
-            Images.Image = Switchblade.Instance.DisabledDynamicKeyImagePath;
+            Clear();
+            Enabled = false;
         }
 
         /// <summary>
@@ -168,7 +162,7 @@ namespace SharpBlade
         /// <param name="image">Path to the image file.</param>
         public override void Draw(string image)
         {
-            Draw(image, image);
+            DynamicKeyImageRenderer.Draw(KeyType, image);
         }
 
         /// <summary>
@@ -178,8 +172,43 @@ namespace SharpBlade
         /// <param name="downImage">Image for the DOWN state.</param>
         public void Draw(string image, string downImage)
         {
-            Images.Up = image;
-            Images.Down = downImage;
+            DynamicKeyImageRenderer.Draw(KeyType, image, downImage);
+        }
+
+        /// <summary>
+        /// Sets the image for a specific state on this dynamic key.
+        /// </summary>
+        /// <param name="state">The state to set an image for.</param>
+        /// <param name="image">The image file to set.</param>
+        public void Draw(DynamicKeyState state, string image)
+        {
+            DynamicKeyImageRenderer.Draw(KeyType, state, image);
+        }
+
+        /// <summary>
+        /// Sets the image for the DOWN state on this key.
+        /// </summary>
+        /// <param name="image">Image file to set for the state.</param>
+        public void DrawDown(string image)
+        {
+            Draw(DynamicKeyState.Down, image);
+        }
+
+        /// <summary>
+        /// Sets the image for the UP state on this key.
+        /// </summary>
+        /// <param name="image">Image file to set for the state.</param>
+        public void DrawUp(string image)
+        {
+            Draw(DynamicKeyState.Up, image);
+        }
+
+        /// <summary>
+        /// Enables event propagation for this dynamic key.
+        /// </summary>
+        public void Enable()
+        {
+            Enabled = true;
         }
 
         /// <summary>
@@ -201,30 +230,7 @@ namespace SharpBlade
         /// <param name="interval">The interval (in milliseconds) at which to refresh the images.</param>
         public void Set(string image, string downImage, int interval = 42)
         {
-            Images.Stop();
-            Images.Up = image;
-            Images.Down = downImage;
-            Images.Interval = interval;
-        }
-
-        /// <summary>
-        /// Sets the <see cref="Renderer{T}" /> to be used for this <see cref="DynamicKey" /> and
-        /// calls its <see cref="Renderer{T}.Start" /> method.
-        /// </summary>
-        /// <typeparam name="T">
-        /// The type of <see cref="RenderTarget" /> that the renderer is compatible with.
-        /// </typeparam>
-        /// <param name="renderer">An instance of the <see cref="Renderer{T}" /> class.</param>
-        /// <remarks>
-        /// This overload also calls the <see cref="Renderer{T}.Stop" /> method
-        /// on <see cref="DynamicKeyImageRenderer" /> prior to setting the new renderer and starting it,
-        /// to avoid possible collisions.
-        /// </remarks>
-        public override void Set<T>(IRenderer<T> renderer)
-        {
-            Images.Stop();
-
-            base.Set(renderer);
+            Renderer = new DynamicKeyImageRenderer(KeyType, image, downImage, interval);
         }
 
         /// <summary>
@@ -235,6 +241,11 @@ namespace SharpBlade
         {
             PreviousState = State;
             State = state;
+
+            // Don't notify subscribers unless key is enabled
+            if (!Enabled)
+                return;
+
             OnChanged();
             if (State == DynamicKeyState.Up
                 && (PreviousState == DynamicKeyState.Down || PreviousState == DynamicKeyState.None))
@@ -249,8 +260,7 @@ namespace SharpBlade
         /// </summary>
         protected override void ClearImage()
         {
-            Images.Stop();
-            Images.Image = Switchblade.Instance.DisabledDynamicKeyImagePath;
+            DynamicKeyImageRenderer.Draw(KeyType, Switchblade.Instance.DisabledDynamicKeyImagePath);
         }
 
         /// <summary>

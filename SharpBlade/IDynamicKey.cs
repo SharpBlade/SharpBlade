@@ -35,7 +35,6 @@ namespace SharpBlade
     using SharpBlade.Annotations;
     using SharpBlade.Events;
     using SharpBlade.Razer;
-    using SharpBlade.Rendering;
 
     /// <summary>
     /// <see cref="DynamicKey" /> interface.
@@ -59,20 +58,6 @@ namespace SharpBlade
         /// </summary>
         [PublicAPI]
         event EventHandler<DynamicKeyEventArgs> Released;
-
-        /// <summary>
-        /// Gets the instance of <see cref="DynamicKeyImageRenderer" /> that
-        /// manages the static images for this dynamic key.
-        /// </summary>
-        /// <remarks>
-        /// Be wary when using this property and the <see cref="Renderer" />
-        /// property, careless switching between the two without calling their
-        /// respective <c>Stop</c> methods can cause the dynamic key to
-        /// switch back and forth between different images or bitmaps,
-        /// due to two different renderers fighting against each other.
-        /// </remarks>
-        [PublicAPI]
-        DynamicKeyImageRenderer Images { get; }
 
         /// <summary>
         /// Gets the <see cref="DynamicKeyType" /> of this key.
@@ -99,8 +84,13 @@ namespace SharpBlade
         bool Disposed { get; }
 
         /// <summary>
-        /// Disables this dynamic key (sets to blank image).
+        /// Disables this dynamic key (sets to blank image
+        /// and stops event propagation).
         /// </summary>
+        /// <remarks>
+        /// Events for this dynamic key will not be propagated again
+        /// until a call to <see cref="Enable" /> is made.
+        /// </remarks>
         [PublicAPI]
         void Disable();
 
@@ -111,6 +101,34 @@ namespace SharpBlade
         /// <param name="downImage">Image for the DOWN state.</param>
         [PublicAPI]
         void Draw(string image, string downImage);
+
+        /// <summary>
+        /// Sets the image for a specific state on this dynamic key.
+        /// </summary>
+        /// <param name="state">The state to set an image for.</param>
+        /// <param name="image">The image file to set.</param>
+        [PublicAPI]
+        void Draw(DynamicKeyState state, string image);
+
+        /// <summary>
+        /// Sets the image for the DOWN state on this key.
+        /// </summary>
+        /// <param name="image">Image file to set for the state.</param>
+        [PublicAPI]
+        void DrawDown(string image);
+
+        /// <summary>
+        /// Sets the image for the UP state on this key.
+        /// </summary>
+        /// <param name="image">Image file to set for the state.</param>
+        [PublicAPI]
+        void DrawUp(string image);
+
+        /// <summary>
+        /// Enables event propagation for this dynamic key.
+        /// </summary>
+        [PublicAPI]
+        void Enable();
 
         /// <summary>
         /// Sets the images to be drawn and refreshed on this key.

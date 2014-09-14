@@ -45,6 +45,8 @@ namespace SharpBlade.Rendering
     /// </summary>
     public abstract class RenderTarget : IRenderTarget
     {
+        private IRenderer _renderer;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RenderTarget" /> class.
         /// </summary>
@@ -89,7 +91,30 @@ namespace SharpBlade.Rendering
         /// Gets or sets the <see cref="IRenderer" /> instance used to
         /// manage timed rendering of objects.
         /// </summary>
-        public IRenderer Renderer { get; protected set; }
+        /// <remarks>
+        /// <para>To set custom renderers implementing <see cref="IRenderer{T}" />,
+        /// the <see cref="Set{T}" /> method has to be used in order for the
+        /// <see cref="RenderTarget" /> to properly set the
+        /// <see cref="IRenderer{T}.Target" /> property.</para>
+        /// <para>Failure to do so may cause the renderer to not operate.</para>
+        /// </remarks>
+        public IRenderer Renderer
+        {
+            get
+            {
+                return _renderer;
+            }
+
+            set
+            {
+                Clear();
+
+                _renderer = value;
+                
+                if (_renderer != null)
+                    _renderer.Start();
+            }
+        }
 
         /// <summary>
         /// Gets the <see cref="Razer.TargetDisplay" /> that content will be
@@ -182,7 +207,7 @@ namespace SharpBlade.Rendering
             Justification = "Doesn't make sense to dispose the object we are creating here.")]
         public void Set(IBitmapProvider provider, int interval = 42)
         {
-            Set(new BitmapRenderer(provider, interval));
+            Renderer = new BitmapRenderer(this, provider, interval);
         }
 
         /// <summary>
@@ -196,7 +221,7 @@ namespace SharpBlade.Rendering
             Justification = "Doesn't make sense to dispose the object we are creating here.")]
         public void Set(Form form, RenderMethod method = RenderMethod.Polling, int interval = 42)
         {
-            Set(new WinFormsRenderer(form, method, interval));
+            Renderer = new WinFormsRenderer(this, form, method, interval);
         }
 
         /// <summary>
@@ -208,7 +233,7 @@ namespace SharpBlade.Rendering
             Justification = "Doesn't make sense to dispose the object we are creating here.")]
         public void Set(IntPtr handle, int interval = 42)
         {
-            Set(new NativeRenderer(handle, interval));
+            Renderer = new NativeRenderer(this, handle, interval);
         }
 
         /// <summary>
@@ -222,7 +247,7 @@ namespace SharpBlade.Rendering
             Justification = "Doesn't make sense to dispose the object we are creating here.")]
         public void Set(Window window, RenderMethod method = RenderMethod.Polling, int interval = 42)
         {
-            Set(new WpfRenderer(window, method, interval));
+            Renderer = new WpfRenderer(this, window, method, interval);
         }
 
         /// <summary>
@@ -245,8 +270,6 @@ namespace SharpBlade.Rendering
             if (renderer == null)
                 throw new ArgumentNullException("renderer");
 
-            Clear();
-
             var targetRenderer = renderer as Renderer<T>;
 
             if (targetRenderer != null)
@@ -261,9 +284,6 @@ namespace SharpBlade.Rendering
 
                 targetRenderer.Target = target;
             }
-
-            Renderer = renderer;
-            Renderer.Start();
         }
 
         /// <summary>

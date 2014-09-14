@@ -61,7 +61,7 @@ namespace SharpBlade.Rendering
         /// manage timed rendering of objects.
         /// </summary>
         [PublicAPI]
-        IRenderer Renderer { get; }
+        IRenderer Renderer { get; set; }
 
         /// <summary>
         /// Gets the <see cref="Razer.TargetDisplay" /> that content will be

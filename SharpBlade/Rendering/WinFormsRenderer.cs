@@ -40,7 +40,7 @@ namespace SharpBlade.Rendering
     /// <summary>
     /// Renders WinForms forms.
     /// </summary>
-    internal sealed class WinFormsRenderer : Renderer
+    internal sealed class WinFormsRenderer : Renderer<IRenderTarget>
     {
         /// <summary>
         /// WinForms Form to render.
@@ -63,25 +63,28 @@ namespace SharpBlade.Rendering
         /// <summary>
         /// Initializes a new instance of the <see cref="WinFormsRenderer" /> class.
         /// </summary>
+        /// <param name="target">The <see cref="IRenderTarget" /> to render the form to.</param>
         /// <param name="form">WinForms form to render.</param>
         /// <param name="interval">Interval (in milliseconds) to redraw at.</param>
         [PublicAPI]
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "This is public.")]
-        public WinFormsRenderer(Form form, int interval = 42)
-            : this(form, RenderMethod.Polling, interval)
+        internal WinFormsRenderer(IRenderTarget target, Form form, int interval = 42)
+            : this(target, form, RenderMethod.Polling, interval)
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WinFormsRenderer" /> class.
         /// </summary>
+        /// <param name="target">The <see cref="IRenderTarget" /> to render the form to.</param>
         /// <param name="form">WinForms form to render.</param>
         /// <param name="method">Render method to use.</param>
         /// <param name="interval">Interval (in milliseconds) to poll at when <paramref name="method" />
         /// is set to <see cref="RenderMethod.Polling" />.</param>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
             Justification = "It makes no sense to dispose _timer.")]
-        public WinFormsRenderer(Form form, RenderMethod method, int interval = 42)
+        internal WinFormsRenderer(IRenderTarget target, Form form, RenderMethod method, int interval = 42)
+            : base(target)
         {
             _form = form;
             Method = method;

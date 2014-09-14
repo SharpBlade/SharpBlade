@@ -42,7 +42,7 @@ namespace SharpBlade.Rendering
     /// is able to supply a window handle.
     /// </summary>
     // ReSharper disable once ClassNeverInstantiated.Global
-    public sealed class NativeRenderer : Renderer
+    public sealed class NativeRenderer : Renderer<IRenderTarget>
     {
         /// <summary>
         /// Timer to control rendering of window when
@@ -60,11 +60,13 @@ namespace SharpBlade.Rendering
         /// Initializes a new instance of the <see cref="NativeRenderer" /> class.
         /// Used for rendering a native window at the specified interval.
         /// </summary>
+        /// <param name="target">The <see cref="IRenderTarget" /> to render the window to.</param>
         /// <param name="handle">Native window handle to render.</param>
         /// <param name="interval">The interval (in milliseconds) to render the window at.</param>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
             Justification = "The values for the properties won't cause exceptions.")]
-        public NativeRenderer(IntPtr handle, int interval = 42)
+        internal NativeRenderer(IRenderTarget target, IntPtr handle, int interval = 42)
+            : base(target)
         {
             _handle = handle;
 
