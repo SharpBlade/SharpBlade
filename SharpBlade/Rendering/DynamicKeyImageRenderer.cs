@@ -144,10 +144,7 @@ namespace SharpBlade.Rendering
         [PublicAPI]
         public bool SingleFile
         {
-            get
-            {
-                return Up == Down;
-            }
+            get { return Up == Down; }
         }
 
         /// <summary>
