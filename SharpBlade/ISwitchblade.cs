@@ -78,7 +78,7 @@ namespace SharpBlade
         /// after <see cref="SharpBlade.Touchpad.ClearImage" /> or <see cref="RenderTarget.Clear()" />.
         /// have been called.
         /// </summary>
-        /// <remarks>Defaults to <see cref="Switchblade.BlankTouchpadImage" /></remarks>
+        /// <remarks>Defaults to <see cref="Switchblade.DefaultBlankTouchpadImage" /></remarks>
         [PublicAPI]
         string BlankTouchpadImagePath { get; set; }
 
@@ -97,7 +97,7 @@ namespace SharpBlade
         /// <summary>
         /// Gets or sets the image shown on dynamic keys when disabled.
         /// </summary>
-        /// <remarks>Defaults to <see cref="Switchblade.DisabledDynamicKeyImage" /></remarks>
+        /// <remarks>Defaults to <see cref="Switchblade.DefaultDisabledDynamicKeyImage" /></remarks>
         [PublicAPI]
         string DisabledDynamicKeyImagePath { get; set; }
 

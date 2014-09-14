@@ -123,7 +123,7 @@ namespace SharpBlade.Rendering
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        /// <param name="disposing">True if this is called from <see cref="Dispose()" />, false otherwise.</param>
+        /// <param name="disposing">True if this is called from <see cref="Dispose" />, false otherwise.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -125,6 +125,10 @@ namespace SharpBlade
         /// </summary>
         public event EventHandler<DynamicKeyEventArgs> Released;
 
+        /// <summary>
+        /// Gets a value indicating whether this dynamic key
+        /// is currently enabled (propagating events).
+        /// </summary>
         public bool Enabled { get; private set; }
 
         /// <summary>

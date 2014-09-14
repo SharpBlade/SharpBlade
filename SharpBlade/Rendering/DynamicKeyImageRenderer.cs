@@ -53,18 +53,6 @@ namespace SharpBlade.Rendering
         /// Initializes a new instance of the <see cref="DynamicKeyImageRenderer" /> class.
         /// </summary>
         /// <param name="keyType">The type of DK to render to.</param>
-        /// <param name="image">The image to render (both states).</param>
-        /// <param name="interval">The interval (in milliseconds) at which to refresh the image.</param>
-        [PublicAPI]
-        internal DynamicKeyImageRenderer(DynamicKeyType keyType, string image, int interval = 42)
-            : this(keyType, image, image, interval)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DynamicKeyImageRenderer" /> class.
-        /// </summary>
-        /// <param name="keyType">The type of DK to render to.</param>
         /// <param name="up">The image to render (UP state).</param>
         /// <param name="down">The image to render (DOWN state).</param>
         /// <param name="interval">The interval (in milliseconds) at which to refresh the image.</param>
@@ -86,6 +74,7 @@ namespace SharpBlade.Rendering
                 return _down;
             }
 
+            [PublicAPI]
             set
             {
                 _down = value;
@@ -125,6 +114,7 @@ namespace SharpBlade.Rendering
                 return _up;
             }
 
+            [PublicAPI]
             set
             {
                 _up = value;

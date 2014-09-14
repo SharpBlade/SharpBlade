@@ -67,24 +67,6 @@ namespace SharpBlade.Rendering
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WpfRenderer" /> class.
-        /// Sets the target to <c>null</c>, this constructor is meant for
-        /// when an instance is created to later be used with <see cref="IRenderTarget.Set{T}" />.
-        /// </summary>
-        /// <param name="target">The <see cref="IRenderTarget" /> to render the window to.</param>
-        /// <param name="window">The window to render.</param>
-        /// <param name="interval">The interval to render the window at.</param>
-        /// <remarks>
-        /// Trying to call <see cref="Draw()" />, <see cref="Start" />, or <see cref="Stop"/>
-        /// while <see cref="Renderer{T}.Target" /> is null will cause a runtime error.
-        /// </remarks>
-        [PublicAPI]
-        internal WpfRenderer(IRenderTarget target, Window window, int interval = 42)
-            : this(target, window, RenderMethod.Polling, interval)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WpfRenderer" /> class.
         /// </summary>
         /// <param name="target">The <see cref="IRenderTarget" /> to render the window to.</param>
         /// <param name="window">WPF window to render.</param>

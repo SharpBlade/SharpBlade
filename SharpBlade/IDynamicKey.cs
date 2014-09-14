@@ -84,6 +84,13 @@ namespace SharpBlade
         bool Disposed { get; }
 
         /// <summary>
+        /// Gets a value indicating whether this dynamic key
+        /// is currently enabled (propagating events).
+        /// </summary>
+        [PublicAPI]
+        bool Enabled { get; }
+
+        /// <summary>
         /// Disables this dynamic key (sets to blank image
         /// and stops event propagation).
         /// </summary>

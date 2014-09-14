@@ -61,7 +61,7 @@ namespace SharpBlade.Rendering
 
         /// <summary>
         /// Force a redraw of the object associated with this
-        /// <see cref="Renderer{T}" /> to the <see cref="Target" />.
+        /// <see cref="Renderer{T}" />.
         /// </summary>
         public abstract void Draw();
 

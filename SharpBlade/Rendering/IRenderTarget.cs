@@ -57,7 +57,7 @@ namespace SharpBlade.Rendering
         int DisplayWidth { get; }
 
         /// <summary>
-        /// Gets the <see cref="IRenderer" /> instance used to
+        /// Gets or sets the <see cref="IRenderer" /> instance used to
         /// manage timed rendering of objects.
         /// </summary>
         [PublicAPI]

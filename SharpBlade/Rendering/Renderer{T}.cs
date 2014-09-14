@@ -30,6 +30,8 @@
 
 namespace SharpBlade.Rendering
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Helper class to manage rendering complex structures to a render target.
     /// </summary>
@@ -38,22 +40,10 @@ namespace SharpBlade.Rendering
     /// The <c>typeparam</c> can be used to restrict a renderer to certain types
     /// of render targets.
     /// </remarks>
+    [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly",
+        Justification = "IDisposable is needed on the interface so that RenderTarget can dispose it properly")]
     public abstract class Renderer<T> : Renderer, IRenderer<T> where T : class, IRenderTarget
     {
-        /// <summary>
-        /// Gets a local instance of the SwitchBlade target.
-        /// </summary>
-        public T Target { get; internal set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Renderer{T}" /> class.
-        /// This constructor does not initialize the <see cref="Target" /> property.
-        /// </summary>
-        protected Renderer()
-        {
-            
-        }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Renderer{T}" /> class.
         /// This constructor allows internal components to supply the target
@@ -64,5 +54,18 @@ namespace SharpBlade.Rendering
         {
             Target = target;
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Renderer{T}" /> class.
+        /// This constructor does not initialize the <see cref="Target" /> property.
+        /// </summary>
+        protected Renderer()
+        {
+        }
+
+        /// <summary>
+        /// Gets a local instance of the SwitchBlade target.
+        /// </summary>
+        public T Target { get; internal set; }
     }
 }

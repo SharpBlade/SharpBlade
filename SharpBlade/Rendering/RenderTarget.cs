@@ -45,6 +45,9 @@ namespace SharpBlade.Rendering
     /// </summary>
     public abstract class RenderTarget : IRenderTarget
     {
+        /// <summary>
+        /// Private backing field for the current <see cref="IRenderer" />.
+        /// </summary>
         private IRenderer _renderer;
 
         /// <summary>
