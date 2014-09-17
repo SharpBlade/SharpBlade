@@ -35,11 +35,12 @@ namespace SharpBlade
     using SharpBlade.Annotations;
     using SharpBlade.Events;
     using SharpBlade.Razer;
+    using SharpBlade.Rendering;
 
     /// <summary>
     /// <see cref="Touchpad" /> interface.
     /// </summary>
-    public interface ITouchpad
+    public interface ITouchpad : IRenderTarget
     {
         /// <summary>
         /// Raised when a finger(s?) flick on the touchpad.

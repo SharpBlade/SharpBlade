@@ -35,11 +35,12 @@ namespace SharpBlade
     using SharpBlade.Annotations;
     using SharpBlade.Events;
     using SharpBlade.Razer;
+    using SharpBlade.Rendering;
 
     /// <summary>
     /// <see cref="DynamicKey" /> interface.
     /// </summary>
-    public interface IDynamicKey
+    public interface IDynamicKey : IRenderTarget
     {
         /// <summary>
         /// Raised when the state of this key changes.
