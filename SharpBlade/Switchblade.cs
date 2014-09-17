@@ -176,7 +176,7 @@ namespace SharpBlade
                 Capabilities.DynamicKeyArrangement.X,
                 Capabilities.DynamicKeyArrangement.Y);
 
-            for (ulong i = 0; i < Capabilities.NumSurfaces; i++)
+            for (var i = 0; i < Capabilities.SurfaceCount; i++)
             {
                 var pf = Capabilities.Pixelformat[i];
                 var sg = Capabilities.Surfacegeometry[i];
