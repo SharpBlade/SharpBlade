@@ -305,12 +305,12 @@ namespace SharpBlade.Rendering
             if (!disposing)
                 ClearImage();
 
-            if (Renderer == null)
+            if (_renderer == null)
                 return;
 
-            Renderer.Stop();
-            Renderer.Dispose();
-            Renderer = null;
+            _renderer.Stop();
+            _renderer.Dispose();
+            _renderer = null;
         }
 
         /// <summary>
