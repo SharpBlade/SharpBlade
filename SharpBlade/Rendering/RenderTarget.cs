@@ -37,6 +37,7 @@ namespace SharpBlade.Rendering
     using System.Windows;
     using System.Windows.Forms;
 
+    using SharpBlade.Events;
     using SharpBlade.Integration;
     using SharpBlade.Razer;
 
@@ -51,6 +52,12 @@ namespace SharpBlade.Rendering
         private IRenderer _renderer;
 
         /// <summary>
+        /// Field to keep track of whether the <see cref="_renderer" /> has
+        /// been disposed after a Deactivated app event.
+        /// </summary>
+        private bool _rendererSuspended;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="RenderTarget" /> class.
         /// </summary>
         /// <param name="targetDisplay">
@@ -63,6 +70,10 @@ namespace SharpBlade.Rendering
             DisplayHeight = height;
             DisplayWidth = width;
             TargetDisplay = targetDisplay;
+
+            var sb = Switchblade.Instance;
+            sb.Activated += OnAppActivated;
+            sb.Deactivated += OnAppDeactivated;
         }
 
         /// <summary>
@@ -331,6 +342,41 @@ namespace SharpBlade.Rendering
                 Clear(true);
 
             Disposed = true;
+        }
+
+        /// <summary>
+        /// Runs when app is activated from a suspended state, starts the
+        /// renderer back up if it was suspended by us when app was
+        /// deactivated.
+        /// </summary>
+        /// <param name="sender">The object that raised the event.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnAppActivated(object sender, AppEventEventArgs e)
+        {
+            var renderer = Renderer;
+            if (_rendererSuspended && renderer != null)
+                renderer.Start();
+
+            // We set the suspended tracking field to false regardless of above
+            // outcome, to avoid possible errors on next deactivation.
+            _rendererSuspended = false;
+        }
+
+        /// <summary>
+        /// Runs when app is deactivated and put in the background by
+        /// the SBUI system, stops the renderer (if active) and sets
+        /// the suspended tracking field to start it back up after
+        /// app activates again.
+        /// </summary>
+        /// <param name="sender">The object that raised the event.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnAppDeactivated(object sender, AppEventEventArgs e)
+        {
+            var renderer = Renderer;
+            if (renderer == null || !renderer.Active)
+                return;
+            renderer.Stop();
+            _rendererSuspended = true;
         }
     }
 }
