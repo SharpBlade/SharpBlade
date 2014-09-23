@@ -30,6 +30,8 @@
 
 namespace SharpBlade.Helpers
 {
+    using System.Diagnostics.CodeAnalysis;
+    using System.Drawing;
     using System.IO;
 
     /// <summary>
@@ -47,6 +49,26 @@ namespace SharpBlade.Helpers
             var currentDirectory = Directory.GetCurrentDirectory();
             var combined = Path.Combine(currentDirectory, path);
             return combined;
+        }
+
+        /// <summary>
+        /// Gets a blank (filled with black) <see cref="Bitmap" /> object with
+        /// the specified dimensions.
+        /// </summary>
+        /// <param name="width">Width of the bitmap to create.</param>
+        /// <param name="height">Height of the bitmap to create.</param>
+        /// <returns>
+        /// An instance of <see cref="Bitmap" /> that matches the specified dimensions
+        /// and is filled with the color black.
+        /// </returns>
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
+            Justification = "There isn't really anywhere that could throw an exception here.")]
+        internal static Bitmap GetBlankBitmap(int width, int height)
+        {
+            var bmp = new Bitmap(width, height);
+            using (var gfx = Graphics.FromImage(bmp))
+                gfx.FillRectangle(Brushes.Black, 0, 0, width, height);
+            return bmp;
         }
     }
 }

@@ -32,8 +32,11 @@ namespace SharpBlade
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Drawing;
 
     using SharpBlade.Events;
+    using SharpBlade.Helpers;
     using SharpBlade.Logging;
     using SharpBlade.Razer;
     using SharpBlade.Rendering;
@@ -61,6 +64,11 @@ namespace SharpBlade
                 { DynamicKeyType.DK9, TargetDisplay.DK9 },
                 { DynamicKeyType.DK10, TargetDisplay.DK10 }
             };
+
+        /// <summary>
+        /// Blank bitmap object used for clearing the dynamic key.
+        /// </summary>
+        private readonly Bitmap _blankBitmap;
 
         /// <summary>
         /// The log instance associated with this object.
@@ -93,6 +101,9 @@ namespace SharpBlade
             State = DynamicKeyState.None;
             PreviousState = DynamicKeyState.None;
             KeyType = keyType;
+
+            _log.Debug("Creating blank bitmap");
+            _blankBitmap = GenericMethods.GetBlankBitmap(DisplayWidth, DisplayHeight);
 
             _log.Debug("Setting images");
             Draw(image, pressedImage);
@@ -264,7 +275,24 @@ namespace SharpBlade
         /// </summary>
         protected override void ClearImage()
         {
-            DynamicKeyImageRenderer.Draw(KeyType, Switchblade.Instance.DisabledDynamicKeyImagePath);
+            BitmapRenderer.Draw(this, _blankBitmap);
+        }
+
+        /// <summary>
+        /// Disposes of this <see cref="DynamicKey" />.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> if called from parameter-less <see cref="Dispose" />, false otherwise.</param>
+        [SuppressMessage("Microsoft.Usage", "CA2215:Dispose methods should call base class dispose",
+            Justification = "It's already calling base dispose in all possible flows (Dispose is ever only true if base dispose has run).")]
+        protected override void Dispose(bool disposing)
+        {
+            if (Disposed)
+                return;
+
+            if (disposing)
+                _blankBitmap.Dispose();
+
+            base.Dispose(disposing);
         }
 
         /// <summary>

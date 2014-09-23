@@ -34,29 +34,19 @@ namespace SharpBlade
     using System.Linq;
     using System.Windows.Forms;
 
+    using SharpBlade.Annotations;
     using SharpBlade.Events;
     using SharpBlade.Integration;
     using SharpBlade.Logging;
     using SharpBlade.Native;
     using SharpBlade.Native.WinAPI;
     using SharpBlade.Razer;
-    using SharpBlade.Rendering;
 
     /// <summary>
     /// Manages everything related to Razer and its devices.
     /// </summary>
     public sealed class Switchblade : ISwitchblade
     {
-        /// <summary>
-        /// Blank image used for touchpad.
-        /// </summary>
-        private const string DefaultBlankTouchpadImage = @"Default\Images\tp_blank.png";
-
-        /// <summary>
-        /// Blank image used for dynamic keys.
-        /// </summary>
-        private const string DefaultDisabledDynamicKeyImage = @"Default\Images\dk_disabled.png";
-
         /// <summary>
         /// Array of 3-tuples to pair Virtual Keys (1st element) with their ModifierKeys counterpart (3rd element),
         /// the second element is used when checking for VK status (pressed or toggled, VK specific).
@@ -133,10 +123,6 @@ namespace SharpBlade
             _log = LogManager.GetLogger(this);
 
             _log.Info("Switchblade is initializing");
-
-            _log.Debug("Setting default values for touchpad/dynamickey blank/disabled images");
-            BlankTouchpadImagePath = DefaultBlankTouchpadImage;
-            DisabledDynamicKeyImagePath = DefaultDisabledDynamicKeyImage;
 
             _log.Debug("Calling RzSBStart()");
 
@@ -253,6 +239,7 @@ namespace SharpBlade
         /// <summary>
         /// Gets singleton instance of Switchblade.
         /// </summary>
+        [PublicAPI]
         public static ISwitchblade Instance
         {
             get
@@ -260,14 +247,6 @@ namespace SharpBlade
                 return _instance ?? (_instance = new Switchblade());
             }
         }
-
-        /// <summary>
-        /// Gets or sets the image shown on Touchpad when it's blank or
-        /// after <see cref="SharpBlade.Touchpad.ClearImage" /> or <see cref="RenderTarget.Clear()" />.
-        /// have been called.
-        /// </summary>
-        /// <remarks>Defaults to <see cref="DefaultBlankTouchpadImage" /></remarks>
-        public string BlankTouchpadImagePath { get; set; }
 
         /// <summary>
         /// Gets a structure describing the SDK and hardware capabilities of the system.
@@ -281,12 +260,6 @@ namespace SharpBlade
         {
             get { return _dynamicKeys; }
         }
-
-        /// <summary>
-        /// Gets or sets the image shown on dynamic keys when disabled.
-        /// </summary>
-        /// <remarks>Defaults to <see cref="DefaultDisabledDynamicKeyImage" /></remarks>
-        public string DisabledDynamicKeyImagePath { get; set; }
 
         /// <summary>
         /// Gets the <see cref="IDisplayStateFile" /> instance associated with this

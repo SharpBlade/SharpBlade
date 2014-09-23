@@ -176,7 +176,7 @@ namespace SharpBlade.Rendering
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        /// <param name="disposing">True if called from <see cref="Renderer{T}.Dispose()" />, false otherwise.</param>
+        /// <param name="disposing">True if called from <see cref="Renderer.Dispose()" />, false otherwise.</param>
         [SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly",
             Justification = "The class has sealed keyword already.")]
         protected override void Dispose(bool disposing)

@@ -31,6 +31,8 @@
 namespace SharpBlade
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Drawing;
     using System.Linq;
 
     using SharpBlade.Events;
@@ -56,6 +58,11 @@ namespace SharpBlade
         private static Touchpad _instance;
 
         /// <summary>
+        /// Blank bitmap object used for clearing the touchpad.
+        /// </summary>
+        private readonly Bitmap _blankBitmap;
+
+        /// <summary>
         /// Log object for the <see cref="Touchpad" />.
         /// </summary>
         private readonly log4net.ILog _log;
@@ -73,6 +80,9 @@ namespace SharpBlade
             var result = NativeMethods.RzSBGestureSetCallback(_gestureCallback);
             if (HRESULT.RZSB_FAILED(result))
                 throw new NativeCallException("RzSBGestureSetCallback", result);
+
+            _log.Debug("Creating blank bitmap");
+            _blankBitmap = GenericMethods.GetBlankBitmap(DisplayWidth, DisplayHeight);
         }
 
         /// <summary>
@@ -152,7 +162,6 @@ namespace SharpBlade
         /// Disables a gesture from being handled by the touchpad.
         /// </summary>
         /// <param name="gestureTypes">Gesture to disable.</param>
-        [CLSCompliant(false)]
         public void DisableGesture(GestureTypes gestureTypes)
         {
             SetGesture(gestureTypes, false);
@@ -162,7 +171,6 @@ namespace SharpBlade
         /// Disables forwarding of a gesture.
         /// </summary>
         /// <param name="gestureTypes">Gesture to disable.</param>
-        [CLSCompliant(false)]
         public void DisableOSGesture(GestureTypes gestureTypes)
         {
             SetOSGesture(gestureTypes, false);
@@ -172,7 +180,6 @@ namespace SharpBlade
         /// Enables a gesture to be handled by the touchpad.
         /// </summary>
         /// <param name="gestureTypes">Gesture to enable.</param>
-        [CLSCompliant(false)]
         public void EnableGesture(GestureTypes gestureTypes)
         {
             SetGesture(gestureTypes, true);
@@ -182,7 +189,6 @@ namespace SharpBlade
         /// Enables a gesture to be forwarded to the host operating system.
         /// </summary>
         /// <param name="gestureTypes">Gesture to forward.</param>
-        [CLSCompliant(false)]
         public void EnableOSGesture(GestureTypes gestureTypes)
         {
             SetOSGesture(gestureTypes, true);
@@ -193,7 +199,6 @@ namespace SharpBlade
         /// </summary>
         /// <param name="gestureTypes">The gesture type to set.</param>
         /// <param name="enabled">True to enable gesture, false to disable.</param>
-        [CLSCompliant(false)]
         public void SetGesture(GestureTypes gestureTypes, bool enabled)
         {
             _log.DebugFormat("SetGesture is {0} gestures: {1}", enabled ? "enabling" : "disabling", gestureTypes);
@@ -221,7 +226,6 @@ namespace SharpBlade
         /// </summary>
         /// <param name="gestureTypes">Gesture to set.</param>
         /// <param name="enabled">True to enable forwarding, false to disable.</param>
-        [CLSCompliant(false)]
         public void SetOSGesture(GestureTypes gestureTypes, bool enabled)
         {
             _log.DebugFormat("SetOSGesture is {0} gestures: {1}", enabled ? "enabling" : "disabling", gestureTypes);
@@ -272,10 +276,27 @@ namespace SharpBlade
         /// </summary>
         protected override void ClearImage()
         {
-            TouchpadImageRenderer.Draw(GenericMethods.GetAbsolutePath(Switchblade.Instance.BlankTouchpadImagePath));
+            BitmapRenderer.Draw(this, _blankBitmap);
         }
 
         #endregion Drawing Methods
+
+        /// <summary>
+        /// Disposes of this <see cref="Touchpad" />.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> if called from parameter-less <see cref="Dispose" />, false otherwise.</param>
+        [SuppressMessage("Microsoft.Usage", "CA2215:Dispose methods should call base class dispose",
+            Justification = "It's already calling base dispose in all possible flows (Dispose is ever only true if base dispose has run).")]
+        protected override void Dispose(bool disposing)
+        {
+            if (Disposed)
+                return;
+
+            if (disposing)
+                _blankBitmap.Dispose();
+
+            base.Dispose(disposing);
+        }
 
         #region Event Dispatchers
 

@@ -322,7 +322,6 @@ namespace SharpBlade.Rendering
         /// Disposes of this <see cref="RenderTarget" />.
         /// </summary>
         /// <param name="disposing"><c>true</c> if called from parameter-less <see cref="Dispose()" />, false otherwise.</param>
-        // ReSharper disable VirtualMemberNeverOverriden.Global
         protected virtual void Dispose(bool disposing)
         {
             if (Disposed)

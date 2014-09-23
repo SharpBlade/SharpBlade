@@ -36,7 +36,6 @@ namespace SharpBlade
     using SharpBlade.Annotations;
     using SharpBlade.Events;
     using SharpBlade.Razer;
-    using SharpBlade.Rendering;
 
     /// <summary>
     /// <see cref="Switchblade" /> interface.
@@ -74,15 +73,6 @@ namespace SharpBlade
         event EventHandler<KeyboardRawEventArgs> KeyboardRawEvent;
 
         /// <summary>
-        /// Gets or sets the image shown on Touchpad when it's blank or
-        /// after <see cref="SharpBlade.Touchpad.ClearImage" /> or <see cref="RenderTarget.Clear()" />.
-        /// have been called.
-        /// </summary>
-        /// <remarks>Defaults to <see cref="Switchblade.DefaultBlankTouchpadImage" /></remarks>
-        [PublicAPI]
-        string BlankTouchpadImagePath { get; set; }
-
-        /// <summary>
         /// Gets a structure describing the SDK and hardware capabilities of the system.
         /// </summary>
         [PublicAPI]
@@ -93,13 +83,6 @@ namespace SharpBlade
         /// </summary>
         [PublicAPI]
         IDynamicKeys DynamicKeys { get; }
-
-        /// <summary>
-        /// Gets or sets the image shown on dynamic keys when disabled.
-        /// </summary>
-        /// <remarks>Defaults to <see cref="Switchblade.DefaultDisabledDynamicKeyImage" /></remarks>
-        [PublicAPI]
-        string DisabledDynamicKeyImagePath { get; set; }
 
         /// <summary>
         /// Gets the <see cref="IDisplayStateFile" /> instance associated with this
