@@ -212,9 +212,29 @@ namespace SharpBlade
         }
 
         /// <summary>
+        /// Raised when the app is activated (put in foreground).
+        /// </summary>
+        public event EventHandler<AppEventEventArgs> Activated;
+
+        /// <summary>
         /// Raised when an app event occurs.
         /// </summary>
         public event EventHandler<AppEventEventArgs> AppEvent;
+
+        /// <summary>
+        /// Raised when the CLOSE app event occurs.
+        /// </summary>
+        public event EventHandler<AppEventEventArgs> Close;
+
+        /// <summary>
+        /// Raised when the app is deactivated (put in background).
+        /// </summary>
+        public event EventHandler<AppEventEventArgs> Deactivated;
+
+        /// <summary>
+        /// Raised when the EXIT app event occurs.
+        /// </summary>
+        public event EventHandler<AppEventEventArgs> Exit;
 
         /// <summary>
         /// Raised when a keyboard char event occurs.
@@ -389,6 +409,22 @@ namespace SharpBlade
 
             OnAppEvent(type, firstParam, secondParam);
 
+            switch (type)
+            {
+                case AppEventType.Activated:
+                    OnActivated(firstParam, secondParam);
+                    break;
+                case AppEventType.Close:
+                    OnClose(firstParam, secondParam);
+                    break;
+                case AppEventType.Deactivated:
+                    OnDectivated(firstParam, secondParam);
+                    break;
+                case AppEventType.Exit:
+                    OnExit(firstParam, secondParam);
+                    break;
+            }
+
             return Result;
         }
 
@@ -447,6 +483,18 @@ namespace SharpBlade
         }
 
         /// <summary>
+        /// Raises the activated app event to subscribers.
+        /// </summary>
+        /// <param name="firstParam">The first DWORD parameter.</param>
+        /// <param name="secondParam">The second DWORD parameter.</param>
+        private void OnActivated(uint firstParam, uint secondParam)
+        {
+            var func = Activated;
+            if (func != null)
+                func(this, new AppEventEventArgs(AppEventType.Activated, firstParam, secondParam));
+        }
+
+        /// <summary>
         /// Raises app event to subscribers.
         /// </summary>
         /// <param name="type">App event type.</param>
@@ -457,6 +505,42 @@ namespace SharpBlade
             var func = AppEvent;
             if (func != null)
                 func(this, new AppEventEventArgs(type, firstParam, secondParam));
+        }
+
+        /// <summary>
+        /// Raises the close app event to subscribers.
+        /// </summary>
+        /// <param name="firstParam">The first DWORD parameter.</param>
+        /// <param name="secondParam">The second DWORD parameter.</param>
+        private void OnClose(uint firstParam, uint secondParam)
+        {
+            var func = Close;
+            if (func != null)
+                func(this, new AppEventEventArgs(AppEventType.Close, firstParam, secondParam));
+        }
+
+        /// <summary>
+        /// Raises the deactivated app event to subscribers.
+        /// </summary>
+        /// <param name="firstParam">The first DWORD parameter.</param>
+        /// <param name="secondParam">The second DWORD parameter.</param>
+        private void OnDectivated(uint firstParam, uint secondParam)
+        {
+            var func = Exit;
+            if (func != null)
+                func(this, new AppEventEventArgs(AppEventType.Deactivated, firstParam, secondParam));
+        }
+
+        /// <summary>
+        /// Raises the exit app event to subscribers.
+        /// </summary>
+        /// <param name="firstParam">The first DWORD parameter.</param>
+        /// <param name="secondParam">The second DWORD parameter.</param>
+        private void OnExit(uint firstParam, uint secondParam)
+        {
+            var func = Exit;
+            if (func != null)
+                func(this, new AppEventEventArgs(AppEventType.Exit, firstParam, secondParam));
         }
 
         /// <summary>

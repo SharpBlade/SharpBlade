@@ -43,10 +43,34 @@ namespace SharpBlade
     public interface ISwitchblade : IDisposable
     {
         /// <summary>
+        /// Raised when the app is activated (put in foreground).
+        /// </summary>
+        [PublicAPI]
+        event EventHandler<AppEventEventArgs> Activated;
+
+        /// <summary>
         /// Raised when an app event occurs.
         /// </summary>
         [PublicAPI]
         event EventHandler<AppEventEventArgs> AppEvent;
+
+        /// <summary>
+        /// Raised when the CLOSE app event occurs.
+        /// </summary>
+        [PublicAPI]
+        event EventHandler<AppEventEventArgs> Close;
+
+        /// <summary>
+        /// Raised when the app is deactivated (put in background).
+        /// </summary>
+        [PublicAPI]
+        event EventHandler<AppEventEventArgs> Deactivated;
+
+        /// <summary>
+        /// Raised when the EXIT app event occurs.
+        /// </summary>
+        [PublicAPI]
+        event EventHandler<AppEventEventArgs> Exit;
 
         /// <summary>
         /// Raised when a keyboard char event occurs.
