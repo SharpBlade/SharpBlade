@@ -32,6 +32,9 @@ namespace SharpBlade.Rendering
 {
     using System;
 
+    using SharpBlade.Events;
+    using SharpBlade.Logging;
+
     /// <summary>
     /// Class that can render objects in arbitrary ways.
     /// This class is not directly associated with a render target,
@@ -39,6 +42,29 @@ namespace SharpBlade.Rendering
     /// </summary>
     public abstract class Renderer : IRenderer
     {
+        /// <summary>
+        /// <see cref="log4net.ILog" /> instance for this class.
+        /// </summary>
+        private log4net.ILog _log;
+
+        /// <summary>
+        /// Field to keep track of whether this renderer has
+        /// been suspended after a Deactivated app event.
+        /// </summary>
+        private bool _suspended;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Renderer" /> class.
+        /// </summary>
+        protected Renderer()
+        {
+            _log = LogManager.GetLogger(this);
+
+            var sb = Switchblade.Instance;
+            sb.Activated += OnAppActivated;
+            sb.Deactivated += OnAppDeactivated;
+        }
+
         /// <summary>
         /// Gets a value indicating whether this renderer is currently
         /// in an active state (redrawing based on a timer or event).
@@ -80,5 +106,43 @@ namespace SharpBlade.Rendering
         /// </summary>
         /// <param name="disposing">True if called from <see cref="Dispose()" />, false otherwise.</param>
         protected abstract void Dispose(bool disposing);
+
+        /// <summary>
+        /// Runs when app is activated from a suspended state, starts
+        /// rendering back up if it was suspended by us when app was
+        /// deactivated.
+        /// </summary>
+        /// <param name="sender">The object that raised the event.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnAppActivated(object sender, AppEventEventArgs e)
+        {
+            if (_suspended)
+            {
+                _log.Debug("Starting back up from being suspended.");
+                Start();
+            }
+
+            // We set the suspended tracking field to false regardless of above
+            // outcome, to avoid possible errors on next deactivation.
+            _suspended = false;
+        }
+
+        /// <summary>
+        /// Runs when app is deactivated and put in the background by
+        /// the SBUI system, stops renderering (if active) and sets
+        /// the suspended tracking field to start back up after
+        /// app activates again.
+        /// </summary>
+        /// <param name="sender">The object that raised the event.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnAppDeactivated(object sender, AppEventEventArgs e)
+        {
+            if (!Active)
+                return;
+
+            _log.Debug("App is deactivating, suspending rendering...");
+            Stop();
+            _suspended = true;
+        }
     }
 }
