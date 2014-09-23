@@ -134,7 +134,7 @@ namespace SharpBlade
         /// <param name="releaseOnEnter">If true, keyboard capture will cease when the enter key is pressed,
         /// otherwise, <see cref="Switchblade.SetKeyboardCapture" /> has to be called explicitly with false as the argument.</param>
         [PublicAPI]
-        void StartWinFormsControlKeyboardCapture(Control control, bool releaseOnEnter = true);
+        void StartKeyboardCapture(Control control, bool releaseOnEnter = true);
 
         /// <summary>
         /// Starts forwarding keyboard events to the specified WPF control.
@@ -143,7 +143,7 @@ namespace SharpBlade
         /// <param name="releaseOnEnter">If true, keyboard capture will cease when the enter key is pressed,
         /// otherwise, <see cref="Switchblade.SetKeyboardCapture" /> has to be called explicitly with false as the argument.</param>
         [PublicAPI]
-        void StartWpfControlKeyboardCapture(System.Windows.Controls.Control control, bool releaseOnEnter = true);
+        void StartKeyboardCapture(System.Windows.Controls.Control control, bool releaseOnEnter = true);
 
         /// <summary>
         /// Stops all Razer interaction.

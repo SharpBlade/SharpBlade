@@ -344,7 +344,7 @@ namespace SharpBlade
         /// <param name="control">THe control to forward input to.</param>
         /// <param name="releaseOnEnter">If true, keyboard capture will cease when the enter key is pressed,
         /// otherwise, <see cref="SetKeyboardCapture" /> has to be called explicitly with false as the argument.</param>
-        public void StartWinFormsControlKeyboardCapture(Control control, bool releaseOnEnter = true)
+        public void StartKeyboardCapture(Control control, bool releaseOnEnter = true)
         {
             SetKeyboardCapture(true);
             _keyboardControl = new KeyboardControl(control, releaseOnEnter);
@@ -356,7 +356,7 @@ namespace SharpBlade
         /// <param name="control">The control to forward input to.</param>
         /// <param name="releaseOnEnter">If true, keyboard capture will cease when the enter key is pressed,
         /// otherwise, <see cref="SetKeyboardCapture" /> has to be called explicitly with false as the argument.</param>
-        public void StartWpfControlKeyboardCapture(System.Windows.Controls.Control control, bool releaseOnEnter = true)
+        public void StartKeyboardCapture(System.Windows.Controls.Control control, bool releaseOnEnter = true)
         {
             SetKeyboardCapture(true);
             _keyboardControl = new KeyboardControl(control, releaseOnEnter);
