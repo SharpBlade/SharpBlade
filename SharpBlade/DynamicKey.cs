@@ -76,6 +76,11 @@ namespace SharpBlade
         private readonly log4net.ILog _log;
 
         /// <summary>
+        /// Whether or not this key is enabled.
+        /// </summary>
+        private bool _enabled;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DynamicKey" /> class.
         /// </summary>
         /// <param name="keyType">The type of dynamic key being initialized.</param>
@@ -84,7 +89,7 @@ namespace SharpBlade
         /// <param name="callback">The function to call when this key is released.</param>
         internal DynamicKey(
             DynamicKeyType keyType,
-            string image,
+            string image = null,
             string pressedImage = null,
             EventHandler<DynamicKeyEventArgs> callback = null)
             : base(TargetDisplayMapping[keyType], Constants.DynamicKeyHeight, Constants.DynamicKeyWidth)
@@ -106,7 +111,8 @@ namespace SharpBlade
             _blankBitmap = GenericMethods.GetBlankBitmap(DisplayWidth, DisplayHeight);
 
             _log.Debug("Setting images");
-            Draw(image, pressedImage);
+            if (image != null)
+                Draw(image, pressedImage);
 
             if (callback != null)
             {
@@ -114,7 +120,7 @@ namespace SharpBlade
                 Released += callback;
             }
 
-            Enabled = true;
+            _enabled = true;
         }
 
         /// <summary>
@@ -137,10 +143,24 @@ namespace SharpBlade
         public event EventHandler<DynamicKeyEventArgs> Released;
 
         /// <summary>
-        /// Gets a value indicating whether this dynamic key
+        /// Gets or sets a value indicating whether this dynamic key
         /// is currently enabled (propagating events).
         /// </summary>
-        public bool Enabled { get; private set; }
+        public bool Enabled
+        {
+            get
+            {
+                return _enabled;
+            }
+
+            set
+            {
+                if (!value)
+                    Clear();
+
+                _enabled = value;
+            }
+        }
 
         /// <summary>
         /// Gets the <see cref="DynamicKeyType" /> of this key.
@@ -156,20 +176,6 @@ namespace SharpBlade
         /// Gets the current state of this key.
         /// </summary>
         public DynamicKeyState State { get; private set; }
-
-        /// <summary>
-        /// Disables this dynamic key (sets to blank image
-        /// and stops event propagation).
-        /// </summary>
-        /// <remarks>
-        /// Events for this dynamic key will not be propagated again
-        /// until a call to <see cref="Enable" /> is made.
-        /// </remarks>
-        public void Disable()
-        {
-            Clear();
-            Enabled = false;
-        }
 
         /// <summary>
         /// Sets a static image to both states of the dynamic key.
@@ -216,14 +222,6 @@ namespace SharpBlade
         public void DrawUp(string image)
         {
             Draw(DynamicKeyState.Up, image);
-        }
-
-        /// <summary>
-        /// Enables event propagation for this dynamic key.
-        /// </summary>
-        public void Enable()
-        {
-            Enabled = true;
         }
 
         /// <summary>

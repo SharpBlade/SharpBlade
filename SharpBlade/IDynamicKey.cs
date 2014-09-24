@@ -85,22 +85,11 @@ namespace SharpBlade
         bool Disposed { get; }
 
         /// <summary>
-        /// Gets a value indicating whether this dynamic key
+        /// Gets or sets a value indicating whether this dynamic key
         /// is currently enabled (propagating events).
         /// </summary>
         [PublicAPI]
-        bool Enabled { get; }
-
-        /// <summary>
-        /// Disables this dynamic key (sets to blank image
-        /// and stops event propagation).
-        /// </summary>
-        /// <remarks>
-        /// Events for this dynamic key will not be propagated again
-        /// until a call to <see cref="Enable" /> is made.
-        /// </remarks>
-        [PublicAPI]
-        void Disable();
+        bool Enabled { get; set; }
 
         /// <summary>
         /// Sets the images for each state of the dynamic key.
@@ -131,12 +120,6 @@ namespace SharpBlade
         /// <param name="image">Image file to set for the state.</param>
         [PublicAPI]
         void DrawUp(string image);
-
-        /// <summary>
-        /// Enables event propagation for this dynamic key.
-        /// </summary>
-        [PublicAPI]
-        void Enable();
 
         /// <summary>
         /// Sets the images to be drawn and refreshed on this key.

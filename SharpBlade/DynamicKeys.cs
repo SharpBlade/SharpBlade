@@ -106,12 +106,17 @@ namespace SharpBlade
         /// </summary>
         /// <param name="keyType">The type of key to get.</param>
         /// <returns>
-        /// An instance of <see cref="IDynamicKey" /> if the requested
-        /// type has been enabled, otherwise <c>null</c>.
+        /// An instance of <see cref="IDynamicKey" />.
         /// </returns>
         public IDynamicKey this[DynamicKeyType keyType]
         {
-            get { return Get(keyType); }
+            get
+            {
+                var index = (int)keyType - 1;
+                if (index >= _keys.Length)
+                    throw new ArgumentOutOfRangeException("keyType");
+                return _keys[index] ?? Enable(keyType);
+            }
         }
 
         /// <summary>
@@ -122,8 +127,13 @@ namespace SharpBlade
         {
             var index = (int)keyType - 1;
             var dk = _keys[index];
-            if (dk != null)
-                dk.Disable();
+
+            if (dk != null && !dk.Disposed)
+            {
+                dk.Enabled = false;
+                dk.Dispose();
+            }
+
             _keys[index] = null;
         }
 
@@ -135,7 +145,7 @@ namespace SharpBlade
         /// <param name="replace">True to override this key's previous configuration
         /// if it has already been enabled, otherwise returns current key if already enabled.</param>
         /// <returns>The dynamic key that was enabled.</returns>
-        public IDynamicKey Enable(DynamicKeyType keyType, string image, bool replace = false)
+        public IDynamicKey Enable(DynamicKeyType keyType, string image, bool replace)
         {
             return Enable(keyType, image, null, replace);
         }
@@ -153,7 +163,7 @@ namespace SharpBlade
             DynamicKeyType keyType,
             EventHandler<DynamicKeyEventArgs> callback,
             string image,
-            bool replace = false)
+            bool replace)
         {
             return Enable(keyType, callback, image, null, replace);
         }
@@ -188,8 +198,8 @@ namespace SharpBlade
         /// <returns>The dynamic key that was enabled.</returns>
         public IDynamicKey Enable(
             DynamicKeyType keyType,
-            EventHandler<DynamicKeyEventArgs> callback,
-            string image,
+            EventHandler<DynamicKeyEventArgs> callback = null,
+            string image = null,
             string pressedImage = null,
             bool replace = false)
         {
@@ -220,16 +230,6 @@ namespace SharpBlade
             }
 
             return _keys[index];
-        }
-
-        /// <summary>
-        /// Gets a specific dynamic key.
-        /// </summary>
-        /// <param name="keyType">The key type to get.</param>
-        /// <returns><see cref="DynamicKey" /> object representing the specified key type.</returns>
-        public IDynamicKey Get(DynamicKeyType keyType)
-        {
-            return _keys[(int)keyType - 1];
         }
 
         /// <summary>
