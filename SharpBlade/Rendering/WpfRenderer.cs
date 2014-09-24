@@ -171,24 +171,15 @@ namespace SharpBlade.Rendering
                 using (var bitmap = new Bitmap(stream))
                 {
                     if (winFormsComponents != null)
-                    {
-                        // This is safe to assume because above we are creating the bitmap
-                        // with PixelFormat Pbgra32
-                        // ReSharper disable once BitwiseOperatorOnEnumWithoutFlags
                         using (var graphics = Graphics.FromImage(bitmap))
-                        {
                             foreach (var component in winFormsComponents)
                                 graphics.DrawImage(component.Draw(), component.Bounds);
-                        }
-                    }
 
                     target.Draw(bitmap);
                 }
 
                 encoder.Frames.Clear();
             }
-
-            rtb.Clear();
         }
 
         /// <summary>
