@@ -107,6 +107,11 @@ namespace SharpBlade
         private bool _disposed;
 
         /// <summary>
+        /// Whether or not keyboard capture is currently enabled.
+        /// </summary>
+        private bool _keyboardCapture;
+
+        /// <summary>
         /// Holds reference to the <see cref="KeyboardControl" /> instance.
         /// </summary>
         private KeyboardControl _keyboardControl;
@@ -291,9 +296,30 @@ namespace SharpBlade
         }
 
         /// <summary>
-        /// Gets a value indicating whether keyboard capture is enabled or not.
+        /// Gets or sets a value indicating whether keyboard capture is enabled or not.
         /// </summary>
-        public bool KeyboardCapture { get; private set; }
+        public bool KeyboardCapture
+        {
+            get
+            {
+                return _keyboardCapture;
+            }
+
+            set
+            {
+                if (value == _keyboardCapture)
+                    return;
+
+                var hresult = NativeMethods.RzSBCaptureKeyboard(value);
+                if (HRESULT.RZSB_FAILED(hresult))
+                    throw new NativeCallException("RzSBCaptureKeyboard", hresult);
+
+                if (!value)
+                    _keyboardControl = null;
+
+                _keyboardCapture = value;
+            }
+        }
 
         /// <summary>
         /// Gets the touchpad on the keyboard.
@@ -313,33 +339,14 @@ namespace SharpBlade
         }
 
         /// <summary>
-        /// Enables or disables keyboard capture.
-        /// </summary>
-        /// <param name="enabled">Whether or not to enable keyboard capture.</param>
-        public void SetKeyboardCapture(bool enabled)
-        {
-            if (enabled == KeyboardCapture)
-                return;
-
-            var hresult = NativeMethods.RzSBCaptureKeyboard(enabled);
-            if (HRESULT.RZSB_FAILED(hresult))
-                throw new NativeCallException("RzSBCaptureKeyboard", hresult);
-
-            if (!enabled)
-                _keyboardControl = null;
-
-            KeyboardCapture = enabled;
-        }
-
-        /// <summary>
         /// Starts forwarding keyboard events to the specified WinForms control.
         /// </summary>
         /// <param name="control">THe control to forward input to.</param>
         /// <param name="releaseOnEnter">If true, keyboard capture will cease when the enter key is pressed,
-        /// otherwise, <see cref="SetKeyboardCapture" /> has to be called explicitly with false as the argument.</param>
+        /// otherwise, <see cref="KeyboardCapture" /> has to be explicitly set to false.</param>
         public void StartKeyboardCapture(Control control, bool releaseOnEnter = true)
         {
-            SetKeyboardCapture(true);
+            KeyboardCapture = true;
             _keyboardControl = new WinFormsKeyboardControl(control, releaseOnEnter);
         }
 
@@ -348,10 +355,10 @@ namespace SharpBlade
         /// </summary>
         /// <param name="control">The control to forward input to.</param>
         /// <param name="releaseOnEnter">If true, keyboard capture will cease when the enter key is pressed,
-        /// otherwise, <see cref="SetKeyboardCapture" /> has to be called explicitly with false as the argument.</param>
+        /// otherwise, <see cref="KeyboardCapture" /> has to be explicitly set to false.</param>
         public void StartKeyboardCapture(System.Windows.Controls.Control control, bool releaseOnEnter = true)
         {
-            SetKeyboardCapture(true);
+            KeyboardCapture = true;
             _keyboardControl = new WpfKeyboardControl(control, releaseOnEnter);
         }
 
@@ -474,7 +481,7 @@ namespace SharpBlade
                     {
                         _keyboardControl.SendKeyUp(key);
                         if (key == VirtualKey.RETURN && _keyboardControl.ReleaseOnEnter)
-                            SetKeyboardCapture(false);
+                            KeyboardCapture = false;
                     }
                 }
             }

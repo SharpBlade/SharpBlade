@@ -116,23 +116,16 @@ namespace SharpBlade
         IDisplayStateFile DisplayStateFile { get; }
 
         /// <summary>
-        /// Gets a value indicating whether keyboard capture is enabled or not.
+        /// Gets or sets a value indicating whether keyboard capture is enabled or not.
         /// </summary>
         [PublicAPI]
-        bool KeyboardCapture { get; }
+        bool KeyboardCapture { get; set; }
 
         /// <summary>
         /// Gets the touchpad on the keyboard.
         /// </summary>
         [PublicAPI]
         ITouchpad Touchpad { get; }
-
-        /// <summary>
-        /// Enables or disables keyboard capture.
-        /// </summary>
-        /// <param name="enabled">Whether or not to enable keyboard capture.</param>
-        [PublicAPI]
-        void SetKeyboardCapture(bool enabled);
 
         /// <summary>
         /// Starts forwarding keyboard events to the specified WinForms control.
