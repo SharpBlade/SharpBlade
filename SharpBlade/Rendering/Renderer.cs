@@ -131,7 +131,7 @@ namespace SharpBlade.Rendering
 
         /// <summary>
         /// Runs when app is deactivated and put in the background by
-        /// the SBUI system, stops renderering (if active) and sets
+        /// the SBUI system, stops rendering (if active) and sets
         /// the suspended tracking field to start back up after
         /// app activates again.
         /// </summary>
