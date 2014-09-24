@@ -132,7 +132,7 @@ namespace SharpBlade
         /// </summary>
         /// <param name="control">THe control to forward input to.</param>
         /// <param name="releaseOnEnter">If true, keyboard capture will cease when the enter key is pressed,
-        /// otherwise, <see cref="Switchblade.SetKeyboardCapture" /> has to be called explicitly with false as the argument.</param>
+        /// otherwise, <see cref="Switchblade.KeyboardCapture" /> has to be explicitly set to false.</param>
         [PublicAPI]
         void StartKeyboardCapture(Control control, bool releaseOnEnter = true);
 
@@ -141,7 +141,7 @@ namespace SharpBlade
         /// </summary>
         /// <param name="control">The control to forward input to.</param>
         /// <param name="releaseOnEnter">If true, keyboard capture will cease when the enter key is pressed,
-        /// otherwise, <see cref="Switchblade.SetKeyboardCapture" /> has to be called explicitly with false as the argument.</param>
+        /// otherwise, <see cref="Switchblade.KeyboardCapture" /> has to be explicitly set to false.</param>
         [PublicAPI]
         void StartKeyboardCapture(System.Windows.Controls.Control control, bool releaseOnEnter = true);
 
