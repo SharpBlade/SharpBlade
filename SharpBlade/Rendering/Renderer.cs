@@ -45,7 +45,7 @@ namespace SharpBlade.Rendering
         /// <summary>
         /// <see cref="log4net.ILog" /> instance for this class.
         /// </summary>
-        private log4net.ILog _log;
+        private readonly log4net.ILog _log;
 
         /// <summary>
         /// Field to keep track of whether this renderer has
