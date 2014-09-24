@@ -418,7 +418,7 @@ namespace SharpBlade
                     OnClose(firstParam, secondParam);
                     break;
                 case AppEventType.Deactivated:
-                    OnDectivated(firstParam, secondParam);
+                    OnDeactivated(firstParam, secondParam);
                     break;
                 case AppEventType.Exit:
                     OnExit(firstParam, secondParam);
@@ -524,9 +524,9 @@ namespace SharpBlade
         /// </summary>
         /// <param name="firstParam">The first DWORD parameter.</param>
         /// <param name="secondParam">The second DWORD parameter.</param>
-        private void OnDectivated(uint firstParam, uint secondParam)
+        private void OnDeactivated(uint firstParam, uint secondParam)
         {
-            var func = Exit;
+            var func = Deactivated;
             if (func != null)
                 func(this, new AppEventEventArgs(AppEventType.Deactivated, firstParam, secondParam));
         }

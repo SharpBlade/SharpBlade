@@ -59,7 +59,9 @@ namespace SharpBlade.Rendering
         protected Renderer()
         {
             _log = LogManager.GetLogger(this);
+            _log.Debug("Renderer constructing");
 
+            _log.Debug("Subscribing to events");
             var sb = Switchblade.Instance;
             sb.Activated += OnAppActivated;
             sb.Deactivated += OnAppDeactivated;
