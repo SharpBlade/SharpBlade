@@ -340,7 +340,7 @@ namespace SharpBlade
         public void StartKeyboardCapture(Control control, bool releaseOnEnter = true)
         {
             SetKeyboardCapture(true);
-            _keyboardControl = new KeyboardControl(control, releaseOnEnter);
+            _keyboardControl = new WinFormsKeyboardControl(control, releaseOnEnter);
         }
 
         /// <summary>
@@ -352,7 +352,7 @@ namespace SharpBlade
         public void StartKeyboardCapture(System.Windows.Controls.Control control, bool releaseOnEnter = true)
         {
             SetKeyboardCapture(true);
-            _keyboardControl = new KeyboardControl(control, releaseOnEnter);
+            _keyboardControl = new WpfKeyboardControl(control, releaseOnEnter);
         }
 
         /// <summary>

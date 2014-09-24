@@ -104,6 +104,8 @@
     <Compile Include="IDynamicKeys.cs" />
     <Compile Include="Integration\EmbeddedWinFormsControl.cs" />
     <Compile Include="Integration\KeyboardControl.cs" />
+    <Compile Include="Integration\WinFormsKeyboardControl.cs" />
+    <Compile Include="Integration\WpfKeyboardControl.cs" />
     <Compile Include="ISwitchblade.cs" />
     <Compile Include="ITouchpad.cs" />
     <Compile Include="Logging\LogManager.cs" />

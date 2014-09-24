@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------------------------------------
-// <copyright file="KeyboardControl.cs" company="SharpBlade">
+// <copyright file="WinFormsKeyboardControl.cs" company="SharpBlade">
 //     Copyright © 2013-2014 by Adam Hellberg and Brandon Scott.
 //
 //     Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -30,45 +30,69 @@
 
 namespace SharpBlade.Integration
 {
+    using System;
+    using System.Windows.Forms;
+
     using SharpBlade.Native.WinAPI;
 
     /// <summary>
-    /// Helper class to send input to a GUI control.
+    /// Helper class to send key events to a WinForms control.
     /// </summary>
-    internal abstract class KeyboardControl
+    internal sealed class WinFormsKeyboardControl : KeyboardControl
     {
         /// <summary>
-        /// Specifies if the caller wishes for keyboard capture
-        /// to be disabled (released) after the ENTER key has
-        /// been pressed.
+        /// The WinForms <see cref="Control" /> upon which to raise key events.
         /// </summary>
-        internal readonly bool ReleaseOnEnter;
+        private readonly Control _control;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="KeyboardControl" /> class.
+        /// Initializes a new instance of the <see cref="WinFormsKeyboardControl" /> class.
         /// </summary>
+        /// <param name="control">A WinForms <see cref="Control" /> to raise key events on.</param>
         /// <param name="releaseOnEnter">Whether or not to release control when enter is pressed.</param>
-        protected KeyboardControl(bool releaseOnEnter)
+        internal WinFormsKeyboardControl(Control control, bool releaseOnEnter)
+            : base(releaseOnEnter)
         {
-            ReleaseOnEnter = releaseOnEnter;
+            _control = control;
         }
 
         /// <summary>
-        /// Sends a char event to the active control.
+        /// Sends WM_CHAR to WinForms control.
         /// </summary>
-        /// <param name="character">The character that was typed.</param>
-        internal abstract void SendChar(char character);
+        /// <param name="character">Character that was typed.</param>
+        internal override void SendChar(char character)
+        {
+            User32.NativeMethods.PostMessage(
+                _control.Handle,
+                (uint)User32.MessageType.CHAR,
+                (IntPtr)character,
+                IntPtr.Zero);
+        }
 
         /// <summary>
-        /// Sends a KeyDown event to the active control.
+        /// Sends WM_KEYDOWN to WinForms control.
         /// </summary>
-        /// <param name="key">The key that was pressed.</param>
-        internal abstract void SendKeyDown(VirtualKey key);
+        /// <param name="key">Key that was pressed.</param>
+        internal override void SendKeyDown(VirtualKey key)
+        {
+            User32.NativeMethods.PostMessage(
+                _control.Handle,
+                (uint)User32.MessageType.KEYDOWN,
+                (IntPtr)key,
+                IntPtr.Zero);
+        }
 
         /// <summary>
-        /// Sends a KeyUp event to the active control.
+        /// Sends WM_KEYUP to WinForms control.
         /// </summary>
-        /// <param name="key">The key that was released.</param>
-        internal abstract void SendKeyUp(VirtualKey key);
+        /// <param name="key">Key that was released.</param>
+        internal override void SendKeyUp(VirtualKey key)
+        {
+            User32.NativeMethods.PostMessage(
+                _control.Handle,
+                (uint)User32.MessageType.KEYUP,
+                (IntPtr)key,
+                IntPtr.Zero);
+        }
     }
 }
