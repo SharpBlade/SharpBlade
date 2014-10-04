@@ -13,13 +13,12 @@
 // Disable "missing documentation" warning (CS1591: Missing XML comment for publicly visible type or member)
 
 #pragma warning disable 1591
-using System;
-using System.CodeDom.Compiler;
-using System.Globalization;
 
 namespace SharpBlade.Native
 {
-    #region HRESULT
+    using System;
+    using System.CodeDom.Compiler;
+    using System.Globalization;
 
     // ReSharper disable InconsistentNaming
     [GeneratedCode("pinvoke.net", "1.0.0.0")]
@@ -3445,10 +3444,6 @@ namespace SharpBlade.Native
         // FACILITY_WIN32
         // ******************
 
-        #region (0x070000 - 0x07FFFF) FACILITY_WIN32 errors
-
-        #endregion (0x070000 - 0x07FFFF) FACILITY_WIN32 errors
-
         // ******************
         // FACILITY_WINDOWS
         // ******************
@@ -5414,10 +5409,6 @@ namespace SharpBlade.Native
         //  FACILITY_CONTROL
         // ******************
 
-        #region (0x0A0000 - 0x0AFFFF) FACILITY_CONTROL errors
-
-        #endregion (0x0A0000 - 0x0AFFFF) FACILITY_CONTROL errors
-
         // ******************
         // FACILITY_CERT
         // ******************
@@ -5622,25 +5613,13 @@ namespace SharpBlade.Native
         //  FACILITY_INTERNET
         // ******************
 
-        #region (0x0C0000 - 0x0CFFFF) FACILITY_INTERNET errors
-
-        #endregion (0x0C0000 - 0x0CFFFF) FACILITY_INTERNET errors
-
         // ******************
         //  FACILITY_MEDIASERVER
         // ******************
 
-        #region (0x0D0000 - 0x0DFFFF) FACILITY_MEDIASERVER errors
-
-        #endregion (0x0D0000 - 0x0DFFFF) FACILITY_MEDIASERVER errors
-
         // ******************
         //  FACILITY_MSMQ
         // ******************
-
-        #region (0x0E0000 - 0x0EFFFF) FACILITY_MSMQ errors
-
-        #endregion (0x0E0000 - 0x0EFFFF) FACILITY_MSMQ errors
 
         // *****************
         // FACILITY_SETUPAPI
@@ -7135,145 +7114,73 @@ namespace SharpBlade.Native
         //  FACILITY_AAF
         // ******************
 
-        #region (0x120000 - 0x12FFFF) FACILITY_AAF=18 errors
-
-        #endregion (0x120000 - 0x12FFFF) FACILITY_AAF=18 errors
-
         // ******************
         //  FACILITY_URT
         // ******************
-
-        #region (0x130000 - 0x13FFFF) FACILITY_URT=19 errors
-
-        #endregion (0x130000 - 0x13FFFF) FACILITY_URT=19 errors
 
         // ******************
         //  FACILITY_ACS
         // ******************
 
-        #region (0x140000 - 0x14FFFF) FACILITY_ACS=20 errors
-
-        #endregion (0x140000 - 0x14FFFF) FACILITY_ACS=20 errors
-
         // ******************
         //  FACILITY_DPLAY
         // ******************
-
-        #region (0x150000 - 0x15FFFF) FACILITY_DPLAY=21 errors
-
-        #endregion (0x150000 - 0x15FFFF) FACILITY_DPLAY=21 errors
 
         // ******************
         //  FACILITY_UMI
         // ******************
 
-        #region (0x160000 - 0x16FFFF) FACILITY_UMI=22 errors
-
-        #endregion (0x160000 - 0x16FFFF) FACILITY_UMI=22 errors
-
         // ******************
         //  FACILITY_SXS
         // ******************
-
-        #region (0x170000 - 0x17FFFF) FACILITY_SXS=23 errors
-
-        #endregion (0x170000 - 0x17FFFF) FACILITY_SXS=23 errors
 
         // ******************
         //  FACILITY_WINDOWS_CE
         // ******************
 
-        #region (0x180000 - 0x18FFFF) FACILITY_WINDOWS_CE=24 errors
-
-        #endregion (0x180000 - 0x18FFFF) FACILITY_WINDOWS_CE=24 errors
-
         // ******************
         //  FACILITY_HTTP
         // ******************
-
-        #region (0x190000 - 0x19FFFF) FACILITY_HTTP=25 errors
-
-        #endregion (0x190000 - 0x19FFFF) FACILITY_HTTP=25 errors
 
         // ******************
         //  FACILITY_26
         // ******************
 
-        #region (0x1A0000 - 0x1AFFFF) FACILITY_26=26 errors
-
-        #endregion (0x1A0000 - 0x1AFFFF) FACILITY_26=26 errors
-
         // ******************
         //  FACILITY_27
         // ******************
-
-        #region (0x1B0000 - 0x1BFFFF) FACILITY_27=27 errors
-
-        #endregion (0x1B0000 - 0x1BFFFF) FACILITY_27=27 errors
 
         // ******************
         //  FACILITY_28
         // ******************
 
-        #region (0x1C0000 - 0x1CFFFF) FACILITY_28=28 errors
-
-        #endregion (0x1C0000 - 0x1CFFFF) FACILITY_28=28 errors
-
         // ******************
         //  FACILITY_29
         // ******************
-
-        #region (0x1D0000 - 0x1DFFFF) FACILITY_29=29 errors
-
-        #endregion (0x1D0000 - 0x1DFFFF) FACILITY_29=29 errors
 
         // ******************
         //  FACILITY_30
         // ******************
 
-        #region (0x1E0000 - 0x1EFFFF) FACILITY_30=30 errors
-
-        #endregion (0x1E0000 - 0x1EFFFF) FACILITY_30=30 errors
-
         // ******************
         //  FACILITY_31
         // ******************
-
-        #region (0x1F0000 - 0x1FFFFF) FACILITY_31=31 errors
-
-        #endregion (0x1F0000 - 0x1FFFFF) FACILITY_31=31 errors
 
         // ******************
         //  FACILITY_BACKGROUNDCOPY
         // ******************
 
-        #region (0x200000 - 0x20FFFF) FACILITY_BACKGROUNDCOPY=32 errors
-
-        #endregion (0x200000 - 0x20FFFF) FACILITY_BACKGROUNDCOPY=32 errors
-
         // ******************
         //  FACILITY_CONFIGURATION
         // ******************
-
-        #region (0x210000 - 0x21FFFF) FACILITY_CONFIGURATION=33 errors
-
-        #endregion (0x210000 - 0x21FFFF) FACILITY_CONFIGURATION=33 errors
 
         // ******************
         //  FACILITY_STATE_MANAGEMENT
         // ******************
 
-        #region (0x220000 - 0x22FFFF) FACILITY_STATE_MANAGEMENT=34 errors
-
-        #endregion (0x220000 - 0x22FFFF) FACILITY_STATE_MANAGEMENT=34 errors
-
         // ******************
         //  FACILITY_METADIRECTORY
         // ******************
-
-        #region (0x230000 - 0x23FFFF) FACILITY_METADIRECTORY=35 errors
-
-        #endregion (0x230000 - 0x23FFFF) FACILITY_METADIRECTORY=35 errors
 
         // ***********************************************
         // Razer SDK Error codes (SwitchBladeSDK_errors.h)
@@ -7602,8 +7509,4 @@ namespace SharpBlade.Native
             return codes;
         }
     }
-
-    // ReSharper restore InconsistentNaming
-
-    #endregion HRESULT
 }
