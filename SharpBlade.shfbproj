@@ -54,11 +54,10 @@ If you have any questions, feel free to contact &amp;lt%3ba href=&amp;quot%3bhtt
 <NamespaceSummaryItem name="SharpBlade.Native" isDocumented="True">All native code and related components are located in the Native namespace.</NamespaceSummaryItem>
 <NamespaceSummaryItem name="SharpBlade.Native.WinAPI" isDocumented="True">Native code specific to WinAPI.</NamespaceSummaryItem>
 <NamespaceSummaryItem name="SharpBlade.Razer" isDocumented="True">Contains definitions and implementations of Razer's native code. All code in this namespace (except the exception class) are manually parsed from Razer's API C header files.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="SharpBlade.Razer.Events" isDocumented="False">Events regarding Razer components.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="SharpBlade.Razer.Exceptions" isDocumented="False">Exceptions related to Razer components.</NamespaceSummaryItem>
 <NamespaceSummaryItem name="SharpBlade" isDocumented="True">Main SharpBlade namespace, contains core SharpBlade components and code general enough to not need its own namespace.</NamespaceSummaryItem>
 <NamespaceSummaryItem name="SharpBlade.Events" isDocumented="True">Contains EventArgs classes for all events used in SharpBlade.</NamespaceSummaryItem>
-<NamespaceSummaryItem name="SharpBlade.Rendering" isDocumented="True">Code dealing with rendering operations.</NamespaceSummaryItem></NamespaceSummaries>
+<NamespaceSummaryItem name="SharpBlade.Rendering" isDocumented="True">Code dealing with rendering operations.</NamespaceSummaryItem>
+<NamespaceSummaryItem name="SharpBlade.Tests.Extensions" isDocumented="False" /></NamespaceSummaries>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in
        order for Visual Studio to perform the build.  The others are optional
