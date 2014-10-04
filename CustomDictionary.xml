@@ -4,12 +4,22 @@
         <Recognized>
             <Word>callback</Word>
             <Word>Counterclockwise</Word>
+            <Word>Pixelformat</Word>
             <Word>Razer</Word>
             <Word>RazerAPI</Word>
+            <Word>Rgb</Word>
+            <Word>Surfacegeometry</Word>
             <Word>Touchpoint</Word>
         </Recognized>
         <DiscreteExceptions>
+            <Term>drawdown</Term>
             <Term>setup</Term>
+            <Term>pixelformat</Term>
         </DiscreteExceptions>
     </Words>
+    <Acronyms>
+        <CasingExceptions>
+            <Acronym>RGB</Acronym>
+        </CasingExceptions>
+    </Acronyms>
 </Dictionary>

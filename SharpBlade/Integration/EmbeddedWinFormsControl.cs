@@ -19,23 +19,23 @@
 //     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 //     CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-//     Disclaimer: SharpBlade is in no way affiliated
-//     with Razer and/or any of its employees and/or licensors.
-//     Adam Hellberg does not take responsibility for any harm caused, direct
-//     or indirect, to any Razer peripherals via the use of SharpBlade.
+//     Disclaimer: SharpBlade is in no way affiliated with Razer and/or any of
+//     its employees and/or licensors. Adam Hellberg and/or Brandon Scott do not
+//     take responsibility for any harm caused, direct or indirect, to any Razer
+//     peripherals via the use of SharpBlade.
 //
 //     "Razer" is a trademark of Razer USA Ltd.
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System.Diagnostics.Contracts;
-using System.Drawing;
-using System.Security.RightsManagement;
-using System.Windows.Forms;
-using System.Windows.Forms.Integration;
-
 namespace SharpBlade.Integration
 {
+    using System.Drawing;
+    using System.Windows.Forms;
+    using System.Windows.Forms.Integration;
+
+    using SharpBlade.Annotations;
+
     /// <summary>
     /// Contains references to a <see cref="WindowsFormsHost" /> object and
     /// a <see cref="System.Windows.Forms.Control" /> embedded in the host. Provides methods
@@ -58,11 +58,9 @@ namespace SharpBlade.Integration
         /// </summary>
         /// <param name="host">The WindowsFormsHost object containing the control.</param>
         /// <param name="control">The WinForms control contained in the host.</param>
+        [PublicAPI]
         public EmbeddedWinFormsControl(WindowsFormsHost host, Control control)
         {
-            Contract.Requires(host != null);
-            Contract.Requires(control != null);
-
             _host = host;
             _control = control;
         }
@@ -83,7 +81,10 @@ namespace SharpBlade.Integration
         /// </summary>
         public Control Control
         {
-            get { return _control; }
+            get
+            {
+                return _control;
+            }
         }
 
         /// <summary>
@@ -91,7 +92,10 @@ namespace SharpBlade.Integration
         /// </summary>
         public WindowsFormsHost Host
         {
-            get { return _host; }
+            get
+            {
+                return _host;
+            }
         }
 
         /// <summary>
@@ -120,7 +124,8 @@ namespace SharpBlade.Integration
         /// Draws the structure to a bitmap.
         /// </summary>
         /// <returns>Bitmap with the control structure rendered.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability",
+            "CA2000:Dispose objects before losing scope",
             Justification = "Disposing bitmap does not make sense as it's being returned to the caller")]
         public Bitmap Draw()
         {
@@ -156,16 +161,6 @@ namespace SharpBlade.Integration
             {
                 return (_control.GetHashCode() * 397) ^ _host.GetHashCode();
             }
-        }
-
-        /// <summary>
-        /// The contract invariant method for <see cref="EmbeddedWinFormsControl" />.
-        /// </summary>
-        [ContractInvariantMethod]
-        private void ObjectInvariant()
-        {
-            Contract.Invariant(_host != null);
-            Contract.Invariant(_control != null);
         }
     }
 }

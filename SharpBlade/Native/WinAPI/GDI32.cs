@@ -3,23 +3,24 @@
 // (Doesn't really count as auto-generated but we circumvent StyleCop this way)
 // </auto-generated>
 
-using System;
-using System.CodeDom.Compiler;
-using System.Runtime.InteropServices;
-
+// ReSharper disable InconsistentNaming
 namespace SharpBlade.Native.WinAPI
 {
+    using System;
+    using System.CodeDom.Compiler;
+    using System.Runtime.InteropServices;
+
     /// <summary>
     /// Static class containing all functions
     /// provided by the Windows GDI32 library.
     /// </summary>
     [GeneratedCode("pinvoke.net", "1.0.0.0")]
-    public static class GDI32
+    internal static class GDI32
     {
         /// <summary>
         /// Copies the source rectangle directly to the destination rectangle.
         /// </summary>
-        public const int SRCCOPY = 0x00CC0020;
+        internal const int SRCCOPY = 0x00CC0020;
 
         /// <summary>
         /// Native methods for GDI32.

@@ -19,42 +19,56 @@
 //     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 //     CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-//     Disclaimer: SharpBlade is in no way affiliated
-//     with Razer and/or any of its employees and/or licensors.
-//     Adam Hellberg does not take responsibility for any harm caused, direct
-//     or indirect, to any Razer peripherals via the use of SharpBlade.
+//     Disclaimer: SharpBlade is in no way affiliated with Razer and/or any of
+//     its employees and/or licensors. Adam Hellberg and/or Brandon Scott do not
+//     take responsibility for any harm caused, direct or indirect, to any Razer
+//     peripherals via the use of SharpBlade.
 //
 //     "Razer" is a trademark of Razer USA Ltd.
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-using System.Diagnostics.Contracts;
-using System.IO;
-
 namespace SharpBlade.Helpers
 {
+    using System.Diagnostics.CodeAnalysis;
+    using System.Drawing;
+    using System.IO;
+
     /// <summary>
     /// Helper functions for generic operations.
     /// </summary>
-    public static class GenericMethods
+    internal static class GenericMethods
     {
         /// <summary>
         /// Gets the absolute path to the specified file.
         /// </summary>
         /// <param name="path">(Relative) path to resolve.</param>
         /// <returns>The absolute path to the specified relative path on the file system.</returns>
-        public static string GetAbsolutePath(string path)
+        internal static string GetAbsolutePath(string path)
         {
-            Contract.Requires(path != null);
-            Contract.Ensures(!string.IsNullOrEmpty(Contract.Result<string>()));
-
             var currentDirectory = Directory.GetCurrentDirectory();
-            Contract.Assume(!string.IsNullOrEmpty(currentDirectory));
-
             var combined = Path.Combine(currentDirectory, path);
-            Contract.Assume(!string.IsNullOrEmpty(combined));
-
             return combined;
+        }
+
+        /// <summary>
+        /// Gets a blank (filled with black) <see cref="Bitmap" /> object with
+        /// the specified dimensions.
+        /// </summary>
+        /// <param name="width">Width of the bitmap to create.</param>
+        /// <param name="height">Height of the bitmap to create.</param>
+        /// <returns>
+        /// An instance of <see cref="Bitmap" /> that matches the specified dimensions
+        /// and is filled with the color black.
+        /// </returns>
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
+            Justification = "There isn't really anywhere that could throw an exception here.")]
+        internal static Bitmap GetBlankBitmap(int width, int height)
+        {
+            var bmp = new Bitmap(width, height);
+            using (var gfx = Graphics.FromImage(bmp))
+                gfx.FillRectangle(Brushes.Black, 0, 0, width, height);
+            return bmp;
         }
     }
 }

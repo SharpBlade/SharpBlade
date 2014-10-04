@@ -19,7 +19,20 @@
                             <xs:element name="DiscreteExceptions">
                                 <xs:complexType>
                                     <xs:sequence>
-                                        <xs:element name="Term" type="xs:string" />
+                                        <xs:element maxOccurs="unbounded" name="Term" type="xs:string" />
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Acronyms">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="CasingExceptions">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="Acronym" type="xs:string" />
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>

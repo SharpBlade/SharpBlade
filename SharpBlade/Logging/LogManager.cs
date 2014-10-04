@@ -19,59 +19,32 @@
 //     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 //     CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-//     Disclaimer: SharpBlade is in no way affiliated
-//     with Razer and/or any of its employees and/or licensors.
-//     Adam Hellberg does not take responsibility for any harm caused, direct
-//     or indirect, to any Razer peripherals via the use of SharpBlade.
+//     Disclaimer: SharpBlade is in no way affiliated with Razer and/or any of
+//     its employees and/or licensors. Adam Hellberg and/or Brandon Scott do not
+//     take responsibility for any harm caused, direct or indirect, to any Razer
+//     peripherals via the use of SharpBlade.
 //
 //     "Razer" is a trademark of Razer USA Ltd.
 // </copyright>
 // ---------------------------------------------------------------------------------------
 
-#if DEBUG
-
-using System;
-using System.Diagnostics.Contracts;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Xml.Linq;
-
-using log4net;
-using log4net.Config;
-
-using Microsoft.Win32.SafeHandles;
-
-using SharpBlade.Native.WinAPI;
-
-#else
-using System;
-using System.Diagnostics.Contracts;
-using System.IO;
-using System.Linq;
-using System.Xml.Linq;
-
-using log4net;
-using log4net.Config;
-
-#endif
-
 namespace SharpBlade.Logging
 {
+    using System;
+    using System.IO;
+    using System.Linq;
+    using System.Xml.Linq;
+
+    using log4net;
+    using log4net.Config;
+
+    using SharpBlade.Annotations;
+
     /// <summary>
     /// Provides helper methods for logging functions.
     /// </summary>
     public static class LogManager
     {
-#if DEBUG
-
-        /// <summary>
-        /// Whether or not a console has been loaded and allocated for log output.
-        /// </summary>
-        private static bool _consoleLoaded;
-
-#endif
-
         /// <summary>
         /// Whether or not a log4net instance (and thus its config)
         /// has been loaded.
@@ -85,15 +58,10 @@ namespace SharpBlade.Logging
         /// <param name="directory">The directory to check for log files.</param>
         /// <remarks>This will delete ALL files in the specified directory,
         /// regardless of file type.</remarks>
-        // ReSharper disable UnusedMember.Global
+        [PublicAPI]
         public static void ClearOldLogs(int daysOld = 7, string directory = "logs")
-            // ReSharper restore UnusedMember.Global
         {
-            Contract.Requires(!string.IsNullOrEmpty(directory));
-
             var log = GetLogger(typeof(LogManager));
-
-            Contract.Assert(log != null);
 
             if (!Directory.Exists(directory))
             {
@@ -112,7 +80,6 @@ namespace SharpBlade.Logging
             {
                 try
                 {
-                    Contract.Assume(!string.IsNullOrEmpty(file));
                     File.Delete(file);
                     log.InfoFormat("Deleted old log file: {0}", file);
                     count++;
@@ -127,35 +94,20 @@ namespace SharpBlade.Logging
         }
 
         /// <summary>
-        /// Destroys an open console, usually the one created by <see cref="SetupConsole" />.
-        /// </summary>
-        /// <remarks>Method body only compiled on DEBUG.</remarks>
-        // ReSharper disable UnusedMember.Global
-        public static void DestroyConsole() // ReSharper restore UnusedMember.Global
-        {
-#if DEBUG
-            if (_consoleLoaded)
-                Kernel32.NativeMethods.FreeConsole();
-#endif
-        }
-
-        /// <summary>
         /// Gets a logger object associated with the specified object.
         /// </summary>
         /// <param name="sender">The object to get a logger for.</param>
         /// <returns>An <see cref="ILog" /> that provides logging features.</returns>
         public static ILog GetLogger(object sender)
         {
-            Contract.Requires(sender != null);
-            Contract.Ensures(Contract.Result<ILog>() != null);
+            if (sender == null)
+                throw new ArgumentNullException("sender");
 
             if (!_loaded)
                 LoadConfig();
 
             var type = sender.GetType().ToString() == "System.RuntimeType" ? (Type)sender : sender.GetType();
             var logger = log4net.LogManager.GetLogger(type);
-
-            Contract.Assume(logger != null);
 
             return logger;
         }
@@ -201,28 +153,6 @@ namespace SharpBlade.Logging
             }
 
             _loaded = true;
-        }
-
-        /// <summary>
-        /// Sets up a console for standard output.
-        /// </summary>
-        /// <remarks>Method body only compiled on DEBUG.</remarks>
-        // ReSharper disable UnusedMember.Global
-        public static void SetupConsole() // ReSharper restore UnusedMember.Global
-        {
-#if DEBUG
-            if (System.Diagnostics.Debugger.IsAttached)
-                return;
-
-            Kernel32.NativeMethods.AllocConsole();
-            var stdHandle = Kernel32.NativeMethods.GetStdHandle(Kernel32.STD_OUTPUT_HANDLE);
-            var safeFileHandle = new SafeFileHandle(stdHandle, true);
-            var fileStream = new FileStream(safeFileHandle, FileAccess.Write);
-            var encoding = Encoding.GetEncoding(Kernel32.CODE_PAGE);
-            var stdOut = new StreamWriter(fileStream, encoding) { AutoFlush = true };
-            Console.SetOut(stdOut);
-            _consoleLoaded = true;
-#endif
         }
     }
 }

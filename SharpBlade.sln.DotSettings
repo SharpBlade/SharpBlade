@@ -1,9 +1,14 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:Boolean x:Key="/Default/CodeInspection/CodeAnnotations/NamespacesWithAnnotations/=SharpBlade_002EAnnotations/@EntryIndexedValue">True</s:Boolean>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=2C390908_002DD634_002D4450_002D9804_002D71D4929DD392_002Fd_003ANative_002Fd_003AWinAPI_002Ff_003AGDI32_002Ecs/@EntryIndexedValue">2C390908-D634-4450-9804-71D4929DD392/d:Native/d:WinAPI/f:GDI32.cs</s:String>
+	
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=2C390908_002DD634_002D4450_002D9804_002D71D4929DD392_002Fd_003ANative_002Fd_003AWinAPI_002Ff_003AKernel32_002Ecs/@EntryIndexedValue">2C390908-D634-4450-9804-71D4929DD392/d:Native/d:WinAPI/f:Kernel32.cs</s:String>
+	
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=2C390908_002DD634_002D4450_002D9804_002D71D4929DD392_002Fd_003ANative_002Fd_003AWinAPI_002Ff_003AUser32_002Ecs/@EntryIndexedValue">2C390908-D634-4450-9804-71D4929DD392/d:Native/d:WinAPI/f:User32.cs</s:String>
+	
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=2C390908_002DD634_002D4450_002D9804_002D71D4929DD392_002Fd_003ANative_002Ff_003ARazerAPI_002Ecs/@EntryIndexedValue">2C390908-D634-4450-9804-71D4929DD392/d:Native/f:RazerAPI.cs</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=2C390908_002DD634_002D4450_002D9804_002D71D4929DD392_002Fd_003AProperties_002Ff_003AAssemblyInfo_002Ecs/@EntryIndexedValue">2C390908-D634-4450-9804-71D4929DD392/d:Properties/f:AssemblyInfo.cs</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=2C390908_002DD634_002D4450_002D9804_002D71D4929DD392_002Ff_003AGlobalSuppressions_002Ecs/@EntryIndexedValue">2C390908-D634-4450-9804-71D4929DD392/f:GlobalSuppressions.cs</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=EventNeverSubscribedTo_002EGlobal/@EntryIndexedValue">HINT</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=MemberCanBePrivate_002EGlobal/@EntryIndexedValue">HINT</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=UnusedAutoPropertyAccessor_002EGlobal/@EntryIndexedValue">HINT</s:String>
@@ -11,7 +16,7 @@
 	<s:String x:Key="/Default/CodeStyle/CodeCleanup/Profiles/=Reformat_0020_002B_0020Usings_0020_002B_0020Header/@EntryIndexedValue">&lt;?xml version="1.0" encoding="utf-16"?&gt;&lt;Profile name="Reformat + Usings + Header"&gt;&lt;HtmlReformatCode&gt;True&lt;/HtmlReformatCode&gt;&lt;CSUpdateFileHeader&gt;True&lt;/CSUpdateFileHeader&gt;&lt;CSReformatCode&gt;True&lt;/CSReformatCode&gt;&lt;VBReformatCode&gt;True&lt;/VBReformatCode&gt;&lt;JsReformatCode&gt;True&lt;/JsReformatCode&gt;&lt;CssReformatCode&gt;True&lt;/CssReformatCode&gt;&lt;CSOptimizeUsings&gt;&lt;OptimizeUsings&gt;True&lt;/OptimizeUsings&gt;&lt;EmbraceInRegion&gt;False&lt;/EmbraceInRegion&gt;&lt;RegionName&gt;&lt;/RegionName&gt;&lt;/CSOptimizeUsings&gt;&lt;/Profile&gt;</s:String>
 	<s:String x:Key="/Default/CodeStyle/CodeCleanup/SilentCleanupProfile/@EntryValue">Reformat + Usings + Header</s:String>
 	<s:Int64 x:Key="/Default/CodeStyle/CodeFormatting/CSharpFormat/BLANK_LINES_AFTER_USING_LIST/@EntryValue">1</s:Int64>
-	<s:Boolean x:Key="/Default/CodeStyle/CSharpUsing/AddImportsToDeepestScope/@EntryValue">False</s:Boolean>
+	<s:Boolean x:Key="/Default/CodeStyle/CSharpUsing/AddImportsToDeepestScope/@EntryValue">True</s:Boolean>
 	<s:String x:Key="/Default/CodeStyle/FileHeader/FileHeaderText/@EntryValue">---------------------------------------------------------------------------------------&#xD;
 &lt;copyright file="$FILENAME$" company="SharpBlade"&gt;&#xD;
     Copyright © 2013-$CURRENT_YEAR$ by Adam Hellberg and Brandon Scott.&#xD;
@@ -33,15 +38,17 @@
     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN&#xD;
     CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.&#xD;
 &#xD;
-    Disclaimer: SharpBlade is in no way affiliated&#xD;
-    with Razer and/or any of its employees and/or licensors.&#xD;
-    Adam Hellberg does not take responsibility for any harm caused, direct&#xD;
-    or indirect, to any Razer peripherals via the use of SharpBlade.&#xD;
+    Disclaimer: SharpBlade is in no way affiliated with Razer and/or any of&#xD;
+    its employees and/or licensors. Adam Hellberg and/or Brandon Scott do not&#xD;
+    take responsibility for any harm caused, direct or indirect, to any Razer&#xD;
+    peripherals via the use of SharpBlade.&#xD;
 &#xD;
     "Razer" is a trademark of Razer USA Ltd.&#xD;
 &lt;/copyright&gt;&#xD;
 ---------------------------------------------------------------------------------------</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=API/@EntryIndexedValue">API</s:String>
+	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=BE/@EntryIndexedValue">BE</s:String>
+	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=DK/@EntryIndexedValue">DK</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=GDI/@EntryIndexedValue">GDI</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/CSharpNaming/Abbreviations/=IO/@EntryIndexedValue">IO</s:String>
 	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EPsi_002ECSharp_002ECodeStyle_002ESettingsUpgrade_002EMigrateBlankLinesAroundFieldToBlankLinesAroundProperty/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
