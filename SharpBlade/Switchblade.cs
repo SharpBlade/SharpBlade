@@ -160,6 +160,7 @@ namespace SharpBlade
 
 #if DEBUG
             _log.DebugFormat(
+                System.Globalization.CultureInfo.InvariantCulture,
                 "HW type: {0}, DK size: {1}x{2}, DK arr: X={3} Y={4}",
                 Capabilities.HardwareType,
                 Capabilities.DynamicKeySize.X,
@@ -171,7 +172,13 @@ namespace SharpBlade
             {
                 var pf = Capabilities.Pixelformat[i];
                 var sg = Capabilities.Surfacegeometry[i];
-                _log.DebugFormat("Surface #{0}: PixelFormat={1}, SurfaceGeometry: X={2}, Y={3}", i, pf, sg.X, sg.Y);
+                _log.DebugFormat(
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    "Surface #{0}: PixelFormat={1}, SurfaceGeometry: X={2}, Y={3}",
+                    i,
+                    pf,
+                    sg.X,
+                    sg.Y);
             }
 #endif
 
